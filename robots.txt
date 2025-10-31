@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://zakwiat.github.io/sitemap.xml
