@@ -205,6 +205,55 @@ Esta web no solo refleja mi relación con la tecnología, sino también mi maner
     window.addEventListener('resize', onScroll);
     onScroll(); // inicial
   })();
+    // ☄️ Spawner de cometas (1–2 activos, diagonales rojo/naranja)
+(function(){
+  const layer = document.querySelector('.comets');
+  if(!layer) return;
+
+  let active = 0, maxActive = 2;
+
+  function spawnComet(){
+    if(active >= maxActive) return;
+
+    const c = document.createElement('i');
+    c.className = 'comet';
+
+    // posición inicial y deriva (ligeramente oblicua hacia la izquierda)
+    const startX = 10 + Math.random()*80;      // 10–90 vw
+    const driftX = -12 - Math.random()*16;     // -12 a -28 vw (hacia la izquierda)
+    const angle  = 12 + Math.random()*10;      // 12–22º
+    const dur    = 2.6 + Math.random()*1.8;    // 2.6–4.4 s
+
+    c.style.setProperty('--startX', startX.toFixed(2));
+    c.style.setProperty('--driftX', driftX.toFixed(2) + 'vw');
+    c.style.setProperty('--angle',  angle.toFixed(2) + 'deg');
+    c.style.setProperty('--dur',    dur.toFixed(2) + 's');
+
+    layer.appendChild(c);
+    active++;
+
+    c.addEventListener('animationend', ()=>{
+      c.remove();
+      active--;
+    }, {once:true});
+  }
+
+  // Intervalo aleatorio entre 4–9 s
+  function loop(){
+    const t = 4000 + Math.random()*5000;
+    setTimeout(()=>{ spawnComet(); loop(); }, t);
+  }
+
+  // Arranque con 1 cometa
+  spawnComet();
+  loop();
+
+  // Móviles: baja a 1 cometa si el dispositivo es flojo
+  if (matchMedia('(max-width: 900px)').matches && (window.devicePixelRatio||1) < 1.5){
+    maxActive = 1;
+  }
+})();
+
 </script>
 
 </body>
