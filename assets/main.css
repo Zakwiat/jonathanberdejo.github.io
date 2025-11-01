@@ -431,5 +431,51 @@ body.scrolled .comets{ opacity:.45; transition:opacity .4s }
 #langSwitcher:hover {
   text-shadow: 0 0 6px #00eaff;
 }
+/* ===== COMETAS ===== */
+.comets { position:absolute; inset:0; z-index:1; pointer-events:none }
+.comet{
+  position:absolute;
+  left: calc(var(--startX, 50) * 1vw);
+  top: -12vh;
+  --sz: var(--size, 9px);
+  width: var(--sz); height: var(--sz);
+  transform: rotate(var(--angle, 15deg));
+  animation: cometFall var(--dur, 3.2s) cubic-bezier(.12,.24,.02,1) forwards,
+             cometPulse 1.2s ease-in-out infinite;
+  will-change: transform, opacity, filter;
+}
+.comet::before{
+  content:""; position:absolute; inset:-2px; border-radius:50%;
+  --h: var(--hue, 18);  /* 10–30 = rojo/naranja */
+  --l: var(--lum, 55%);
+  background:
+    radial-gradient(circle at 30% 30%,
+      hsl(var(--h),100%,98%),
+      hsl(var(--h),100%,80%) 35%,
+      hsl(calc(var(--h) + 6),100%,55%) 65%,
+      hsla(var(--h),100%,50%,.65));
+  box-shadow:
+    0 0 32px hsla(var(--h),100%,60%,.95),
+    0 0 80px hsla(var(--h),100%,50%,.75),
+    0 0 140px hsla(var(--h),100%,45%,.55);
+}
+.comet::after{
+  content:""; position:absolute; left:-2px; right:-2px; top:45%;
+  height: var(--tail, 200px);
+  transform: translateY(-100%) skewX(-15deg);
+  background: linear-gradient(to bottom,
+    hsla(var(--h),100%,85%,.95) 0%,
+    hsla(var(--h),100%,60%,.65) 35%,
+    hsla(var(--h),100%,50%,.30) 70%,
+    rgba(255,30,0,0) 100%);
+  filter: blur(2.2px);
+  border-radius:8px;
+}
+@keyframes cometFall{
+  0%   { transform: translate(0,0) rotate(var(--angle,15deg)); opacity: 0 }
+  5%   { opacity: 1 }
+  100% { transform: translate(var(--driftX, -18vw), 125vh) rotate(var(--angle,15deg)); opacity: 0 }
+}
+@keyframes cometPulse{ 0%,100%{ filter:brightness(1)} 50%{ filter:brightness(1.25)} }
 
 
