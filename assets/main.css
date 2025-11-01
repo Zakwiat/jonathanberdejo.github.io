@@ -221,3 +221,24 @@ body.scrolled .beam { animation-play-state: paused; opacity: 0.05; transition:op
 /* Opcional: menos distracción al leer (baja intensidad fuera del hero) */
 body.scrolled .star{ opacity:.12 !important; }
 body.scrolled .nebula-red{ opacity:.35; }
+/* ===== ✨ Movimiento orbital de las estrellas ===== */
+@keyframes starShift {
+  0%   { transform: translate(0, 0) rotate(0deg); }
+  50%  { transform: translate(-1.5%, -1%) rotate(0.5deg); }
+  100% { transform: translate(1.5%, 1%) rotate(-0.5deg); }
+}
+.stars {
+  animation: starShift 180s linear infinite alternate;
+}
+
+/* ===== ⚙️ Optimización de rendimiento ===== */
+html, body {
+  backface-visibility: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+.neon-bg, .stars, .nebula-red, .neon-lines, .beam, .beam::before {
+  will-change: transform, opacity;
+}
+@media (prefers-reduced-motion: reduce) {
+  .stars, .beam, .beam::before, .title { animation: none !important; }
+}
