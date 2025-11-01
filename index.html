@@ -226,7 +226,10 @@ document.getElementById('year').textContent = new Date().getFullYear();
 // Estrellas
 (function(){
   const wrap = document.querySelector('.stars'); if(!wrap) return;
-  const isMobile = matchMedia('(max-width: 900px)').matches; const N = isMobile ? 120 : 220;
+  const isMobile = matchMedia('(max-width: 900px)').matches;
+const N = isMobile ? 80 : 140;  // antes 120/220
+
+
   const frag = document.createDocumentFragment();
   for (let i=0;i<N;i++){ const s=document.createElement('i'); s.className='star';
     s.style.left=(Math.random()*100).toFixed(3)+'%'; s.style.top=(Math.random()*100).toFixed(3)+'%';
@@ -341,8 +344,11 @@ langSel.addEventListener("change", (e)=>{
 (function(){
   const layer = document.querySelector('.comets');
   if(!layer) return;
-  let maxActive = matchMedia('(max-width: 900px)').matches ? 2 : 4;
-  let active = 0;
+  let maxActive = matchMedia('(max-width: 900px)').matches ? 1 : 2; // antes 2/4
+
+function loop(){ setTimeout(()=>{ spawnComet(); loop(); }, 3200 + Math.random()*2400); } // menos spawn
+function bursts(){ /* desactiva ráfagas para bajar carga */ }
+
 
   function spawnComet(customDelay=0){
     if(active >= maxActive) return;
@@ -391,26 +397,92 @@ langSel.addEventListener("change", (e)=>{
   const ctx = canvas.getContext('2d');
 
   // Config
-  const DPR = Math.min(window.devicePixelRatio || 1, 2);
-  const isMobile = matchMedia('(max-width: 900px)').matches;
-  const MAX_RAYS = isMobile ? 18 : 36;         // cantidad de trazos simultáneos
-  const SPEED = isMobile ? 0.7 : 1.0;          // factor de velocidad
-  const HUE = 186;                              // cian-azulado
-  const SAT = 100;                              // saturación
-  const LGT = 56;                               // luminosidad base
+  // Config
+const DPR = Math.min(window.devicePixelRatio || 1, 1.5); // tope 1.5 para rendimiento
+const isMobile = matchMedia('(max-width: 900px)').matches;
+const MAX_RAYS = isMobile ? 8 : 14;    // menos trazos simultáneos
+const SPEED = isMobile ? 0.85 : 1.0;
+const HUE = 186;
+const SAT = 100;
+const LGT = 56;
 
-  let W=0,H=0, protectRects=[];
+let W=0,H=0, protectRects=[], running=true;
 
-  function resize(){
-    const r = canvas.getBoundingClientRect();
-    W = Math.floor(r.width  * DPR);
-    H = Math.floor(r.height * DPR);
-    canvas.width  = W;
-    canvas.height = H;
-    canvas.style.width  = r.width+'px';
-    canvas.style.height = r.height+'px';
-    computeProtected();
+function resize(){
+  const r = canvas.getBoundingClientRect();
+  W = Math.max(1, Math.floor(r.width  * DPR));
+  H = Math.max(1, Math.floor(r.height * DPR));
+  canvas.width  = W;
+  canvas.height = H;
+  canvas.style.width  = r.width +'px';
+  canvas.style.height = r.height+'px';
+  computeProtected();
+}
+
+// Pausar cuando la pestaña no está visible
+document.addEventListener('visibilitychange', ()=>{
+  running = document.visibilityState === 'visible';
+  if (running) requestAnimationFrame(frame);
+});
+
+function drawRay(r){
+  const steps = 18;                       // cola más corta (menos dibujado)
+  for(let i=0;i<steps;i++){
+    const tt = Math.max(0, r.t - i*(1/steps)*0.22);
+    if(tt<=0) continue;
+    const x = cubic(r.start.x, r.cx1, r.cx2, r.end.x, tt);
+    const y = cubic(r.start.y, r.cy1, r.cy2, r.end.y, tt);
+
+    const w = r.thickness * (1 - i/steps);
+    ctx.strokeStyle = `hsla(${r.hue}, ${SAT}%, ${LGT}%, ${r.alpha*(1 - i/steps)})`;
+    ctx.lineWidth = w;
+    ctx.lineCap = 'round';
+
+    ctx.globalCompositeOperation = 'lighter';
+    ctx.shadowColor = `hsl(${r.hue}, ${SAT}%, 58%)`;
+    ctx.shadowBlur = r.glow*(1 - i/steps) * 0.8;   // menos blur = más FPS
+
+    const prevT = Math.max(0, tt - 0.018);
+    const px = cubic(r.start.x, r.cx1, r.cx2, r.end.x, prevT);
+    const py = cubic(r.start.y, r.cy1, r.cy2, r.end.y, prevT);
+
+    ctx.beginPath();
+    ctx.moveTo(px, py);
+    ctx.lineTo(x, y);
+    ctx.stroke();
   }
+}
+
+let last = performance.now();
+function frame(now){
+  if(!running) return;
+  const dt = Math.min(0.035, (now-last)/1000);
+  last = now;
+
+  ctx.clearRect(0,0,W,H);
+
+  ensureRays();
+  for(const r of rays){
+    r.t += dt / r.life;
+    drawRay(r);
+  }
+  for(let i=rays.length-1;i>=0;i--){
+    if(rays[i].t >= 1){ rays.splice(i,1); }
+  }
+
+  // perforar zonas de texto
+  if(protectRects.length){
+    ctx.save();
+    ctx.globalCompositeOperation = 'destination-out';
+    ctx.fillStyle = '#000';
+    protectRects.forEach(pr=>{
+      const {x,y,w,h,r} = pr; roundRect(ctx,x,y,w,h,r); ctx.fill();
+    });
+    ctx.restore();
+  }
+  requestAnimationFrame(frame);
+}
+
 
   // Zonas a proteger (no pintar encima)
   function computeProtected(){
