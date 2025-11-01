@@ -305,3 +305,33 @@ html, body {
   z-index: 1;
 }
 
+/* === FIX PACK: ver estrellas debajo de las tarjetas === */
+
+/* 1) El universo debe estar en la capa base, no por detrás del body */
+.neon-bg{
+  z-index: 0 !important;            /* antes podía estar en -1 */
+}
+
+/* 2) El contenido va por encima del universo */
+.nav, .hero, .section, .footer{
+  position: relative;
+  z-index: 2;                        /* por encima de .neon-bg (0) */
+}
+
+/* 3) Tarjeta realmente translúcida (sin mancha negra) */
+.card{
+  background: transparent !important;      /* elimina cualquier relleno opaco */
+  border: 1px solid rgba(0,234,255,0.22);
+  border-radius: 18px;
+  padding: 24px;
+  box-shadow: none !important;             /* quita sombras que oscurecen */
+  backdrop-filter: blur(4px);              /* suave para legibilidad */
+  -webkit-backdrop-filter: blur(4px);
+}
+.card:hover{ background: rgba(0,0,0,0.06) }
+
+/* 4) Asegura que las capas del universo estén visibles */
+.stars, .nebula-red, .neon-lines{
+  z-index: 0;                               /* mismo plano que .neon-bg */
+  pointer-events: none;
+}
