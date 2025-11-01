@@ -569,3 +569,7 @@ body.scrolled .comets{ opacity:.45; transition:opacity .4s }
 @media (prefers-reduced-motion: reduce){
   .comet{ animation: none !important }
 }
+#starLinkCanvas{
+  position:fixed; inset:0; z-index:1; pointer-events:none;
+  /* Ocupa toda la pantalla por encima de las estrellas pero bajo el contenido */
+}
