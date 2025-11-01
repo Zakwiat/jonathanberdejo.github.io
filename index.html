@@ -17,7 +17,7 @@
     </nav>
   </header>
 
- <section id="home" class="section hero">
+<section id="home" class="section hero">
   <!-- ONDAS NEÓN CURVADAS -->
   <div class="waves" aria-hidden="true">
     <svg viewBox="0 0 1200 220" preserveAspectRatio="none">
@@ -32,48 +32,43 @@
       </defs>
 
       <!-- Grupo que se desplaza en X -->
-     <!-- scroll infinito sin cortes: dos tiles seguidos -->
-<div class="waves" aria-hidden="true">
-  <svg viewBox="0 0 1200 220" preserveAspectRatio="none">
-    <defs>
-      <filter id="neon-glow">
-        <feGaussianBlur stdDeviation="6" result="blur"/>
-        <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-      </filter>
-    </defs>
+      <g class="runner">
+        <!-- ONDA 1 (suave) -->
+        <path class="wave w1"
+          d="M0,70 C180,10 420,140 600,70 S1020,10 1200,70">
+          <animate attributeName="d" dur="1.5s" repeatCount="indefinite"
+            values="
+              M0,70 C180,10 420,140 600,70 S1020,10 1200,70;
+              M0,70 C180,130 420,10 600,70 S1020,130 1200,70;
+              M0,70 C180,10 420,140 600,70 S1020,10 1200,70"/>
+        </path>
 
-    <g class="runner">
-      <path class="wave w1" d="M0,60 C180,10 420,140 600,60 S1020,10 1200,60">
-        <animate attributeName="d" dur="1.5s" repeatCount="indefinite"
-          values="M0,60 C180,10 420,140 600,60 S1020,10 1200,60;
-                  M0,60 C180,130 420,10 600,60 S1020,130 1200,60;
-                  M0,60 C180,10 420,140 600,60 S1020,10 1200,60"/>
-      </path>
+        <!-- ONDA 2 (más curva) -->
+        <path class="wave w2"
+          d="M0,120 C160,30 410,200 620,120 S1040,30 1220,120">
+          <animate attributeName="d" dur="1.8s" repeatCount="indefinite"
+            values="
+              M0,120 C160,30 410,200 620,120 S1040,30 1220,120;
+              M0,120 C160,190 410,40 620,120 S1040,190 1220,120;
+              M0,120 C160,30 410,200 620,120 S1040,30 1220,120"/>
+        </path>
 
-      <path class="wave w2" d="M0,140 C160,30 410,200 620,140 S1040,30 1220,140">
-        <animate attributeName="d" dur="1.8s" repeatCount="indefinite"
-          values="M0,140 C160,30 410,200 620,140 S1040,30 1220,140;
-                  M0,140 C160,190 410,40 620,140 S1040,190 1220,140;
-                  M0,140 C160,30 410,200 620,140 S1040,30 1220,140"/>
-      </path>
-
-      <path class="wave w3" d="M0,220 C200,90 430,220 650,220 S1080,90 1280,220">
-        <animate attributeName="d" dur="1.3s" repeatCount="indefinite"
-          values="M0,220 C200,90 430,220 650,220 S1080,90 1280,220;
-                  M0,220 C200,210 430,120 650,220 S1080,210 1280,220;
-                  M0,220 C200,90 430,220 650,220 S1080,90 1280,220"/>
-      </path>
-    </g>
-  </svg>
-</div>
-
-
+        <!-- ONDA 3 (profunda) -->
+        <path class="wave w3"
+          d="M0,170 C200,90 430,220 650,170 S1080,90 1280,170">
+          <animate attributeName="d" dur="1.3s" repeatCount="indefinite"
+            values="
+              M0,170 C200,90 430,220 650,170 S1080,90 1280,170;
+              M0,170 C200,210 430,120 650,170 S1080,210 1280,170;
+              M0,170 C200,90 430,220 650,170 S1080,90 1280,170"/>
+        </path>
+      </g>
+    </svg>
+  </div>
 
   <!-- TU TÍTULO -->
   <h1 class="hero-title">JONATHAN BERDEJO</h1>
-  <p class="hero-sub">Exploring ideas, crafting projects, and staying curious</p>
-</section>
-
+  <p class="hero-sub">Creative mind with a technical edge.</p>
 </section>
 
 </section>
