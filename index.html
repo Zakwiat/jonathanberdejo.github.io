@@ -376,6 +376,176 @@ langSel.addEventListener("change", (e)=>{
 
   spawnComet(); loop(); bursts();
 })();
+// ===== Tech Rays (freeform strokes that never cover text) =====
+(function(){
+  const canvas = document.getElementById('techRays');
+  if(!canvas) return;
+  const ctx = canvas.getContext('2d');
+
+  // Config
+  const DPR = Math.min(window.devicePixelRatio || 1, 2);
+  const isMobile = matchMedia('(max-width: 900px)').matches;
+  const MAX_RAYS = isMobile ? 18 : 36;         // cantidad de trazos simultáneos
+  const SPEED = isMobile ? 0.7 : 1.0;          // factor de velocidad
+  const HUE = 186;                              // cian-azulado
+  const SAT = 100;                              // saturación
+  const LGT = 56;                               // luminosidad base
+
+  let W=0,H=0, protectRects=[];
+
+  function resize(){
+    const r = canvas.getBoundingClientRect();
+    W = Math.floor(r.width  * DPR);
+    H = Math.floor(r.height * DPR);
+    canvas.width  = W;
+    canvas.height = H;
+    canvas.style.width  = r.width+'px';
+    canvas.style.height = r.height+'px';
+    computeProtected();
+  }
+
+  // Zonas a proteger (no pintar encima)
+  function computeProtected(){
+    const sel = ['.hero', '.section .card', '.hud-nav']; // añade/quita si quieres
+    protectRects = [];
+    sel.forEach(s=>{
+      document.querySelectorAll(s).forEach(el=>{
+        const b = el.getBoundingClientRect();
+        protectRects.push({
+          x:(b.left  - canvas.getBoundingClientRect().left)*DPR,
+          y:(b.top   - canvas.getBoundingClientRect().top )*DPR,
+          w:b.width*DPR, h:b.height*DPR, r:14*DPR // radio para esquinas
+        });
+      });
+    });
+  }
+
+  // Ray = trazo libre (curva Bezier compuesta)
+  function makeRay(){
+    const margin = 80*DPR;
+    const edges = [
+      {x: Math.random()*W, y: -margin},                // arriba
+      {x: Math.random()*W, y: H+margin},               // abajo
+      {x: -margin,            y: Math.random()*H},     // izquierda
+      {x: W+margin,           y: Math.random()*H},     // derecha
+    ];
+    const start = edges[(Math.random()*edges.length)|0];
+    const end   = edges[(Math.random()*edges.length)|0];
+
+    // control points para curva "dibujada a mano"
+    const cx1 = start.x + (Math.random()*0.6+0.2)*(end.x-start.x) + (Math.random()-0.5)*0.35*W;
+    const cy1 = start.y + (Math.random()*0.6+0.2)*(end.y-start.y) + (Math.random()-0.5)*0.35*H;
+    const cx2 = start.x + (Math.random()*0.6+0.2)*(end.x-start.x) + (Math.random()-0.5)*0.35*W;
+    const cy2 = start.y + (Math.random()*0.6+0.2)*(end.y-start.y) + (Math.random()-0.5)*0.35*H;
+
+    const thickness = (isMobile? 1.2:1.6) * DPR * (Math.random()*0.8 + 0.7);
+    const life = (3.8 + Math.random()*2.2) / SPEED;   // segundos
+    const glow = 10*DPR;
+
+    return {
+      t: 0, life,
+      start, end, cx1, cy1, cx2, cy2,
+      thickness, glow,
+      hue: HUE + Math.random()*6-3,
+      alpha: 0.11 + Math.random()*0.09
+    };
+  }
+
+  const rays = [];
+  function ensureRays(){
+    while(rays.length < MAX_RAYS) rays.push(makeRay());
+  }
+
+  function drawRay(r){
+    // trail -> dibujamos varias “capas” para efecto rápido
+    const steps = 28; // cola
+    for(let i=0;i<steps;i++){
+      const tt = Math.max(0, r.t - i*(1/steps)*0.25); // cola corta
+      if(tt<=0) continue;
+      const x = cubic(r.start.x, r.cx1, r.cx2, r.end.x, tt);
+      const y = cubic(r.start.y, r.cy1, r.cy2, r.end.y, tt);
+
+      const w = r.thickness * (1 - i/steps);
+      ctx.strokeStyle = `hsla(${r.hue}, ${SAT}%, ${LGT}%, ${r.alpha*(1 - i/steps)})`;
+      ctx.lineWidth = w;
+      ctx.lineCap = 'round';
+
+      // brillo aditivo
+      ctx.globalCompositeOperation = 'lighter';
+      ctx.shadowColor = `hsl(${r.hue}, ${SAT}%, 60%)`;
+      ctx.shadowBlur = r.glow*(1 - i/steps);
+
+      // pequeño segmento de movimiento (da sensación de rapidez)
+      const prevT = Math.max(0, tt - 0.02);
+      const px = cubic(r.start.x, r.cx1, r.cx2, r.end.x, prevT);
+      const py = cubic(r.start.y, r.cy1, r.cy2, r.end.y, prevT);
+
+      ctx.beginPath();
+      ctx.moveTo(px, py);
+      ctx.lineTo(x, y);
+      ctx.stroke();
+    }
+  }
+
+  function cubic(p0,p1,p2,p3,t){
+    const it=1-t;
+    return it*it*it*p0 + 3*it*it*t*p1 + 3*it*t*t*p2 + t*t*t*p3;
+  }
+
+  let last = performance.now();
+  function frame(now){
+    const dt = Math.min(0.035, (now-last)/1000); // s
+    last = now;
+
+    // limpiar
+    ctx.clearRect(0,0,W,H);
+
+    // dibujar rays
+    ensureRays();
+    for(const r of rays){
+      r.t += dt / r.life;
+      drawRay(r);
+    }
+    // reciclar
+    for(let i=rays.length-1;i>=0;i--){
+      if(rays[i].t >= 1){ rays.splice(i,1); }
+    }
+
+    // perforar zonas de texto (no se ve encima)
+    if(protectRects.length){
+      ctx.save();
+      ctx.globalCompositeOperation = 'destination-out';
+      ctx.fillStyle = '#000';
+      protectRects.forEach(pr=>{
+        const {x,y,w,h,r} = pr;
+        roundRect(ctx,x,y,w,h,r);
+        ctx.fill();
+      });
+      ctx.restore();
+    }
+
+    requestAnimationFrame(frame);
+  }
+
+  function roundRect(ctx,x,y,w,h,r){
+    const rr = Math.min(r, w/2, h/2);
+    ctx.beginPath();
+    ctx.moveTo(x+rr, y);
+    ctx.arcTo(x+w, y,   x+w, y+h, rr);
+    ctx.arcTo(x+w, y+h, x,   y+h, rr);
+    ctx.arcTo(x,   y+h, x,   y,   rr);
+    ctx.arcTo(x,   y,   x+w, y,   rr);
+    ctx.closePath();
+  }
+
+  // init
+  resize();
+  window.addEventListener('resize', resize);
+  // Recalcular zonas protegidas si cambias idioma/contenido
+  const ro = new ResizeObserver(()=>computeProtected());
+  document.querySelectorAll('.hero, .section .card, .hud-nav').forEach(el=>ro.observe(el));
+  requestAnimationFrame(frame);
+})();
 
 </script>
 </body>
