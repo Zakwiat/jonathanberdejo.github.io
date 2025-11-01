@@ -266,6 +266,62 @@
         maxActive = 2;
       }
     })();
+    (function(){
+    const btn = document.getElementById('requestCVBtn');
+    const modal = document.getElementById('cvModal');
+    const form = document.getElementById('cvForm');
+    const statusEl = document.getElementById('cvStatus');
+
+    // Estado previo desde localStorage
+    const KEY = 'cvRequestedAt';
+    const prev = localStorage.getItem(KEY);
+    if (prev){
+      const d = new Date(prev);
+      statusEl.textContent = `CV solicitado el ${d.toLocaleDateString()} ${d.toLocaleTimeString()}`;
+    }
+
+    const open = ()=> modal.classList.add('is-open');
+    const close = ()=> modal.classList.remove('is-open');
+
+    btn?.addEventListener('click', open);
+    modal?.addEventListener('click', e => { if (e.target.dataset.close !== undefined) close(); });
+    window.addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
+
+    form?.addEventListener('submit', (e)=>{
+      e.preventDefault();
+      const data = new FormData(form);
+      const name = (data.get('name')||'').toString().trim();
+      const email = (data.get('email')||'').toString().trim();
+      const msg = (data.get('msg')||'').toString().trim();
+
+      // Construye mailto
+      const subject = encodeURIComponent(`Solicitud de CV - ${name}`);
+      const body = encodeURIComponent(
+`Hola Jonathan,
+
+Me gustaría recibir tu CV.
+
+Nombre: ${name}
+Email: ${email}
+${msg ? `Mensaje: ${msg}\n` : ''}
+
+Gracias.`
+      );
+
+      // Marca como solicitado en este navegador
+      const now = new Date();
+      localStorage.setItem(KEY, now.toISOString());
+      statusEl.textContent = `CV solicitado el ${now.toLocaleDateString()} ${now.toLocaleTimeString()}`;
+
+      // Abre el cliente de correo
+      window.location.href = `mailto:berdejosanchez@gmail.com?subject=${subject}&body=${body}`;
+
+      // Limpia y cierra
+      form.reset();
+      close();
+    });
+  })();
+</script>
   </script>
   <div class="modal" id="cvModal" aria-hidden="true" role="dialog" aria-labelledby="cvTitle">
   <div class="modal__backdrop" data-close></div>
