@@ -63,37 +63,46 @@ body{
 /* =========================================================
    LÍNEAS NEÓN
 ========================================================= */
-.neon-lines{ position:absolute; inset:0; }
-
-.beam{
-  position:absolute;
-  left:-45vw; top:0;
-  width:70vw; height:10px;
-  transform: translateX(-30vw);
-  animation: moveX var(--speed,2.2s) linear infinite;
-  mix-blend-mode:screen;
-}
-.beam::before{
-  content:""; position:absolute; inset:0;
-  background:var(--neon);
-  filter: brightness(3.2) saturate(250%) blur(.6px);
-  box-shadow:
-    0 0 18px var(--neon),
-    0 0 42px var(--neon),
-    0 0 96px var(--neon),
-    0 0 160px var(--neon);
-  transform-origin:left center;
-  animation:
-    heartbeat var(--beat) ease-in-out infinite,
-    flicker 1.6s ease-in-out infinite;
+/* =========================================================
+   LÍNEAS NEÓN (versión cinematográfica)
+========================================================= */
+.neon-lines {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
 }
 
-/* posiciones / grosores / velocidades */
-.b1{ top:24%; height:10px; --speed:1.8s }
-.b2{ top:38%; height:8px;  --speed:2.0s }
-.b3{ top:52%; height:12px; --speed:2.3s }
-.b4{ top:66%; height:9px;  --speed:2.0s }
-.b5{ top:80%; height:11px; --speed:2.6s }
+.beam {
+  position: absolute;
+  left: -50vw;
+  width: 100vw;
+  height: 6px;
+  background: linear-gradient(90deg, transparent 0%, var(--neon) 25%, var(--neon) 75%, transparent 100%);
+  opacity: 0.35;
+  filter: blur(2px) brightness(1.5);
+  mix-blend-mode: screen;
+  animation: beamMove var(--speed, 2.5s) linear infinite;
+}
+
+.b1 { top: 20%; --speed: 1.8s; }
+.b2 { top: 38%; --speed: 2.2s; }
+.b3 { top: 56%; --speed: 2.6s; }
+.b4 { top: 72%; --speed: 3.0s; }
+.b5 { top: 88%; --speed: 3.5s; }
+
+@keyframes beamMove {
+  from { transform: translateX(-110vw); opacity: 0.3; }
+  50%  { opacity: 0.8; filter: blur(2px) brightness(2.2); }
+  to   { transform: translateX(110vw); opacity: 0.3; }
+}
+
+/* efecto extra: brillo intermitente sutil */
+@keyframes beamPulse {
+  0%,100% { filter: blur(2px) brightness(1.5); }
+  50%     { filter: blur(3px) brightness(2.5); }
+}
+
 
 /* Pausar líneas al leer (clase puesta por JS en scroll) */
 body.scrolled .beam { animation-play-state: paused; opacity: .06; transition:opacity .6s }
