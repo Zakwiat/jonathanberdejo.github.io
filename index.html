@@ -7,6 +7,13 @@
   <link rel="stylesheet" href="assets/main.css?v=neon-fixed" />
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700;900&display=swap" rel="stylesheet"/>
 </head>
+  <script>
+window.addEventListener('scroll',()=>{
+  const top = window.scrollY;
+  document.body.classList.toggle('scrolled', top > window.innerHeight*0.7);
+});
+</script>
+
 <body>
   <!-- Capa neón global (queda fija al hacer scroll) -->
   <div class="neon-bg" aria-hidden="true">
