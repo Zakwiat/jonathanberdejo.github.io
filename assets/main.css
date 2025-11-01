@@ -81,3 +81,23 @@ footer{text-align:center;padding:28px 0;color:#86a3b6;border-top:1px solid #0e22
   .section{padding:110px 6% 80px}
   nav a{margin-left:16px}
 }
+.waves{ position:absolute; inset:0; z-index:1; pointer-events:none; }
+.waves svg{
+  width:140%; height:64vh; position:absolute; top:18%; left:-20%;
+  filter: drop-shadow(0 0 16px rgba(0,234,255,.9))
+          drop-shadow(0 0 36px rgba(0,234,255,.6))
+          drop-shadow(0 0 72px rgba(0,234,255,.35));
+  opacity:.95;
+}
+.wave{ stroke:#00eaff; stroke-linecap:round; fill:none; filter:url(#neon-glow); }
+.w1{ stroke-width:10 } .w2{ stroke-width:8; opacity:.92 } .w3{ stroke-width:9; opacity:.88 }
+
+/* movimiento ida-vuelta (no hay salto) */
+.runner{
+  animation: slidePing 4.5s ease-in-out infinite alternate;
+}
+@keyframes slidePing{
+  from { transform: translateX(-7%); }
+  to   { transform: translateX(7%);  }
+}
+
