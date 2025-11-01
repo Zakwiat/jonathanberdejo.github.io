@@ -101,3 +101,64 @@ footer{text-align:center;padding:28px 0;color:#86a3b6;border-top:1px solid #0e22
   to   { transform: translateX(7%);  }
 }
 
+/* ===== RIBBON MODE: ondas anchas + franjas negras ===== */
+
+/* Fondo base muy oscuro */
+.hero{ position:relative; overflow:hidden; background:#000; }
+
+/* Franjas negras que cortan las cintas (encima de las ondas, debajo del texto) */
+.hero::before{
+  content:""; position:absolute; inset:0; z-index:2; pointer-events:none;
+  background:
+    repeating-linear-gradient(
+      to bottom,
+      rgba(0,0,0,0.95) 0 140px,   /* banda negra gruesa */
+      transparent 140px 220px    /* hueco donde se ve el ribbon */
+    );
+  filter: blur(6px);
+}
+
+/* Halo/viñeta sutil detrás de todo */
+.hero::after{
+  content:""; position:absolute; inset:0; z-index:0;
+  background: radial-gradient(1200px 600px at 20% 10%, rgba(0,234,255,.07), transparent 70%);
+}
+
+/* SVG de ondas (las “cintas”) */
+.waves{ position:absolute; inset:0; z-index:1; pointer-events:none; }
+.waves svg{
+  width: 150%;                 /* un poco más ancho para curvas grandes */
+  height: 90vh;                /* ocupa casi toda la portada */
+  position:absolute; top:-5vh; left:-25%;
+  filter:
+    drop-shadow(0 0 18px rgba(0,234,255,.85))
+    drop-shadow(0 0 48px rgba(0,234,255,.55))
+    drop-shadow(0 0 96px rgba(0,234,255,.35));
+  opacity:.95;
+}
+
+/* Trazos gruesos = cintas */
+.wave{
+  stroke:#00eaff; fill:none; stroke-linecap:round; stroke-linejoin:round;
+  filter:url(#neon-glow);
+}
+/* grosores “ribbon” + leves diferencias de opacidad */
+.w1{ stroke-width:170; opacity:.95; }
+.w2{ stroke-width:150; opacity:.90; }
+.w3{ stroke-width:170; opacity:.92; }
+
+/* Movimiento ping-pong (sin salto) */
+.runner{ animation:slideRibbon 5.5s ease-in-out infinite alternate; }
+@keyframes slideRibbon{
+  from{ transform: translateX(-10%); }
+  to  { transform: translateX( 10%); }
+}
+
+/* Texto por encima de todo */
+.hero-title,.hero-sub{ position:relative; z-index:3; }
+.hero-title{
+  text-shadow:
+    0 0 18px #00eaff,
+    0 0 48px #00eaff,
+    0 0 110px #00eaff;
+}
