@@ -16,13 +16,12 @@ html{scroll-behavior:smooth}
 }
 /* ===== Base ===== */
 body{font-family:'Poppins',system-ui,Segoe UI,Roboto,Arial,sans-serif;background:var(--bg);color:var(--txt);-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;}
-/* ===== Universe (ligero y no bloquea clics) ===== */
+/* ===== Universe (ligero) ===== */
 .neon-bg{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none;background:
   radial-gradient(1200px 600px at 50% 60%, rgba(0,234,255,.06), transparent 70%)}
 .stars{position:absolute;inset:0;pointer-events:none}
 .star{position:absolute;width:2px;height:2px;border-radius:50%;background:#fff;opacity:0;filter:drop-shadow(0 0 6px rgba(255,255,255,.6));animation:twinkle var(--tw,3.5s) ease-in-out infinite var(--td,0s);transform:scale(var(--sc,1))}
 @keyframes twinkle{0%,100%{opacity:0}10%{opacity:.9}50%{opacity:.3}90%{opacity:1}}
-/* ===== Thin tech lines (suaves y discretas) ===== */
 .neon-lines{position:absolute;inset:0;pointer-events:none}
 .beam{position:absolute;left:-60vw;width:80vw;height:4px;opacity:.22;filter:blur(1.5px) brightness(1.2);mix-blend-mode:screen;transform:translateX(-40vw);background:linear-gradient(90deg,transparent 0%, var(--neon) 40%, var(--neon) 60%, transparent 100%);animation:beamX var(--s,2.2s) linear infinite}
 .b1{top:22%;--s:1.8s}.b2{top:38%;--s:2.1s}.b3{top:54%;--s:2.4s}.b4{top:70%;--s:2.8s}.b5{top:86%;--s:3.2s}
@@ -38,8 +37,8 @@ body{font-family:'Poppins',system-ui,Segoe UI,Roboto,Arial,sans-serif;background
 .section h2{font-weight:800;letter-spacing:.02em;margin-bottom:14px;color:#eafcff;text-shadow:0 0 14px rgba(0,234,255,.6)}
 .grid{display:grid;gap:18px}
 .grid-2{grid-template-columns:repeat(2,minmax(0,1fr))}
-.badges{display:flex;flex-wrap:wrap;gap:10px;margin-top:8px}
-.badges span{border:1px solid var(--stroke);padding:6px 10px;border-radius:999px;font-size:.9rem;background:rgba(0,234,255,.06)}
+.badges{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}
+.badge{border:1px solid var(--stroke);padding:6px 10px;border-radius:999px;font-size:.9rem;background:rgba(0,234,255,.06)}
 .actions{display:flex;gap:12px;margin-top:16px;flex-wrap:wrap;align-items:center}
 .btn{border:1px solid var(--neon);border-radius:12px;padding:10px 14px;font-weight:700;color:#001a1f;background:linear-gradient(90deg,#00eaff,#8ff6ff);text-decoration:none;box-shadow:0 0 18px rgba(0,234,255,.35);cursor:pointer}
 .btn--ghost{background:transparent;color:#bfe7f1;border-color:var(--stroke)}
@@ -55,6 +54,16 @@ body{font-family:'Poppins',system-ui,Segoe UI,Roboto,Arial,sans-serif;background
 #langBox{position:fixed;top:20px;right:26px;z-index:7;background:rgba(0,0,0,.4);backdrop-filter: blur(6px);border:1px solid rgba(0,234,255,.25);border-radius:12px;padding:4px 8px;box-shadow:0 0 18px rgba(0,234,255,.25)}
 #langSwitcher{background:transparent;color:#00eaff;border:none;font-weight:700;font-size:.95rem;letter-spacing:.04em;cursor:pointer}
 #langSwitcher option{background:#000;color:#00eaff}
+/* ===== Accordion (Competencias) ===== */
+.acc{display:grid;gap:12px;margin-top:12px}
+.acc-item{border:1px solid rgba(0,234,255,.14);border-radius:14px;overflow:hidden;background:rgba(0,0,0,.12)}
+.acc-h{width:100%;text-align:left;background:transparent;border:none;color:#eafcff;padding:12px 16px;font-weight:700;display:flex;justify-content:space-between;align-items:center;cursor:pointer}
+.acc-h span{opacity:.8;font-weight:600}
+.acc-c{max-height:0;overflow:hidden;transition:max-height .28s ease}
+.acc-item.open .acc-c{max-height:500px}
+.acc-list{padding:8px 16px 16px 28px;opacity:.95;line-height:1.6}
+.acc-h .chev{transition:transform .25s ease}
+.acc-item.open .chev{transform:rotate(90deg)}
 /* ===== Modal Solicitar CV ===== */
 .modal{display:none}
 .modal.is-open{display:block}
@@ -91,11 +100,7 @@ body{font-family:'Poppins',system-ui,Segoe UI,Roboto,Arial,sans-serif;background
   <div class="neon-bg" aria-hidden="true">
     <div class="stars"></div>
     <div class="neon-lines">
-      <span class="beam b1"></span>
-      <span class="beam b2"></span>
-      <span class="beam b3"></span>
-      <span class="beam b4"></span>
-      <span class="beam b5"></span>
+      <span class="beam b1"></span><span class="beam b2"></span><span class="beam b3"></span><span class="beam b4"></span><span class="beam b5"></span>
     </div>
   </div>
 
@@ -104,6 +109,7 @@ body{font-family:'Poppins',system-ui,Segoe UI,Roboto,Arial,sans-serif;background
     <a href="#home"   data-link data-t="navHome">Inicio</a>
     <a href="#about"  data-link data-t="navAbout">Sobre mí</a>
     <a href="#work"   data-link data-t="navWork">Experiencia</a>
+    <a href="#skills" data-link data-t="navSkills">Competencias</a>
     <a href="#contact"data-link data-t="navContact">Contacto</a>
     <span class="hud-indicator" aria-hidden="true"></span>
   </nav>
@@ -116,23 +122,18 @@ body{font-family:'Poppins',system-ui,Segoe UI,Roboto,Arial,sans-serif;background
   <!-- Sobre mí -->
   <section id="about" class="section">
     <div class="container">
-      <div class="card grid grid-2">
-        <div>
-          <h2 data-t="aboutTitle">Sobre mí</h2>
-          <p data-t="aboutText">
-            El tiempo no se recupera, pero se puede usar mejor. Me mueven la curiosidad y la mejora continua: analizar, estructurar y convertir lo complejo en claro. Trabajo con método y criterio; disfruto optimizando procesos con tecnología, ofimática y una comunicación cuidada.
-          </p>
-          <div class="badges">
-            <span>Excel avanzado</span><span>Google Workspace</span><span>ERP / SAP (básico)</span>
-            <span>Data entry</span><span>Atención al cliente</span><span>Coordinación logística</span>
-          </div>
-        </div>
-       
+      <div class="card">
+        <h2 data-t="aboutTitle">Sobre mí</h2>
+        <p data-t="aboutText">
+          He aprendido que el tiempo solo vale cuando se usa bien. Me mueven la curiosidad y la mejora continua: analizar, estructurar y convertir lo complejo en claro. Trabajo con método y criterio; disfruto optimizando procesos con tecnología, ofimática y una comunicación cuidada.
+        </p>
+        <!-- Badges traducibles -->
+        <div class="badges" id="aboutBadges"></div>
       </div>
     </div>
   </section>
 
-  <!-- Experiencia / Servicios -->
+  <!-- Experiencia / Servicios + Qué aporto -->
   <section id="work" class="section">
     <div class="container">
       <div class="card">
@@ -153,6 +154,12 @@ body{font-family:'Poppins',system-ui,Segoe UI,Roboto,Arial,sans-serif;background
               <li>Reporting operativo y hojas de cálculo.</li>
               <li>Documentación de procesos y mejora continua.</li>
             </ul>
+            <h3 style="margin-top:14px" data-t="offerTitle">Qué puedo aportar</h3>
+            <ul data-t="offerList">
+              <li>Documentación clara y ordenada.</li>
+              <li>Optimización simple y medible de tareas.</li>
+              <li>Comunicación bilingüe con foco en claridad.</li>
+            </ul>
           </div>
         </div>
 
@@ -164,14 +171,19 @@ body{font-family:'Poppins',system-ui,Segoe UI,Roboto,Arial,sans-serif;background
       </div>
     </div>
   </section>
-   <div>
-          <h3 style="margin-bottom:10px" data-t="offerTitle">Qué puedo aportar</h3>
-          <ul style="opacity:.95;line-height:1.6" data-t="offerList">
-            <li>Soporte administrativo bilingüe y documentación clara.</li>
-            <li>Dashboards sencillos en Excel/Sheets y reporting.</li>
-            <li>Coordinación operativa y resolución de incidencias.</li>
-          </ul>
+
+  <!-- Competencias (Aptitudes) -->
+  <section id="skills" class="section">
+    <div class="container">
+      <div class="card">
+        <h2 data-t="skillsTitle">Competencias</h2>
+
+        <div class="acc" id="skillsAcc">
+          <!-- Se rellenará desde JS con categorías e items -->
         </div>
+      </div>
+    </div>
+  </section>
 
   <!-- Contacto -->
   <section id="contact" class="section">
@@ -217,7 +229,7 @@ body{font-family:'Poppins',system-ui,Segoe UI,Roboto,Arial,sans-serif;background
 /* ========== Año ========== */
 document.getElementById('year').textContent = new Date().getFullYear();
 
-/* ========== Estrellas ligeras ========== */
+/* ========== Estrellas ========== */
 (function(){
   const wrap = document.querySelector('.stars'); if(!wrap) return;
   const isMobile = matchMedia('(max-width: 900px)').matches; const N = isMobile ? 120 : 220;
@@ -247,7 +259,7 @@ document.getElementById('year').textContent = new Date().getFullYear();
   window.addEventListener('scroll',onScroll,{passive:true}); window.addEventListener('resize',onScroll); onScroll();
 })();
 
-/* ========== Modal Solicitar CV (registro local + mailto) ========== */
+/* ========== Modal Solicitar CV ========== */
 (function(){
   const btn=document.getElementById('requestCVBtn');
   const modal=document.getElementById('cvModal');
@@ -291,18 +303,13 @@ Gracias.`);
   });
 })();
 
-/* ========== Traducciones ES/EN (menú + bloques + botones) ========== */
+/* ========== Textos ES/EN ========== */
 const T = {
   es:{
-    navHome:"Inicio", navAbout:"Sobre mí", navWork:"Experiencia", navContact:"Contacto",
+    navHome:"Inicio", navAbout:"Sobre mí", navWork:"Experiencia", navSkills:"Competencias", navContact:"Contacto",
     aboutTitle:"Sobre mí",
     aboutText:"He aprendido que el tiempo solo vale cuando se usa bien. Me mueven la curiosidad y la mejora continua: analizar, estructurar y convertir lo complejo en claro. Trabajo con método y criterio; disfruto optimizando procesos con tecnología, ofimática y una comunicación cuidada.",
-    offerTitle:"Qué puedo aportar",
-    offerList:[
-      "Soporte administrativo bilingüe y documentación clara.",
-      "Dashboards sencillos en Excel/Sheets y reporting.",
-      "Coordinación operativa y resolución de incidencias."
-    ],
+    badges:["Excel avanzado","Google Workspace","ERP / SAP (básico)","Data entry","Atención al cliente","Coordinación logística"],
     workTitle:"Experiencia & Servicios",
     recentExp:"Experiencia reciente",
     expList:[
@@ -316,6 +323,55 @@ const T = {
       "Reporting operativo y hojas de cálculo.",
       "Documentación de procesos y mejora continua."
     ],
+    offerTitle:"Qué puedo aportar",
+    offerList:[
+      "Documentación clara y ordenada.",
+      "Optimización simple y medible de tareas.",
+      "Comunicación bilingüe con foco en claridad."
+    ],
+    skillsTitle:"Competencias",
+    skillsCats:[
+      {title:"🖥️ Ofimática y gestión digital", items:[
+        "Excel avanzado (tablas dinámicas, fórmulas, bases de datos, trazabilidad)",
+        "Google Workspace (Docs, Sheets, Drive, Calendar, Gmail profesional)",
+        "Microsoft Office (Word, PowerPoint, Outlook, Access)",
+        "Herramientas ERP / SAP (nivel básico)",
+        "Gestión documental digital y archivado estructurado",
+        "Redacción profesional y corrección de textos",
+        "Data entry con alta precisión y mecanografía de +100 WPM"
+      ]},
+      {title:"💼 Administración y soporte", items:[
+        "Organización y priorización de tareas",
+        "Elaboración de informes, facturas y documentos",
+        "Control de inventarios y seguimiento de pedidos",
+        "Gestión de agendas, calendarios y correos corporativos",
+        "Coordinación de reuniones y comunicación interna",
+        "Registro y actualización de bases de datos",
+        "Supervisión de procesos y control de calidad"
+      ]},
+      {title:"🌍 Trabajo remoto y comunicación", items:[
+        "Comunicación bilingüe español–inglés (C1 Cambridge)",
+        "Atención al cliente digital (chat, correo, videollamada)",
+        "Resolución de incidencias con claridad y empatía",
+        "Gestión del tiempo y autonomía en entornos online",
+        "Adaptación a distintos husos horarios y equipos internacionales",
+        "Herramientas colaborativas: Slack, Trello, Notion, Asana, Zoom, Meet"
+      ]},
+      {title:"⚙️ Tecnología y programación", items:[
+        "HTML, CSS y fundamentos de programación",
+        "Uso de CMS y diseño web básico (Canva, WordPress, GitHub Pages)",
+        "Conocimientos de bases de datos (MySQL, NoSQL)",
+        "Automatización de tareas simples y digitalización de procesos",
+        "Mantenimiento y actualización de sitios web"
+      ]},
+      {title:"🚚 Logística y coordinación", items:[
+        "Trazabilidad de pedidos y control de stock (DHL)",
+        "Coordinación logística y registro de incidencias",
+        "Control de calidad y reporte de errores",
+        "ERP logísticos y dispositivos Honeywell",
+        "Entorno de almacén y soporte administrativo"
+      ]}
+    ],
     contactTitle:"Contacto",
     contactText:"¿Colaboramos? Te respondo en el mismo día laboral.",
     btnTalk:"Hablemos", btnRequest:"Solicitar CV", btnEmail:"Enviar email", btnLinkedIn:"LinkedIn",
@@ -324,15 +380,10 @@ const T = {
     cvSend:"Enviar solicitud", cvCancel:"Cancelar"
   },
   en:{
-    navHome:"Home", navAbout:"About", navWork:"Experience", navContact:"Contact",
+    navHome:"Home", navAbout:"About", navWork:"Experience", navSkills:"Skills", navContact:"Contact",
     aboutTitle:"About me",
     aboutText:"I've learned that time only matters when used well. I'm driven by curiosity and improvement—analyzing, structuring, and turning complexity into clarity. I work methodically and enjoy optimizing processes through technology, office tools and clear communication.",
-    offerTitle:"What I bring",
-    offerList:[
-      "Bilingual admin support and clear documentation.",
-      "Simple dashboards in Excel/Sheets and reporting.",
-      "Operational coordination and incident resolution."
-    ],
+    badges:["Advanced Excel","Google Workspace","ERP / SAP (basic)","Data entry","Customer support","Logistics coordination"],
     workTitle:"Experience & Services",
     recentExp:"Recent experience",
     expList:[
@@ -346,6 +397,55 @@ const T = {
       "Operational reporting and spreadsheets.",
       "Process documentation and continuous improvement."
     ],
+    offerTitle:"What I bring",
+    offerList:[
+      "Clear, structured documentation.",
+      "Simple, measurable task optimization.",
+      "Bilingual communication with clarity focus."
+    ],
+    skillsTitle:"Skills",
+    skillsCats:[
+      {title:"🖥️ Office & digital management", items:[
+        "Advanced Excel (pivot tables, formulas, data models, traceability)",
+        "Google Workspace (Docs, Sheets, Drive, Calendar, professional Gmail)",
+        "Microsoft Office (Word, PowerPoint, Outlook, Access)",
+        "ERP / SAP tools (basic level)",
+        "Digital document management and structured filing",
+        "Professional writing and copy-editing",
+        "High-accuracy data entry and 100+ WPM typing"
+      ]},
+      {title:"💼 Administration & support", items:[
+        "Task organization and prioritization",
+        "Reports, invoices and document drafting",
+        "Inventory control and order tracking",
+        "Calendar, schedules and corporate email management",
+        "Meeting coordination and internal comms",
+        "Database recording and updates",
+        "Process supervision and quality control"
+      ]},
+      {title:"🌍 Remote work & communication", items:[
+        "Bilingual Spanish–English communication (C1 Cambridge)",
+        "Digital customer support (chat, email, video)",
+        "Incident resolution with clarity and empathy",
+        "Time management and autonomy in online environments",
+        "Adaptation to time zones and international teams",
+        "Collab tools: Slack, Trello, Notion, Asana, Zoom, Meet"
+      ]},
+      {title:"⚙️ Technology & programming", items:[
+        "HTML, CSS and programming fundamentals",
+        "CMS use and basic web design (Canva, WordPress, GitHub Pages)",
+        "Database knowledge (MySQL, NoSQL)",
+        "Simple task automation and process digitization",
+        "Maintenance and updates of personal/professional sites"
+      ]},
+      {title:"🚚 Logistics & coordination", items:[
+        "Order traceability and stock control (DHL)",
+        "Logistics coordination and incident logging",
+        "Quality control and error reporting",
+        "Logistics ERPs and Honeywell handhelds",
+        "Warehouse environment and admin support"
+      ]}
+    ],
     contactTitle:"Contact",
     contactText:"Let's collaborate! I usually reply the same business day.",
     btnTalk:"Let's talk", btnRequest:"Request CV", btnEmail:"Send email", btnLinkedIn:"LinkedIn",
@@ -355,7 +455,33 @@ const T = {
   }
 };
 
-const langSel = document.getElementById("langSwitcher");
+/* ========== Render helpers ========== */
+function renderBadges(arr){
+  const c = document.getElementById('aboutBadges');
+  c.innerHTML = arr.map(txt=>`<span class="badge">${txt}</span>`).join('');
+}
+function renderAccordion(cats){
+  const acc = document.getElementById('skillsAcc');
+  acc.innerHTML = cats.map((cat,i)=>`
+    <div class="acc-item${i<2?' open':''}">
+      <button class="acc-h" type="button">
+        <span>${cat.title}</span>
+        <span class="chev">›</span>
+      </button>
+      <div class="acc-c">
+        <ul class="acc-list">
+          ${cat.items.map(li=>`<li>${li}</li>`).join('')}
+        </ul>
+      </div>
+    </div>
+  `).join('');
+  // toggle
+  acc.querySelectorAll('.acc-h').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      btn.parentElement.classList.toggle('open');
+    });
+  });
+}
 function applyLang(lang){
   const t=T[lang]||T.es;
 
@@ -363,25 +489,34 @@ function applyLang(lang){
   document.querySelector('[data-t="navHome"]').textContent=t.navHome;
   document.querySelector('[data-t="navAbout"]').textContent=t.navAbout;
   document.querySelector('[data-t="navWork"]').textContent=t.navWork;
+  document.querySelector('[data-t="navSkills"]').textContent=t.navSkills;
   document.querySelector('[data-t="navContact"]').textContent=t.navContact;
 
-  // Titulares y párrafos
+  // Sobre mí
   document.querySelector('[data-t="aboutTitle"]').textContent=t.aboutTitle;
   document.querySelector('[data-t="aboutText"]').textContent=t.aboutText;
-  document.querySelector('[data-t="offerTitle"]').textContent=t.offerTitle;
+  renderBadges(t.badges);
+
+  // Experiencia/Servicios + Aporto
   document.querySelector('[data-t="workTitle"]').textContent=t.workTitle;
   document.querySelector('[data-t="recentExp"]').textContent=t.recentExp;
   document.querySelector('[data-t="services"]').textContent=t.services;
+  document.querySelector('[data-t="offerTitle"]').textContent=t.offerTitle;
+
+  const expUL = document.querySelector('[data-t="expList"]');
+  const svcUL = document.querySelector('[data-t="svcList"]');
+  const offUL = document.querySelector('[data-t="offerList"]');
+  expUL.innerHTML = t.expList.map(li=>`<li>${li}</li>`).join('');
+  svcUL.innerHTML = t.svcList.map(li=>`<li>${li}</li>`).join('');
+  offUL.innerHTML = t.offerList.map(li=>`<li>${li}</li>`).join('');
+
+  // Competencias (accordion)
+  document.querySelector('[data-t="skillsTitle"]').textContent=t.skillsTitle;
+  renderAccordion(t.skillsCats);
+
+  // Contacto
   document.querySelector('[data-t="contactTitle"]').textContent=t.contactTitle;
   document.querySelector('[data-t="contactText"]').textContent=t.contactText;
-
-  // Listas
-  const offerUL = document.querySelector('[data-t="offerList"]');
-  const expUL   = document.querySelector('[data-t="expList"]');
-  const svcUL   = document.querySelector('[data-t="svcList"]');
-  offerUL.innerHTML = t.offerList.map(li=>`<li>${li}</li>`).join('');
-  expUL.innerHTML   = t.expList.map(li=>`<li>${li}</li>`).join('');
-  svcUL.innerHTML   = t.svcList.map(li=>`<li>${li}</li>`).join('');
 
   // Botones
   document.querySelector('[data-t="btnTalk"]').textContent=t.btnTalk;
@@ -398,13 +533,15 @@ function applyLang(lang){
   document.querySelector('[data-t="cvSend"]').textContent=t.cvSend;
   document.querySelector('[data-t="cvCancel"]').textContent=t.cvCancel;
 
-  // Placeholder mínimos (no rompemos estilos)
+  // Placeholders
   document.querySelector('input[name="name"]').placeholder = (lang==='en'?'Your name':'Tu nombre');
   document.querySelector('input[name="email"]').placeholder = (lang==='en'?'you@example.com':'tucorreo@ejemplo.com');
   document.querySelector('textarea[name="msg"]').placeholder = (lang==='en'?'Target role or context':'Puesto objetivo o contexto');
 }
 applyLang('es');
-langSel.addEventListener("change",(e)=>applyLang(e.target.value));
+
+/* ========== Cambio de idioma ========== */
+document.getElementById("langSwitcher").addEventListener("change",(e)=>applyLang(e.target.value));
 </script>
 </body>
 </html>
