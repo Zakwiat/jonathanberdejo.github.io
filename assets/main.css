@@ -105,73 +105,81 @@ footer{text-align:center;padding:28px 0;background:var(--bg);border-top:1px soli
 }
 
 /* ==== HACES DE LUZ HORIZONTALES ==== */
-/* Fondo muy oscuro + viñeta sutil */
-.hero{
-  position:relative; overflow:hidden;
-  background:#02060a;
-}
-.hero::after{
-  content:""; position:absolute; inset:0;
-  background:
-    radial-gradient(1200px 600px at 20% 10%, rgba(0,255,255,.05), transparent 70%),
-    radial-gradient(circle at 50% 120%, rgba(0,0,0,.6), transparent 60%);
-  z-index:0;
+/* === FONDO HERO === */
+.hero {
+  position: relative;
+  overflow: hidden;
+  background: #000a14;
 }
 
-/* Contenedor de haces */
-.beams{ position:absolute; inset:0; pointer-events:none; z-index:1; }
-
-/* Capa externa: mueve el haz en X (velocidad) */
-.beam-mover{
-  position:absolute; left:-30vw; width:60vw; height:0;
-  animation: moveX 2.8s linear infinite;
+/* === CAPA DE RAYOS === */
+.energy {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
 }
 
-/* Capa interna: el haz (neón + ondulación + flicker) */
-.beam{
-  display:block; width:100%; height:6px;
-  background: linear-gradient(90deg, transparent 0%, rgba(0,255,255,1) 50%, transparent 100%);
-  filter: blur(1px) brightness(2.6) saturate(240%);
+/* === CADA RAYO (BEAM SÓLIDO Y BRILLANTE) === */
+.ray {
+  position: absolute;
+  left: -30vw;
+  width: 60vw;
+  height: 8px;
+  background: linear-gradient(90deg, #00ffff 0%, #00aaff 50%, #00ffff 100%);
   box-shadow:
-    0 0 18px rgba(0,255,255,.95),
-    0 0 48px rgba(0,255,255,.55),
-    0 0 96px rgba(0,255,255,.35);
+    0 0 15px #00ffff,
+    0 0 30px #00ffff,
+    0 0 60px #00ccff,
+    0 0 120px #0099ff;
+  filter: brightness(3) saturate(250%) blur(1px);
+  animation: shoot 2.2s linear infinite;
   mix-blend-mode: screen;
-  animation: waveY 1.1s ease-in-out infinite alternate, flicker 1.8s ease-in-out infinite;
-  opacity: .95;
+  opacity: 1;
 }
 
-/* Posiciones y timings (rápidos) */
-.m1{ top:38%; animation-duration:2.6s; }
-.m2{ top:56%; animation-duration:3.0s; animation-delay:.35s; }
-.m3{ top:74%; animation-duration:3.6s; animation-delay:.7s; }
-.m2 .beam{ height:4px; }
-.m3 .beam{ height:5px; }
+/* === VELOCIDAD Y POSICIÓN DE CADA RAYO === */
+.r1 { top: 35%; height: 8px; animation-delay: 0s; }
+.r2 { top: 55%; height: 6px; animation-delay: 0.6s; }
+.r3 { top: 75%; height: 7px; animation-delay: 1.2s; }
 
-/* Barrido izquierda → derecha */
-@keyframes moveX{
-  0%   { transform: translateX(-20vw); }
-  100% { transform: translateX(120vw); }
+/* === ANIMACIÓN DE BARRIDO === */
+@keyframes shoot {
+  0% {
+    transform: translateX(-100vw) skewY(0deg);
+  }
+  100% {
+    transform: translateX(200vw) skewY(0deg);
+  }
 }
 
-/* Ondulación vertical (seno aproximado) */
-@keyframes waveY{
-  0%   { transform: translateY(0) }
-  25%  { transform: translateY(-10px) }
-  50%  { transform: translateY(6px) }
-  75%  { transform: translateY(-6px) }
-  100% { transform: translateY(0) }
+/* === EFECTO ONDULACIÓN SUAVE (OPCIONAL, PUEDE QUITARSE) === */
+.ray::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.5) 50%, transparent 100%);
+  filter: blur(3px);
+  animation: wave 1.2s ease-in-out infinite alternate;
 }
 
-/* Pequeño parpadeo de neón */
-@keyframes flicker{
-  0%,100%{ filter: blur(1px) brightness(2.6) saturate(240%); opacity:.95 }
-  40%    { filter: blur(1px) brightness(3.0) saturate(260%); opacity:1 }
-  60%    { filter: blur(1px) brightness(2.3) saturate(220%); opacity:.9 }
+@keyframes wave {
+  0%   { transform: translateY(0px); }
+  50%  { transform: translateY(-8px); }
+  100% { transform: translateY(0px); }
 }
 
-/* Texto por encima y legible */
-.hero-title,.hero-sub{ position:relative; z-index:2 }
-.hero-title{
-  text-shadow: 0 0 12px rgba(0,255,255,1), 0 0 36px rgba(0,255,255,.8), 0 0 72px rgba(0,255,255,.5);
+/* === TEXTO ENCIMA === */
+.hero-title, .hero-sub {
+  position: relative;
+  z-index: 2;
+}
+
+.hero-title {
+  font-size: clamp(2.5rem, 8vw, 5rem);
+  color: #dffaff;
+  text-shadow:
+    0 0 15px #00ffff,
+    0 0 40px #00ffff,
+    0 0 80px #0099ff;
 }
