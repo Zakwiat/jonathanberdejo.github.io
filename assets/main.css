@@ -392,3 +392,12 @@ body.scrolled .comets{ opacity:.45; transition:opacity .4s }
 .modal__input:focus{ border-color:#00eaff; box-shadow:0 0 0 3px rgba(0,234,255,.15) }
 .modal__actions{ display:flex; gap:10px; justify-content:flex-end; margin-top:8px }
 
+.actions .btn,
+.actions .btn--ghost {
+  min-width: 160px;
+  text-align: center;
+  justify-content: center;
+  display: inline-flex;
+  align-items: center;
+}
+
