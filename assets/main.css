@@ -173,20 +173,34 @@ body.scrolled .beam { animation-play-state: paused; opacity: 0.05; transition:op
 
 
 /* =====⭐ Estrellas (parpadeo) ===== */
-.stars{ position:absolute; inset:0; z-index:0; }
+/* =====⭐ Estrellas visibles ===== */
+.stars{
+  position:absolute;
+  inset:0;
+  z-index:0;
+  pointer-events:none;
+  overflow:hidden;
+}
+
+/* cada estrella individual */
 .star{
-  position:absolute; width:2px; height:2px; border-radius:50%;
-  background:#fff; opacity:0;
-  filter: drop-shadow(0 0 6px rgba(255,255,255,.6));
-  animation: twinkle var(--tw,3.5s) ease-in-out infinite var(--td,0s);
-  transform: scale(var(--sc,1));
+  position:absolute;
+  width:2px; height:2px;
+  border-radius:50%;
+  background:#fff;
+  opacity:0;
+  filter:drop-shadow(0 0 6px rgba(255,255,255,.6));
+  animation:twinkle var(--tw,3.5s) ease-in-out infinite var(--td,0s);
+  transform:scale(var(--sc,1));
 }
+
 @keyframes twinkle{
-  0%,100%{ opacity:0 }
-  10%    { opacity:.95 }
-  50%    { opacity:.35 }
-  90%    { opacity:1 }
+  0%,100%{opacity:0}
+  10%{opacity:.9}
+  50%{opacity:.3}
+  90%{opacity:1}
 }
+
 
 /* =====🌋 Nebulosa roja (sutil) ===== */
 .nebula-red{
