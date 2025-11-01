@@ -1,240 +1,141 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Jonathan Berdejo</title>
-  <link rel="stylesheet" href="assets/main.css?v=neon" />
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700;900&display=swap" rel="stylesheet"/>
-</head>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  // Año en el footer
+  const y = document.getElementById('year');
+  if (y) y.textContent = new Date().getFullYear();
 
-<body>
-  <!-- 🌌 FONDO -->
-  <div class="neon-bg" aria-hidden="true">
-    <div class="stars"></div>
-    <div class="nebula-red"></div>
-    <div class="comets"></div>
-    <div class="neon-lines">
-      <span class="beam b1"></span>
-      <span class="beam b2"></span>
-      <span class="beam b3"></span>
-      <span class="beam b4"></span>
-      <span class="beam b5"></span>
-    </div>
-  </div>
+  // Pausar líneas al hacer scroll
+  window.addEventListener('scroll', () => {
+    document.body.classList.toggle('scrolled', window.scrollY > innerHeight * 0.7);
+  }, { passive:true });
 
-  <!-- HUD -->
-  <nav class="hud-nav" aria-label="Principal">
-    <a href="#home" data-link>Inicio</a>
-    <a href="#about" data-link>Sobre mí</a>
-    <a href="#work" data-link>Experiencia</a>
-    <a href="#contact" data-link>Contacto</a>
-    <span class="hud-indicator" aria-hidden="true"></span>
-  </nav>
+  // === ⭐ Estrellas ===
+  (function stars(){
+    const wrap = document.querySelector('.stars');
+    if (!wrap) return;
+    const N = matchMedia('(max-width:900px)').matches ? 80 : 160;
+    const frag = document.createDocumentFragment();
+    for (let i=0;i<N;i++){
+      const s = document.createElement('i');
+      s.className = 'star';
+      s.style.left = (Math.random()*100) + '%';
+      s.style.top  = (Math.random()*100) + '%';
+      s.style.setProperty('--sc', (0.6 + Math.random()*1.6).toFixed(2));
+      s.style.setProperty('--tw', (2.2 + Math.random()*4.2).toFixed(2) + 's');
+      s.style.setProperty('--td', (Math.random()*5).toFixed(2) + 's');
+      frag.appendChild(s);
+    }
+    wrap.appendChild(frag);
+  })();
 
-  <!-- HERO -->
-  <header id="home" class="hero">
-    <h1 class="title">JONATHAN BERDEJO</h1>
-  </header>
-
-  <!-- SOBRE MÍ -->
-  <section id="about" class="section">
-    <div class="container">
-      <div class="card grid grid-2">
-        <div>
-          <h2>Sobre mí</h2>
-          <p>
-            He aprendido que el tiempo solo vale cuando se usa bien. Por eso me muevo, avanzo y busco entender cada cosa que hago.
-            Soy una persona práctica, pero también observadora. Me gusta analizar, estructurar y encontrar la forma más clara de hacer las cosas.
-            Trabajo con método, pero también con curiosidad. En un mundo que gira entre pantallas, encuentro mi espacio en la tecnología, la música y la escritura.
-          </p>
-          <div class="badges">
-            <span>Excel avanzado</span><span>Google Workspace</span><span>ERP / SAP</span>
-            <span>Data entry</span><span>Atención al cliente</span><span>Coordinación logística</span>
-          </div>
-          <div class="actions">
-            <a class="btn" href="assets/Jonathan-Berdejo-CV.pdf" download>Descargar CV</a>
-            <a class="btn btn--ghost" href="mailto:berdejosanchez@gmail.com">berdejosanchez@gmail.com</a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- EXPERIENCIA -->
-  <section id="work" class="section">
-    <div class="container">
-      <div class="card">
-        <h2>Experiencia & Servicios</h2>
-        <div class="grid grid-2">
-          <div>
-            <h3>Lo que he hecho</h3>
-            <ul>
-              <li>Logística y control de calidad en entornos internacionales.</li>
-              <li>Gestión documental, registro y trazabilidad en ERP / Excel.</li>
-              <li>Soporte administrativo y atención al cliente bilingüe.</li>
-              <li>Coordinación y reporting de procesos.</li>
-            </ul>
-          </div>
-          <div>
-            <h3>Lo que ofrezco</h3>
-            <ul>
-              <li>Soporte remoto y <strong>data entry</strong> bilingüe.</li>
-              <li>Dashboards y automatizaciones en hojas de cálculo.</li>
-              <li>Documentación de procesos y mejora continua.</li>
-            </ul>
-          </div>
-        </div>
-        <div class="actions" style="margin-top:18px">
-          <a class="btn" href="#contact">Hablemos</a>
-          <a class="btn btn--ghost" href="https://www.linkedin.com/in/" target="_blank">LinkedIn</a>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- CONTACTO -->
-  <section id="contact" class="section">
-    <div class="container">
-      <div class="card">
-        <h2>Contacto</h2>
-        <p>¿Colaboramos? Escríbeme y te contesto en el mismo día laboral.</p>
-        <div class="actions">
-          <a class="btn" href="mailto:berdejosanchez@gmail.com?subject=Colaboración%20-%20Jonathan%20Berdejo">Enviar email</a>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- FOOTER -->
-  <footer class="footer">© <span id="year"></span> Jonathan Berdejo</footer>
-
-  <!-- 🚀 SCRIPT FINAL -->
-  <script>
-    // Año dinámico
-    document.getElementById('year').textContent = new Date().getFullYear();
-
-    // Pausa de líneas al hacer scroll
-    window.addEventListener('scroll', () => {
-      document.body.classList.toggle('scrolled', window.scrollY > innerHeight * 0.7);
+  // === 💡 HUD spotlight ===
+  (function hudSpotlight(){
+    const hud = document.querySelector('.hud-nav');
+    if (!hud) return;
+    hud.addEventListener('mousemove', (e) => {
+      const r = hud.getBoundingClientRect();
+      hud.style.setProperty('--mx', (e.clientX - r.left) + 'px');
+      hud.style.setProperty('--my', (e.clientY - r.top) + 'px');
     });
+    hud.addEventListener('mouseleave', () => {
+      hud.style.removeProperty('--mx');
+      hud.style.removeProperty('--my');
+    });
+  })();
 
-    // === ⭐ Estrellas ===
-    (function(){
-      const wrap = document.querySelector('.stars');
-      if(!wrap) return;
-      const N = matchMedia('(max-width:900px)').matches ? 80 : 160;
-      const frag = document.createDocumentFragment();
-      for(let i=0;i<N;i++){
-        const s = document.createElement('i');
-        s.className = 'star';
-        s.style.left = Math.random()*100 + '%';
-        s.style.top  = Math.random()*100 + '%';
-        s.style.setProperty('--sc',(0.6+Math.random()*1.6).toFixed(2));
-        s.style.setProperty('--tw',(2.2+Math.random()*4.2).toFixed(2)+'s');
-        s.style.setProperty('--td',(Math.random()*5).toFixed(2)+'s');
-        frag.appendChild(s);
-      }
-      wrap.appendChild(frag);
-    })();
+  // === 🔹 Indicador de sección activa ===
+  (function hudActive(){
+    const links = [...document.querySelectorAll('.hud-nav a[data-link]')];
+    const ind   = document.querySelector('.hud-indicator');
+    if (!links.length || !ind) return;
 
-    // === 💫 HUD dinámico ===
-    (function(){
-      const hud = document.querySelector('.hud-nav');
-      if(!hud) return;
-      hud.addEventListener('mousemove', e=>{
-        const r = hud.getBoundingClientRect();
-        hud.style.setProperty('--mx', e.clientX - r.left + 'px');
-        hud.style.setProperty('--my', e.clientY - r.top + 'px');
-      });
-      hud.addEventListener('mouseleave', ()=> {
-        hud.style.removeProperty('--mx');
-        hud.style.removeProperty('--my');
-      });
-    })();
+    const secs = links
+      .map(a => document.querySelector(a.getAttribute('href')))
+      .filter(Boolean);
 
-    // === 🔹 Indicador de sección activa ===
-    (function(){
-      const links = [...document.querySelectorAll('.hud-nav a[data-link]')];
-      const ind = document.querySelector('.hud-indicator');
-      if(!links.length || !ind) return;
+    function setActive(hash){
+      links.forEach(a => a.classList.toggle('active', a.getAttribute('href') === hash));
+      const active = links.find(a => a.classList.contains('active')) || links[0];
+      const r = active.getBoundingClientRect();
+      const navR = active.parentElement.getBoundingClientRect();
+      ind.style.setProperty('--indX', (r.left - navR.left + 8) + 'px');
+      ind.style.setProperty('--indW', (r.width - 16) + 'px');
+    }
 
-      const sections = links.map(a => document.querySelector(a.getAttribute('href'))).filter(Boolean);
-
-      function setActive(hash){
-        links.forEach(a => a.classList.toggle('active', a.getAttribute('href') === hash));
-        const active = links.find(a => a.classList.contains('active')) || links[0];
-        const r = active.getBoundingClientRect();
-        const navR = active.parentElement.getBoundingClientRect();
-        ind.style.setProperty('--indX', (r.left - navR.left + 8) + 'px');
-        ind.style.setProperty('--indW', (r.width - 16) + 'px');
-      }
-
-      function onScroll(){
-        let cur = '#home';
-        for (const sec of sections){
-          const rect = sec.getBoundingClientRect();
-          if(rect.top <= innerHeight*0.38 && rect.bottom >= innerHeight*0.38){
-            cur = '#'+sec.id; break;
-          }
+    function onScroll(){
+      let cur = '#home';
+      for (const sec of secs){
+        const rect = sec.getBoundingClientRect();
+        if (rect.top <= innerHeight*0.38 && rect.bottom >= innerHeight*0.38){
+          cur = '#' + sec.id; break;
         }
-        setActive(cur);
+      }
+      setActive(cur);
+    }
+
+    window.addEventListener('scroll', onScroll, { passive:true });
+    window.addEventListener('resize', onScroll);
+    links.forEach(a => a.addEventListener('click', () => setActive(a.getAttribute('href'))));
+    onScroll();
+  })();
+
+  // === ☄️ Cometas ===
+  (function comets(){
+    const layer = document.querySelector('.comets');
+    if (!layer) return;
+
+    let active = 0;
+    let maxActive = matchMedia('(max-width:900px)').matches ? 2 : 5;
+
+    function spawn(delayMs = 0){
+      if (active >= maxActive) return;
+      const el = document.createElement('i');
+      el.className = 'comet';
+
+      const startX = 8 + Math.random()*84;                    // 8–92 vw
+      const driftX = (-10 - Math.random()*22).toFixed(2) + 'vw'; // -10 a -32 vw
+      const angle  = (12 + Math.random()*12).toFixed(2) + 'deg';
+      const dur    = (2.4 + Math.random()*2.4).toFixed(2) + 's';
+      const size   = (7 + Math.random()*10).toFixed(1) + 'px';
+      const tail   = (170 + Math.random()*180).toFixed(0) + 'px';
+      const hue    = (12 + Math.random()*18).toFixed(0);
+      const lum    = (50 + Math.random()*10).toFixed(0) + '%';
+
+      el.style.setProperty('--startX', startX.toFixed(2));
+      el.style.setProperty('--driftX', driftX);
+      el.style.setProperty('--angle',  angle);
+      el.style.setProperty('--dur',    dur);
+      el.style.setProperty('--size',   size);
+      el.style.setProperty('--tail',   tail);
+      el.style.setProperty('--hue',    hue);
+      el.style.setProperty('--lum',    lum);
+
+      // 25% más grandes/brillantes
+      if (Math.random() < 0.25){
+        el.style.setProperty('--size', (parseFloat(size)*1.4) + 'px');
+        el.style.setProperty('--tail', (parseFloat(tail)*1.5) + 'px');
       }
 
-      window.addEventListener('scroll', onScroll, {passive:true});
-      window.addEventListener('resize', onScroll);
-      onScroll();
-    })();
+      if (delayMs) el.style.animationDelay = delayMs + 'ms';
 
-    // === ☄️ COMETAS ===
-    (function(){
-      const layer = document.querySelector('.comets');
-      if(!layer) return;
-      let maxActive = matchMedia('(max-width:900px)').matches ? 2 : 5;
-      let active = 0;
+      layer.appendChild(el);
+      active++;
+      el.addEventListener('animationend', () => { el.remove(); active--; }, { once:true });
+    }
 
-      function spawn(delay=0){
-        if(active >= maxActive) return;
-        const c = document.createElement('i');
-        c.className = 'comet';
-        const startX = 8 + Math.random()*84;
-        const driftX = (-10 - Math.random()*22).toFixed(2)+'vw';
-        const angle  = (12 + Math.random()*12).toFixed(2)+'deg';
-        const dur    = (2.4 + Math.random()*2.4).toFixed(2)+'s';
-        const size   = (7 + Math.random()*10).toFixed(1)+'px';
-        const tail   = (170 + Math.random()*180).toFixed(0)+'px';
-        const hue    = (12 + Math.random()*18).toFixed(0);
-        const lum    = (50 + Math.random()*10).toFixed(0)+'%';
-        c.style.setProperty('--startX',startX.toFixed(2));
-        c.style.setProperty('--driftX',driftX);
-        c.style.setProperty('--angle',angle);
-        c.style.setProperty('--dur',dur);
-        c.style.setProperty('--size',size);
-        c.style.setProperty('--tail',tail);
-        c.style.setProperty('--hue',hue);
-        c.style.setProperty('--lum',lum);
-        if(Math.random()<0.25){
-          c.style.setProperty('--size',(parseFloat(size)*1.4)+'px');
-          c.style.setProperty('--tail',(parseFloat(tail)*1.5)+'px');
-        }
-        if(delay)c.style.animationDelay=delay+'ms';
-        layer.appendChild(c);
-        active++;
-        c.addEventListener('animationend',()=>{c.remove();active--;},{once:true});
-      }
+    function loop(){
+      setTimeout(() => { spawn(); loop(); }, 2000 + Math.random()*2000);
+    }
+    function bursts(){
+      setInterval(() => {
+        const n = 3 + Math.floor(Math.random()*4); // 3–6
+        for (let i=0;i<n;i++) spawn(i*200);
+      }, 18000);
+    }
 
-      function loop(){setTimeout(()=>{spawn();loop();},2000+Math.random()*2000);}
-      function bursts(){
-        setInterval(()=>{
-          const n=3+Math.floor(Math.random()*4);
-          for(let i=0;i<n;i++) spawn(i*200);
-        },18000);
-      }
-
-      spawn();
-      loop();
-      bursts();
-    })();
-  </script>
-</body>
-</html>
+    spawn();
+    loop();
+    bursts();
+  })();
+});
+</script>
