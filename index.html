@@ -4,277 +4,232 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Jonathan Berdejo</title>
-
-<!-- Fuentes (carga rápida) -->
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700;900&display=swap" rel="stylesheet">
-
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700;900&display=swap" rel="stylesheet"/>
 <style>
-/* ======================== RESET & VARS ======================== */
+/* ===== Reset & Vars ===== */
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%}
 html{scroll-behavior:smooth}
 :root{
-  --neon:#00eaff; --bg:#000; --txt:#eaf6ff; --stroke:rgba(0,234,255,.18);
-  --bpm:72; --beat:calc(60s/var(--bpm));
+  --bpm:72; --beat: calc(60s/var(--bpm));
+  --neon:#00eaff; --bg:#000; --txt:#eaf6ff; --stroke: rgba(0,234,255,.18);
 }
-
-/* ======================== BASE ======================== */
-body{
-  font-family:'Poppins',system-ui,Segoe UI,Roboto,Arial,sans-serif;
-  background:var(--bg); color:var(--txt);
-  -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
-}
-
-/* ======================== BACKGROUND LAYERS ======================== */
-.neon-bg{position:fixed; inset:0; z-index:0; overflow:hidden; pointer-events:none;}
-.neon-bg::before{
-  content:""; position:absolute; inset:-12%;
-  background:
-    radial-gradient(1200px 600px at 50% 60%, rgba(0,234,255,.05), transparent 70%),
-    radial-gradient(900px 480px at 15% 15%, rgba(0,234,255,.05), transparent 70%),
-    radial-gradient(900px 480px at 85% 85%, rgba(0,234,255,.03), transparent 70%);
-  filter: saturate(120%);
-}
-.stars,.comets{position:absolute; inset:0; pointer-events:none}
-.tech-rays{position:absolute; inset:0; pointer-events:none; z-index:2;} /* canvas */
-
-/* ======================== CONTENT ABOVE BG ======================== */
-.hero,.section,.hud-nav,.footer,.modal{position:relative; z-index:5}
-.hero{min-height:100vh; display:grid; place-items:center; text-align:center}
-.title{
-  font-weight:900; letter-spacing:.04em; font-size:clamp(2.8rem,9vw,6.4rem); color:#e8fdff;
-  text-shadow:0 0 18px var(--neon),0 0 48px var(--neon),0 0 120px var(--neon);
-  animation:titleBeat var(--beat) ease-in-out infinite;
-}
+/* ===== Base ===== */
+body{font-family:'Poppins',system-ui,Segoe UI,Roboto,Arial,sans-serif;background:var(--bg);color:var(--txt);-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;}
+/* ===== Universe (ligero y no bloquea clics) ===== */
+.neon-bg{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none;background:
+  radial-gradient(1200px 600px at 50% 60%, rgba(0,234,255,.06), transparent 70%)}
+.stars{position:absolute;inset:0;pointer-events:none}
+.star{position:absolute;width:2px;height:2px;border-radius:50%;background:#fff;opacity:0;filter:drop-shadow(0 0 6px rgba(255,255,255,.6));animation:twinkle var(--tw,3.5s) ease-in-out infinite var(--td,0s);transform:scale(var(--sc,1))}
+@keyframes twinkle{0%,100%{opacity:0}10%{opacity:.9}50%{opacity:.3}90%{opacity:1}}
+/* ===== Thin tech lines (suaves y discretas) ===== */
+.neon-lines{position:absolute;inset:0;pointer-events:none}
+.beam{position:absolute;left:-60vw;width:80vw;height:4px;opacity:.22;filter:blur(1.5px) brightness(1.2);mix-blend-mode:screen;transform:translateX(-40vw);background:linear-gradient(90deg,transparent 0%, var(--neon) 40%, var(--neon) 60%, transparent 100%);animation:beamX var(--s,2.2s) linear infinite}
+.b1{top:22%;--s:1.8s}.b2{top:38%;--s:2.1s}.b3{top:54%;--s:2.4s}.b4{top:70%;--s:2.8s}.b5{top:86%;--s:3.2s}
+@keyframes beamX{from{transform:translateX(-40vw)}to{transform:translateX(120vw)}}
+/* ===== Content on top ===== */
+.nav,.hero,.section,.footer,.hud-nav,.modal{position:relative;z-index:5}
+.hero{min-height:100vh;display:grid;place-items:center;text-align:center}
+.title{font-weight:900;letter-spacing:.04em;font-size:clamp(2.8rem,9vw,6.4rem);color:#e8fdff;text-shadow:0 0 18px var(--neon),0 0 48px var(--neon),0 0 120px var(--neon);animation:titleBeat var(--beat) ease-in-out infinite}
 @keyframes titleBeat{0%{transform:scale(1)}8%{transform:scale(1.015)}18%{transform:scale(1.009)}26%,100%{transform:scale(1)}}
-
 .section{padding:96px 20px}
-.container{max-width:1100px; margin:0 auto}
-.card{
-  background:rgba(0,0,0,.08); border:1px solid rgba(0,234,255,.18); border-radius:18px; padding:24px;
-  box-shadow:0 8px 30px rgba(0,0,0,.25);
-}
-.section h2{font-weight:800; letter-spacing:.02em; margin-bottom:14px; color:#eafcff; text-shadow:0 0 14px rgba(0,234,255,.6)}
-.grid{display:grid; gap:18px}
+.container{max-width:1100px;margin:0 auto}
+.card{background:rgba(0,0,0,.08);border:1px solid rgba(0,234,255,0.18);border-radius:18px;padding:24px;box-shadow:0 8px 30px rgba(0,0,0,.25)}
+.section h2{font-weight:800;letter-spacing:.02em;margin-bottom:14px;color:#eafcff;text-shadow:0 0 14px rgba(0,234,255,.6)}
+.grid{display:grid;gap:18px}
 .grid-2{grid-template-columns:repeat(2,minmax(0,1fr))}
-.badges{display:flex; flex-wrap:wrap; gap:10px; margin-top:8px}
-.badges span{border:1px solid var(--stroke); padding:6px 10px; border-radius:999px; font-size:.9rem; background:rgba(0,234,255,.06)}
-
-.actions{display:flex; flex-wrap:wrap; gap:12px; margin-top:16px}
-.btn{
-  border:1px solid var(--neon); border-radius:12px; padding:10px 18px; font-weight:700;
-  color:#001a1f; background:linear-gradient(90deg,#00eaff,#8ff6ff);
-  text-decoration:none; box-shadow:0 0 18px rgba(0,234,255,.35); cursor:pointer; min-width:160px; text-align:center;
-}
-.btn--ghost{background:transparent; color:#bfe7f1; border-color:var(--stroke)}
-
-/* ======================== HUD NAV ======================== */
-.hud-nav{
-  position:fixed; bottom:22px; left:50%; transform:translateX(-50%);
-  z-index:6; display:flex; gap:18px; padding:10px 14px;
-  background:rgba(0,0,0,.35);
-  backdrop-filter: blur(10px) saturate(120%); -webkit-backdrop-filter: blur(10px) saturate(120%);
-  border:1px solid rgba(0,234,255,.22); border-radius:999px;
-  box-shadow:0 0 24px rgba(0,234,255,.18), inset 0 0 10px rgba(0,234,255,.08); isolation:isolate;
-}
-.hud-nav a{position:relative; z-index:1; color:#c9faff; text-decoration:none; font-weight:700; letter-spacing:.02em; padding:8px 12px; border-radius:10px; transition:.2s}
-.hud-nav a:hover{color:#001a1f; background:linear-gradient(90deg,#00eaff,#8ff6ff); text-shadow:0 0 12px #00eaff}
-.hud-nav a.active{color:#eaffff; text-shadow:0 0 10px #00eaff, 0 0 24px #00eaff}
-.hud-indicator{
-  position:absolute; left:0; bottom:6px; height:2px; border-radius:2px; width:var(--indW,40px); transform:translateX(var(--indX,0));
-  background:linear-gradient(90deg,transparent,#00eaff,transparent); box-shadow:0 0 14px #00eaff; transition:.25s
-}
-
-/* ======================== LANGUAGE SWITCHER ======================== */
-#langBox{
-  position:fixed; top:18px; right:22px; z-index:10;
-  background:rgba(0,0,0,.4); border:1px solid rgba(0,234,255,.25); border-radius:12px; padding:4px 8px;
-  backdrop-filter: blur(6px); box-shadow:0 0 18px rgba(0,234,255,.25);
-}
-#langSwitcher{background:transparent; color:#00eaff; border:none; font-weight:700; font-size:.95rem; letter-spacing:.04em; cursor:pointer}
-#langSwitcher option{background:#000; color:#00eaff}
-
-/* ======================== MODAL CV ======================== */
+.badges{display:flex;flex-wrap:wrap;gap:10px;margin-top:8px}
+.badges span{border:1px solid var(--stroke);padding:6px 10px;border-radius:999px;font-size:.9rem;background:rgba(0,234,255,.06)}
+.actions{display:flex;gap:12px;margin-top:16px;flex-wrap:wrap;align-items:center}
+.btn{border:1px solid var(--neon);border-radius:12px;padding:10px 14px;font-weight:700;color:#001a1f;background:linear-gradient(90deg,#00eaff,#8ff6ff);text-decoration:none;box-shadow:0 0 18px rgba(0,234,255,.35);cursor:pointer}
+.btn--ghost{background:transparent;color:#bfe7f1;border-color:var(--stroke)}
+.footer{padding:40px 20px;color:#a9d7e5;text-align:center;border-top:1px solid var(--stroke)}
+/* ===== HUD Nav ===== */
+.hud-nav{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);z-index:6;display:flex;gap:18px;padding:10px 14px;background:rgba(0,0,0,.35);
+  backdrop-filter: blur(10px) saturate(120%);-webkit-backdrop-filter: blur(10px) saturate(120%);border:1px solid rgba(0,234,255,.22);border-radius:999px;box-shadow:0 0 24px rgba(0,234,255,.18), inset 0 0 10px rgba(0,234,255,.08)}
+.hud-nav a{position:relative;color:#c9faff;text-decoration:none;font-weight:700;letter-spacing:.02em;padding:8px 12px;border-radius:10px;transition: color .2s ease, background .2s ease, text-shadow .2s ease}
+.hud-nav a:hover{color:#001a1f;background:linear-gradient(90deg,#00eaff,#8ff6ff);text-shadow:0 0 12px #00eaff}
+.hud-nav a.active{color:#eaffff;text-shadow:0 0 10px #00eaff, 0 0 24px #00eaff}
+.hud-indicator{position:absolute;left:0;bottom:6px;height:2px;border-radius:2px;width:var(--indW,40px);transform:translateX(var(--indX,0));background:linear-gradient(90deg,transparent,#00eaff,transparent);box-shadow:0 0 14px #00eaff;transition: transform .25s ease, width .25s ease}
+/* ===== Selector idioma ===== */
+#langBox{position:fixed;top:20px;right:26px;z-index:7;background:rgba(0,0,0,.4);backdrop-filter: blur(6px);border:1px solid rgba(0,234,255,.25);border-radius:12px;padding:4px 8px;box-shadow:0 0 18px rgba(0,234,255,.25)}
+#langSwitcher{background:transparent;color:#00eaff;border:none;font-weight:700;font-size:.95rem;letter-spacing:.04em;cursor:pointer}
+#langSwitcher option{background:#000;color:#00eaff}
+/* ===== Modal Solicitar CV ===== */
 .modal{display:none}
 .modal.is-open{display:block}
-.modal__backdrop{position:fixed; inset:0; background:rgba(0,0,0,.6); backdrop-filter:blur(4px)}
-.modal__panel{
-  position:fixed; left:50%; top:50%; transform:translate(-50%,-50%); width:min(560px,92vw);
-  background:rgba(0,0,0,.6); border:1px solid rgba(0,234,255,.22); border-radius:18px; padding:22px;
-  box-shadow:0 12px 40px rgba(0,0,0,.5), 0 0 24px rgba(0,234,255,.18) inset
-}
-.modal__title{margin-bottom:8px; text-shadow:0 0 12px rgba(0,234,255,.5)}
-.modal__text{opacity:.85; margin-bottom:14px}
-.modal__form{display:grid; gap:12px}
-.modal__label{display:grid; gap:6px; font-weight:600}
-.modal__input{background:rgba(0,0,0,.35); color:var(--txt); border:1px solid var(--stroke); border-radius:12px; padding:10px 12px; outline:none}
-.modal__input:focus{border-color:#00eaff; box-shadow:0 0 0 3px rgba(0,234,255,.15)}
-.modal__actions{display:flex; gap:10px; justify-content:flex-end; margin-top:8px}
-
-/* ======================== RESPONSIVE ======================== */
+.modal__backdrop{position:fixed;inset:0;background:rgba(0,0,0,.6);backdrop-filter:blur(4px)}
+.modal__panel{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);width:min(560px,92vw);
+  background:rgba(0,0,0,.6);border:1px solid rgba(0,234,255,.22);border-radius:18px;padding:22px;box-shadow:0 12px 40px rgba(0,0,0,.5), 0 0 24px rgba(0,234,255,.18) inset}
+.modal__title{margin-bottom:8px;text-shadow:0 0 12px rgba(0,234,255,.5)}
+.modal__text{opacity:.85;margin-bottom:14px}
+.modal__form{display:grid;gap:12px}
+.modal__label{display:grid;gap:6px;font-weight:600}
+.modal__input{background:rgba(0,0,0,.35);color:var(--txt);border:1px solid var(--stroke);border-radius:12px;padding:10px 12px;outline:none;box-shadow: inset 0 0 12px rgba(0,234,255,.05)}
+.modal__input:focus{border-color:#00eaff;box-shadow:0 0 0 3px rgba(0,234,255,.15)}
+.modal__actions{display:flex;gap:10px;justify-content:flex-end;margin-top:8px}
+/* ===== Responsive ===== */
 @media (max-width:900px){
   .grid-2{grid-template-columns:1fr}
-  .hud-nav{gap:8px; padding:8px 10px; bottom:16px}
-  .hud-nav a{padding:8px 10px; font-weight:600}
+  .hud-nav{gap:8px;padding:8px 10px;bottom:16px}
+  .hud-nav a{padding:8px 10px;font-weight:600}
+  .beam{width:90vw;left:-65vw}
 }
+@media (prefers-reduced-motion: reduce){.beam,.title,.star{animation:none !important}}
 </style>
 </head>
 <body>
-<!-- Idioma -->
-<div id="langBox">
-  <select id="langSwitcher" aria-label="Idioma">
-    <option value="es" selected>ES</option>
-    <option value="en">EN</option>
-  </select>
-</div>
+  <!-- Selector de idioma -->
+  <div id="langBox">
+    <select id="langSwitcher" aria-label="Idioma">
+      <option value="es" selected>ES</option>
+      <option value="en">EN</option>
+    </select>
+  </div>
 
-<!-- BACKGROUND -->
-<div class="neon-bg" aria-hidden="true">
-  <div class="stars"></div>
-  <div class="comets"></div>
-  <canvas id="techRays" class="tech-rays"></canvas>
-</div>
-
-<!-- NAV HUD -->
-<nav class="hud-nav" aria-label="Principal">
-  <a href="#home" data-link>Inicio</a>
-  <a href="#about" data-link>Sobre mí</a>
-  <a href="#work" data-link>Experiencia</a>
-  <a href="#contact" data-link>Contacto</a>
-  <span class="hud-indicator" aria-hidden="true"></span>
-</nav>
-
-<!-- HERO -->
-<header id="home" class="hero">
-  <h1 class="title">JONATHAN BERDEJO</h1>
-</header>
-
-<!-- ABOUT -->
-<section id="about" class="section">
-  <div class="container">
-    <div class="card grid grid-2">
-      <div>
-        <h2 data-t="aboutTitle">Sobre mí</h2>
-        <p data-t="aboutText">
-          He aprendido que el tiempo solo vale cuando se usa bien. Me mueven la curiosidad y la mejora continua:
-          analizar, estructurar y convertir lo complejo en claro. Trabajo con método y criterio; disfruto optimizando
-          procesos con tecnología, ofimática y una comunicación cuidada.
-        </p>
-        <div class="badges">
-          <span>Excel avanzado</span><span>Google Workspace</span><span>ERP / SAP (básico)</span>
-          <span>Data entry</span><span>Atención al cliente</span><span>Coordinación logística</span>
-        </div>
-      </div>
-     
+  <!-- Fondo -->
+  <div class="neon-bg" aria-hidden="true">
+    <div class="stars"></div>
+    <div class="neon-lines">
+      <span class="beam b1"></span>
+      <span class="beam b2"></span>
+      <span class="beam b3"></span>
+      <span class="beam b4"></span>
+      <span class="beam b5"></span>
     </div>
   </div>
-</section>
 
-<!-- WORK -->
-<section id="work" class="section">
-  <div class="container">
-    <div class="card">
-      <h2 data-t="workTitle">Experiencia & Servicios</h2>
-      <div class="grid grid-2">
+  <!-- HUD -->
+  <nav class="hud-nav" aria-label="Principal">
+    <a href="#home"   data-link data-t="navHome">Inicio</a>
+    <a href="#about"  data-link data-t="navAbout">Sobre mí</a>
+    <a href="#work"   data-link data-t="navWork">Experiencia</a>
+    <a href="#contact"data-link data-t="navContact">Contacto</a>
+    <span class="hud-indicator" aria-hidden="true"></span>
+  </nav>
+
+  <!-- Hero -->
+  <header id="home" class="hero">
+    <h1 class="title">JONATHAN BERDEJO</h1>
+  </header>
+
+  <!-- Sobre mí -->
+  <section id="about" class="section">
+    <div class="container">
+      <div class="card grid grid-2">
         <div>
-          <h3 data-t="recentExp">Experiencia reciente</h3>
-          <ul>
-            <li>Logística y calidad (DHL): recepción, control de stock y trazabilidad.</li>
-            <li>Gestión de incidencias y registro en Excel / ERP (entornos Honeywell).</li>
-            <li>Soporte administrativo: documentación, correo bilingüe, agendas.</li>
-          </ul>
+          <h2 data-t="aboutTitle">Sobre mí</h2>
+          <p data-t="aboutText">
+            He aprendido que el tiempo solo vale cuando se usa bien. Me mueven la curiosidad y la mejora continua: analizar, estructurar y convertir lo complejo en claro. Trabajo con método y criterio; disfruto optimizando procesos con tecnología, ofimática y una comunicación cuidada.
+          </p>
+          <div class="badges">
+            <span>Excel avanzado</span><span>Google Workspace</span><span>ERP / SAP (básico)</span>
+            <span>Data entry</span><span>Atención al cliente</span><span>Coordinación logística</span>
+          </div>
         </div>
         <div>
-          <h3 data-t="services">Servicios</h3>
-          <ul>
-            <li>Data entry y soporte administrativo remoto.</li>
-            <li>Reporting operativo y hojas de cálculo.</li>
-            <li>Documentación de procesos y mejora continua.</li>
+          <h3 style="margin-bottom:10px" data-t="offerTitle">Qué puedo aportar</h3>
+          <ul style="opacity:.95;line-height:1.6" data-t="offerList">
+            <li>Soporte administrativo bilingüe y documentación clara.</li>
+            <li>Dashboards sencillos en Excel/Sheets y reporting.</li>
+            <li>Coordinación operativa y resolución de incidencias.</li>
           </ul>
         </div>
       </div>
- <div>
-        <h3 style="margin-bottom:10px" data-t="canDo">Qué puedo aportar</h3>
-        <ul style="opacity:.95;line-height:1.6">
-          <li data-t="can1">Soporte administrativo bilingüe y documentación clara.</li>
-          <li data-t="can2">Dashboards sencillos en Excel/Sheets y reporting.</li>
-          <li data-t="can3">Coordinación operativa y resolución de incidencias.</li>
-        </ul>
-      </div>
-      <div class="actions" style="margin-top:18px">
-        <a class="btn" href="#contact" data-t="btnTalk">Hablemos</a>
-        <button class="btn btn--ghost" id="requestCVBtn" type="button" aria-haspopup="dialog" data-t="btnRequest">Solicitar CV</button>
-        <span id="cvStatus" style="opacity:.8;"></span>
+    </div>
+  </section>
+
+  <!-- Experiencia / Servicios -->
+  <section id="work" class="section">
+    <div class="container">
+      <div class="card">
+        <h2 data-t="workTitle">Experiencia & Servicios</h2>
+        <div class="grid grid-2">
+          <div>
+            <h3 data-t="recentExp">Experiencia reciente</h3>
+            <ul data-t="expList">
+              <li>Logística y calidad (DHL): recepción, control de stock y trazabilidad.</li>
+              <li>Gestión de incidencias y registro en Excel / ERP (entornos Honeywell).</li>
+              <li>Soporte administrativo: documentación, correo bilingüe, agendas.</li>
+            </ul>
+          </div>
+          <div>
+            <h3 data-t="services">Servicios</h3>
+            <ul data-t="svcList">
+              <li>Data entry y soporte administrativo remoto.</li>
+              <li>Reporting operativo y hojas de cálculo.</li>
+              <li>Documentación de procesos y mejora continua.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="actions" style="margin-top:18px">
+          <a class="btn" href="#contact" data-t="btnTalk">Hablemos</a>
+          <button class="btn btn--ghost" id="requestCVBtn" type="button" aria-haspopup="dialog" data-t="btnRequest">Solicitar CV</button>
+          <span id="cvStatus" style="opacity:.8;"></span>
+        </div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- CONTACT -->
-<section id="contact" class="section">
-  <div class="container">
-    <div class="card">
-      <h2 data-t="contactTitle">Contacto</h2>
-      <p data-t="contactText">¿Colaboramos? Te respondo en el mismo día laboral.</p>
-      <div class="actions">
-        <a class="btn" href="mailto:berdejosanchez@gmail.com?subject=Contacto%20-%20Jonathan%20Berdejo" data-t="btnMail">Enviar email</a>
-        <a class="btn btn--ghost" href="https://www.linkedin.com/in/" target="_blank" rel="noopener">LinkedIn</a>
+  <!-- Contacto -->
+  <section id="contact" class="section">
+    <div class="container">
+      <div class="card">
+        <h2 data-t="contactTitle">Contacto</h2>
+        <p data-t="contactText">¿Colaboramos? Te respondo en el mismo día laboral.</p>
+        <div class="actions">
+          <a class="btn" href="mailto:berdejosanchez@gmail.com?subject=Contacto%20-%20Jonathan%20Berdejo" data-t="btnEmail">Enviar email</a>
+          <a class="btn btn--ghost" href="https://www.linkedin.com/in/" target="_blank" rel="noopener" data-t="btnLinkedIn">LinkedIn</a>
+        </div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<footer class="footer">© <span id="year"></span> Jonathan Berdejo</footer>
+  <footer class="footer">© <span id="year"></span> Jonathan Berdejo</footer>
 
-<!-- MODAL CV -->
-<div class="modal" id="cvModal" aria-hidden="true" role="dialog" aria-labelledby="cvTitle">
-  <div class="modal__backdrop" data-close></div>
-  <div class="modal__panel" role="document">
-    <h3 id="cvTitle" class="modal__title" data-t="cvTitle">Solicitar CV</h3>
-    <p class="modal__text" data-t="cvDesc">Déjame tus datos y te lo envío por email.</p>
-    <form id="cvForm" class="modal__form">
-      <label class="modal__label"><span data-t="cvName">Nombre</span>
-        <input class="modal__input" name="name" required placeholder="Tu nombre">
-      </label>
-      <label class="modal__label"><span>Email</span>
-        <input class="modal__input" name="email" type="email" required placeholder="tucorreo@ejemplo.com">
-      </label>
-      <label class="modal__label"><span data-t="cvMsg">Mensaje (opcional)</span>
-        <textarea class="modal__input" name="msg" rows="3" placeholder="Puesto objetivo o contexto"></textarea>
-      </label>
-      <div class="modal__actions">
-        <button type="submit" class="btn" data-t="cvSend">Enviar solicitud</button>
-        <button type="button" class="btn btn--ghost" data-close data-t="cvCancel">Cancelar</button>
-      </div>
-    </form>
+  <!-- Modal Solicitar CV -->
+  <div class="modal" id="cvModal" aria-hidden="true" role="dialog" aria-labelledby="cvTitle">
+    <div class="modal__backdrop" data-close></div>
+    <div class="modal__panel" role="document">
+      <h3 id="cvTitle" class="modal__title" data-t="cvTitle">Solicitar CV</h3>
+      <p class="modal__text" data-t="cvText">Déjame tus datos y te lo envío por email.</p>
+      <form id="cvForm" class="modal__form">
+        <label class="modal__label" data-t="cvName">Nombre
+          <input class="modal__input" name="name" required placeholder="Tu nombre">
+        </label>
+        <label class="modal__label" data-t="cvEmail">Email
+          <input class="modal__input" name="email" type="email" required placeholder="tucorreo@ejemplo.com">
+        </label>
+        <label class="modal__label" data-t="cvMsg">Mensaje (opcional)
+          <textarea class="modal__input" name="msg" rows="3" placeholder="Puesto objetivo o contexto"></textarea>
+        </label>
+        <div class="modal__actions">
+          <button type="submit" class="btn" data-t="cvSend">Enviar solicitud</button>
+          <button type="button" class="btn btn--ghost" data-close data-t="cvCancel">Cancelar</button>
+        </div>
+      </form>
+    </div>
   </div>
-</div>
 
 <script>
-/* ================= YEAR ================= */
+/* ========== Año ========== */
 document.getElementById('year').textContent = new Date().getFullYear();
 
-/* ================= STARS (ligeras) ================= */
+/* ========== Estrellas ligeras ========== */
 (function(){
   const wrap = document.querySelector('.stars'); if(!wrap) return;
-  const isMobile = matchMedia('(max-width: 900px)').matches;
-  const N = isMobile ? 80 : 140;
+  const isMobile = matchMedia('(max-width: 900px)').matches; const N = isMobile ? 120 : 220;
   const frag = document.createDocumentFragment();
-  for (let i=0;i<N;i++){
-    const s = document.createElement('i');
-    s.style.position='absolute'; s.style.width='2px'; s.style.height='2px';
-    s.style.borderRadius='50%'; s.style.background='#fff'; s.style.opacity='0.9';
-    s.style.left=(Math.random()*100).toFixed(3)+'%';
-    s.style.top =(Math.random()*100).toFixed(3)+'%';
-    s.style.filter='drop-shadow(0 0 6px rgba(255,255,255,.6))';
-    frag.appendChild(s);
-  }
+  for (let i=0;i<N;i++){ const s=document.createElement('i'); s.className='star';
+    s.style.left=(Math.random()*100).toFixed(3)+'%'; s.style.top=(Math.random()*100).toFixed(3)+'%';
+    s.style.setProperty('--sc',(0.6+Math.random()*1.8).toFixed(2));
+    s.style.setProperty('--tw',(1.8+Math.random()*4.8).toFixed(2)+'s');
+    s.style.setProperty('--td',(Math.random()*6).toFixed(2)+'s'); frag.appendChild(s); }
   wrap.appendChild(frag);
 })();
 
-/* ================= HUD ACTIVE LINK ================= */
+/* ========== HUD activo + indicador ========== */
 (function(){
   const links=[...document.querySelectorAll('.hud-nav a[data-link]')];
   const ind=document.querySelector('.hud-indicator'); if(!links.length||!ind) return;
@@ -291,143 +246,7 @@ document.getElementById('year').textContent = new Date().getFullYear();
   window.addEventListener('scroll',onScroll,{passive:true}); window.addEventListener('resize',onScroll); onScroll();
 })();
 
-/* ================= COMETS (muy ligeros) ================= */
-(function(){
-  const layer = document.querySelector('.comets');
-  if(!layer) return;
-  let maxActive = matchMedia('(max-width: 900px)').matches ? 1 : 2;
-  let active = 0;
-  function spawnComet(){
-    if(active >= maxActive) return;
-    const c = document.createElement('i');
-    c.style.position='absolute';
-    const startX = 10 + Math.random()*80;
-    c.style.left = startX+'vw';
-    c.style.top  = '-8vh';
-    c.style.width=c.style.height='8px';
-    c.style.borderRadius='50%';
-    c.style.boxShadow='0 0 32px rgba(255,140,80,.9), 0 0 80px rgba(255,100,50,.6)';
-    c.style.background='radial-gradient(circle at 40% 40%, #fff, #ffb080 45%, rgba(255,120,50,.7))';
-
-    const tail = document.createElement('i');
-    tail.style.position='absolute';
-    tail.style.left='-2px'; tail.style.right='-2px'; tail.style.top='45%';
-    tail.style.height='160px';
-    tail.style.transform='translateY(-100%) skewX(-15deg)';
-    tail.style.background='linear-gradient(to bottom, rgba(255,200,160,.9), rgba(255,140,80,.5) 35%, rgba(255,120,50,.2) 70%, transparent)';
-    tail.style.filter='blur(2px)';
-    tail.style.borderRadius='8px';
-    c.appendChild(tail);
-
-    const driftX = (-12 - Math.random()*18);
-    const dur = 2800 + Math.random()*1600;
-    c.animate(
-      [{transform:`translate(0,0) rotate(15deg)`, opacity:0},
-       {opacity:1, offset:.1},
-       {transform:`translate(${driftX}vw, 110vh) rotate(15deg)`, opacity:0}],
-      {duration:dur, easing:'cubic-bezier(.12,.24,.02,1)'}
-    ).onfinish = ()=>{ c.remove(); active--; };
-    layer.appendChild(c); active++;
-  }
-  function loop(){ setTimeout(()=>{ spawnComet(); loop(); }, 3200 + Math.random()*2400); }
-  spawnComet(); loop();
-})();
-
-/* ================= TECH RAYS (canvas, rápidos y finos) ================= */
-(function(){
-  const canvas = document.getElementById('techRays'); if(!canvas) return;
-  const ctx = canvas.getContext('2d');
-  const DPR = Math.min(window.devicePixelRatio || 1, 1.5);
-  const isMobile = matchMedia('(max-width: 900px)').matches;
-  const MAX_RAYS = isMobile ? 8 : 14;
-  const SPEED = isMobile ? 0.85 : 1.0;
-  const HUE = 186, SAT = 100, LGT = 56;
-  let W=0,H=0, protectRects=[], running=true;
-
-  function resize(){
-    const r = canvas.getBoundingClientRect();
-    W = Math.max(1, Math.floor(r.width*DPR));
-    H = Math.max(1, Math.floor(r.height*DPR));
-    canvas.width=W; canvas.height=H;
-    computeProtected();
-  }
-  function computeProtected(){
-    const sel=['.hero','.section .card','.hud-nav'];
-    protectRects=[];
-    const cR = canvas.getBoundingClientRect();
-    sel.forEach(s=>{
-      document.querySelectorAll(s).forEach(el=>{
-        const b=el.getBoundingClientRect();
-        protectRects.push({x:(b.left-cR.left)*DPR, y:(b.top-cR.top)*DPR, w:b.width*DPR, h:b.height*DPR, r:14*DPR});
-      });
-    });
-  }
-  function rndRay(){
-    const margin=80*DPR;
-    const edges=[
-      {x:Math.random()*W, y:-margin},
-      {x:Math.random()*W, y:H+margin},
-      {x:-margin, y:Math.random()*H},
-      {x:W+margin, y:Math.random()*H},
-    ];
-    const s=edges[(Math.random()*edges.length)|0];
-    const e=edges[(Math.random()*edges.length)|0];
-    const cx1=s.x+(Math.random()*.6+.2)*(e.x-s.x)+(Math.random()-.5)*.35*W;
-    const cy1=s.y+(Math.random()*.6+.2)*(e.y-s.y)+(Math.random()-.5)*.35*H;
-    const cx2=s.x+(Math.random()*.6+.2)*(e.x-s.x)+(Math.random()-.5)*.35*W;
-    const cy2=s.y+(Math.random()*.6+.2)*(e.y-s.y)+(Math.random()-.5)*.35*H;
-    return {
-      t:0, life:(3.6+Math.random()*2.0)/SPEED,
-      s,e,cx1,cy1,cx2,cy2,
-      th:(isMobile?1.0:1.4)*DPR*(Math.random()*.8+.7),
-      glow:8*DPR, hue:HUE+Math.random()*6-3, alpha:.08+Math.random()*.06
-    };
-  }
-  const rays=[];
-  function ensure(){ while(rays.length<MAX_RAYS) rays.push(rndRay()); }
-  function cubic(p0,p1,p2,p3,t){ const it=1-t; return it*it*it*p0 + 3*it*it*t*p1 + 3*it*t*t*p2 + t*t*t*p3; }
-  function roundRect(ctx,x,y,w,h,r){ const rr=Math.min(r,w/2,h/2); ctx.beginPath();
-    ctx.moveTo(x+rr, y); ctx.arcTo(x+w,y, x+w,y+h, rr); ctx.arcTo(x+w,y+h, x,y+h, rr);
-    ctx.arcTo(x,y+h, x,y, rr); ctx.arcTo(x,y, x+w,y, rr); ctx.closePath(); }
-
-  let last=performance.now();
-  function frame(now){
-    if(!running) return;
-    const dt=Math.min(.035,(now-last)/1000); last=now;
-    ctx.clearRect(0,0,W,H);
-    ensure();
-    for(const r of rays){
-      r.t += dt/r.life;
-      const steps=18;
-      for(let i=0;i<steps;i++){
-        const tt=Math.max(0, r.t - i*(1/steps)*.22); if(tt<=0) continue;
-        const x=cubic(r.s.x,r.cx1,r.cx2,r.e.x,tt), y=cubic(r.s.y,r.cy1,r.cy2,r.e.y,tt);
-        const prevT=Math.max(0, tt-.018), px=cubic(r.s.x,r.cx1,r.cx2,r.e.x,prevT), py=cubic(r.s.y,r.cy1,r.cy2,r.e.y,prevT);
-        ctx.globalCompositeOperation='lighter';
-        ctx.strokeStyle=`hsla(${r.hue}, ${SAT}%, ${LGT}%, ${r.alpha*(1-i/steps)})`;
-        ctx.lineWidth=r.th*(1-i/steps); ctx.lineCap='round';
-        ctx.shadowColor=`hsl(${r.hue}, ${SAT}%, 58%)`; ctx.shadowBlur=r.glow*(1-i/steps)*.8;
-        ctx.beginPath(); ctx.moveTo(px,py); ctx.lineTo(x,y); ctx.stroke();
-      }
-    }
-    for(let i=rays.length-1;i>=0;i--) if(rays[i].t>=1) rays.splice(i,1);
-
-    if(protectRects.length){
-      ctx.save(); ctx.globalCompositeOperation='destination-out'; ctx.fillStyle='#000';
-      protectRects.forEach(pr=>{ roundRect(ctx,pr.x,pr.y,pr.w,pr.h,pr.r); ctx.fill(); });
-      ctx.restore();
-    }
-    requestAnimationFrame(frame);
-  }
-  function init(){ const r=canvas.getBoundingClientRect();
-    canvas.style.width=r.width+'px'; canvas.style.height=r.height+'px'; resize(); requestAnimationFrame(frame);
-  }
-  new ResizeObserver(()=>{ resize(); }).observe(document.body);
-  document.addEventListener('visibilitychange', ()=>{ running = document.visibilityState==='visible'; if(running) requestAnimationFrame(frame); });
-  init();
-})();
-
-/* ================= SOLICITAR CV (modal + mailto + estado) ================= */
+/* ========== Modal Solicitar CV (registro local + mailto) ========== */
 (function(){
   const btn=document.getElementById('requestCVBtn');
   const modal=document.getElementById('cvModal');
@@ -439,8 +258,8 @@ document.getElementById('year').textContent = new Date().getFullYear();
   if(prev){ const d=new Date(prev); statusEl.textContent=`CV solicitado el ${d.toLocaleDateString()} ${d.toLocaleTimeString()}`;}
 
   const firstInput=modal.querySelector('input[name="name"]');
-  function open(){ modal.classList.add('is-open'); modal.setAttribute('aria-hidden','false'); setTimeout(()=>firstInput?.focus(),0); }
-  function close(){ modal.classList.remove('is-open'); modal.setAttribute('aria-hidden','true'); btn?.focus(); }
+  const open = () => { modal.classList.add('is-open'); modal.setAttribute('aria-hidden','false'); setTimeout(()=>firstInput?.focus(),0); };
+  const close= () => { modal.classList.remove('is-open'); modal.setAttribute('aria-hidden','true'); btn?.focus(); };
 
   btn?.addEventListener('click',open);
   modal?.addEventListener('click',e=>{ if (e.target.hasAttribute('data-close')) close(); });
@@ -452,6 +271,7 @@ document.getElementById('year').textContent = new Date().getFullYear();
     const name=(data.get('name')||'').toString().trim();
     const email=(data.get('email')||'').toString().trim();
     const msg=(data.get('msg')||'').toString().trim();
+
     const subject=encodeURIComponent(`Solicitud de CV - ${name}`);
     const body=encodeURIComponent(
 `Hola Jonathan,
@@ -462,6 +282,7 @@ Nombre: ${name}
 Email: ${email}
 ${msg?`Mensaje: ${msg}\n`:''}
 Gracias.`);
+
     const now=new Date(); localStorage.setItem(KEY,now.toISOString());
     statusEl.textContent=`CV solicitado el ${now.toLocaleDateString()} ${now.toLocaleTimeString()}`;
     window.location.href=`mailto:berdejosanchez@gmail.com?subject=${subject}&body=${body}`;
@@ -469,17 +290,120 @@ Gracias.`);
   });
 })();
 
-/* ================= BILINGÜE (ES/EN) ================= */
+/* ========== Traducciones ES/EN (menú + bloques + botones) ========== */
 const T = {
-  es:{aboutTitle:"Sobre mí",aboutText:"He aprendido que el tiempo solo vale cuando se usa bien. Me mueven la curiosidad y la mejora continua: analizar, estructurar y convertir lo complejo en claro. Trabajo con método y criterio; disfruto optimizando procesos con tecnología, ofimática y una comunicación cuidada.",canDo:"Qué puedo aportar",can1:"Soporte administrativo bilingüe y documentación clara.",can2:"Dashboards sencillos en Excel/Sheets y reporting.",can3:"Coordinación operativa y resolución de incidencias.",workTitle:"Experiencia & Servicios",recentExp:"Experiencia reciente",services:"Servicios",btnTalk:"Hablemos",btnRequest:"Solicitar CV",contactTitle:"Contacto",contactText:"¿Colaboramos? Te respondo en el mismo día laboral.",btnMail:"Enviar email",cvTitle:"Solicitar CV",cvDesc:"Déjame tus datos y te lo envío por email.",cvName:"Nombre",cvMsg:"Mensaje (opcional)",cvSend:"Enviar solicitud",cvCancel:"Cancelar"},
-  en:{aboutTitle:"About me",aboutText:"I've learned that time only matters when used well. I'm driven by curiosity and improvement—analyzing, structuring, and turning complexity into clarity. I work methodically and enjoy optimizing processes through technology and clear communication.",canDo:"What I bring",can1:"Bilingual admin support and clear documentation.",can2:"Simple dashboards in Excel/Sheets and reporting.",can3:"Operational coordination and issue resolution.",workTitle:"Experience & Services",recentExp:"Recent experience",services:"Services",btnTalk:"Let's talk",btnRequest:"Request CV",contactTitle:"Contact",contactText:"Let's collaborate! I usually reply the same business day.",btnMail:"Send email",cvTitle:"Request CV",cvDesc:"Leave your info and I'll send it by email.",cvName:"Name",cvMsg:"Message (optional)",cvSend:"Send request",cvCancel:"Cancel"}
+  es:{
+    navHome:"Inicio", navAbout:"Sobre mí", navWork:"Experiencia", navContact:"Contacto",
+    aboutTitle:"Sobre mí",
+    aboutText:"He aprendido que el tiempo solo vale cuando se usa bien. Me mueven la curiosidad y la mejora continua: analizar, estructurar y convertir lo complejo en claro. Trabajo con método y criterio; disfruto optimizando procesos con tecnología, ofimática y una comunicación cuidada.",
+    offerTitle:"Qué puedo aportar",
+    offerList:[
+      "Soporte administrativo bilingüe y documentación clara.",
+      "Dashboards sencillos en Excel/Sheets y reporting.",
+      "Coordinación operativa y resolución de incidencias."
+    ],
+    workTitle:"Experiencia & Servicios",
+    recentExp:"Experiencia reciente",
+    expList:[
+      "Logística y calidad (DHL): recepción, control de stock y trazabilidad.",
+      "Gestión de incidencias y registro en Excel / ERP (entornos Honeywell).",
+      "Soporte administrativo: documentación, correo bilingüe, agendas."
+    ],
+    services:"Servicios",
+    svcList:[
+      "Data entry y soporte administrativo remoto.",
+      "Reporting operativo y hojas de cálculo.",
+      "Documentación de procesos y mejora continua."
+    ],
+    contactTitle:"Contacto",
+    contactText:"¿Colaboramos? Te respondo en el mismo día laboral.",
+    btnTalk:"Hablemos", btnRequest:"Solicitar CV", btnEmail:"Enviar email", btnLinkedIn:"LinkedIn",
+    cvTitle:"Solicitar CV", cvText:"Déjame tus datos y te lo envío por email.",
+    cvName:"Nombre", cvEmail:"Email", cvMsg:"Mensaje (opcional)",
+    cvSend:"Enviar solicitud", cvCancel:"Cancelar"
+  },
+  en:{
+    navHome:"Home", navAbout:"About", navWork:"Experience", navContact:"Contact",
+    aboutTitle:"About me",
+    aboutText:"I've learned that time only matters when used well. I'm driven by curiosity and improvement—analyzing, structuring, and turning complexity into clarity. I work methodically and enjoy optimizing processes through technology, office tools and clear communication.",
+    offerTitle:"What I bring",
+    offerList:[
+      "Bilingual admin support and clear documentation.",
+      "Simple dashboards in Excel/Sheets and reporting.",
+      "Operational coordination and incident resolution."
+    ],
+    workTitle:"Experience & Services",
+    recentExp:"Recent experience",
+    expList:[
+      "Logistics & quality (DHL): receiving, stock control and traceability.",
+      "Issue management and logging in Excel / ERP (Honeywell environments).",
+      "Admin support: documentation, bilingual email, schedules."
+    ],
+    services:"Services",
+    svcList:[
+      "Data entry & remote admin support.",
+      "Operational reporting and spreadsheets.",
+      "Process documentation and continuous improvement."
+    ],
+    contactTitle:"Contact",
+    contactText:"Let's collaborate! I usually reply the same business day.",
+    btnTalk:"Let's talk", btnRequest:"Request CV", btnEmail:"Send email", btnLinkedIn:"LinkedIn",
+    cvTitle:"Request CV", cvText:"Leave your details and I'll send it by email.",
+    cvName:"Name", cvEmail:"Email", cvMsg:"Message (optional)",
+    cvSend:"Send request", cvCancel:"Cancel"
+  }
 };
-document.getElementById('langSwitcher').addEventListener('change',e=>{
-  const L=T[e.target.value]||T.es;
-  document.querySelectorAll('[data-t]').forEach(el=>{
-    const key=el.getAttribute('data-t'); if(L[key]) el.textContent=L[key];
-  });
-});
+
+const langSel = document.getElementById("langSwitcher");
+function applyLang(lang){
+  const t=T[lang]||T.es;
+
+  // Menú
+  document.querySelector('[data-t="navHome"]').textContent=t.navHome;
+  document.querySelector('[data-t="navAbout"]').textContent=t.navAbout;
+  document.querySelector('[data-t="navWork"]').textContent=t.navWork;
+  document.querySelector('[data-t="navContact"]').textContent=t.navContact;
+
+  // Titulares y párrafos
+  document.querySelector('[data-t="aboutTitle"]').textContent=t.aboutTitle;
+  document.querySelector('[data-t="aboutText"]').textContent=t.aboutText;
+  document.querySelector('[data-t="offerTitle"]').textContent=t.offerTitle;
+  document.querySelector('[data-t="workTitle"]').textContent=t.workTitle;
+  document.querySelector('[data-t="recentExp"]').textContent=t.recentExp;
+  document.querySelector('[data-t="services"]').textContent=t.services;
+  document.querySelector('[data-t="contactTitle"]').textContent=t.contactTitle;
+  document.querySelector('[data-t="contactText"]').textContent=t.contactText;
+
+  // Listas
+  const offerUL = document.querySelector('[data-t="offerList"]');
+  const expUL   = document.querySelector('[data-t="expList"]');
+  const svcUL   = document.querySelector('[data-t="svcList"]');
+  offerUL.innerHTML = t.offerList.map(li=>`<li>${li}</li>`).join('');
+  expUL.innerHTML   = t.expList.map(li=>`<li>${li}</li>`).join('');
+  svcUL.innerHTML   = t.svcList.map(li=>`<li>${li}</li>`).join('');
+
+  // Botones
+  document.querySelector('[data-t="btnTalk"]').textContent=t.btnTalk;
+  document.querySelector('[data-t="btnRequest"]').textContent=t.btnRequest;
+  document.querySelector('[data-t="btnEmail"]').textContent=t.btnEmail;
+  document.querySelector('[data-t="btnLinkedIn"]').textContent=t.btnLinkedIn;
+
+  // Modal
+  document.querySelector('[data-t="cvTitle"]').textContent=t.cvTitle;
+  document.querySelector('[data-t="cvText"]').textContent=t.cvText;
+  document.querySelector('[data-t="cvName"]').childNodes[0].nodeValue=t.cvName+" ";
+  document.querySelector('[data-t="cvEmail"]').childNodes[0].nodeValue=t.cvEmail+" ";
+  document.querySelector('[data-t="cvMsg"]').childNodes[0].nodeValue=t.cvMsg+" ";
+  document.querySelector('[data-t="cvSend"]').textContent=t.cvSend;
+  document.querySelector('[data-t="cvCancel"]').textContent=t.cvCancel;
+
+  // Placeholder mínimos (no rompemos estilos)
+  document.querySelector('input[name="name"]').placeholder = (lang==='en'?'Your name':'Tu nombre');
+  document.querySelector('input[name="email"]').placeholder = (lang==='en'?'you@example.com':'tucorreo@ejemplo.com');
+  document.querySelector('textarea[name="msg"]').placeholder = (lang==='en'?'Target role or context':'Puesto objetivo o contexto');
+}
+applyLang('es');
+langSel.addEventListener("change",(e)=>applyLang(e.target.value));
 </script>
 </body>
 </html>
