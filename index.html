@@ -1,28 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Jonathan Berdejo</title>
- <link rel="stylesheet" href="assets/main.css?v=ribbon1">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet" />
-</head>
-<body>
-  <header>
-    <div class="logo">Jonathan&nbsp;Berdejo</div>
-    <nav>
-      <a href="#home">Home</a>
-      <a href="#about">About</a>
-      <a href="#contact">Contact</a>
-    </nav>
-  </header>
-
 <section id="home" class="section hero">
   <!-- ONDAS NEÓN CURVADAS -->
   <div class="waves" aria-hidden="true">
-    <svg viewBox="0 0 1200 220" preserveAspectRatio="none">
+    <svg viewBox="0 0 1200 300" preserveAspectRatio="none">
       <defs>
-        <!-- Glow adicional dentro del SVG por si el navegador lo soporta -->
         <filter id="neon-glow">
           <feGaussianBlur stdDeviation="6" result="blur"/>
           <feMerge>
@@ -31,67 +11,45 @@
         </filter>
       </defs>
 
-      <!-- Grupo que se desplaza en X -->
+      <!-- Movimiento izquierda<->derecha (suave, sin cortes) -->
       <g class="runner">
-        <!-- ONDA 1 (suave) -->
+        <!-- ONDA 1 (arriba) — más separada -->
         <path class="wave w1"
           d="M0,70 C180,10 420,140 600,70 S1020,10 1200,70">
-          <animate attributeName="d" dur="1.5s" repeatCount="indefinite"
+          <!-- LATIDO (cambia la forma) -->
+          <animate attributeName="d" dur="1.2s" repeatCount="indefinite"
             values="
-              M0,70 C180,10 420,140 600,70 S1020,10 1200,70;
-              M0,70 C180,130 420,10 600,70 S1020,130 1200,70;
-              M0,70 C180,10 420,140 600,70 S1020,10 1200,70"/>
+              M0,70  C180,10  420,140 600,70  S1020,10  1200,70;
+              M0,70  C180,-30 420,180 600,70  S1020,-30 1200,70;
+              M0,70  C180,10  420,140 600,70  S1020,10  1200,70" />
         </path>
 
-        <!-- ONDA 2 (más curva) -->
+        <!-- ONDA 2 (centro) -->
         <path class="wave w2"
-          d="M0,120 C160,30 410,200 620,120 S1040,30 1220,120">
-          <animate attributeName="d" dur="1.8s" repeatCount="indefinite"
+          d="M0,160 C160,30 410,240 620,160 S1040,30 1220,160">
+          <animate attributeName="d" dur="1.2s" begin=".1s" repeatCount="indefinite"
             values="
-              M0,120 C160,30 410,200 620,120 S1040,30 1220,120;
-              M0,120 C160,190 410,40 620,120 S1040,190 1220,120;
-              M0,120 C160,30 410,200 620,120 S1040,30 1220,120"/>
+              M0,160 C160,30  410,240 620,160 S1040,30  1220,160;
+              M0,160 C160,220 410, 60 620,160 S1040,220 1220,160;
+              M0,160 C160,30  410,240 620,160 S1040,30  1220,160" />
         </path>
 
-        <!-- ONDA 3 (profunda) -->
+        <!-- ONDA 3 (abajo) — más separada -->
         <path class="wave w3"
-          d="M0,170 C200,90 430,220 650,170 S1080,90 1280,170">
-          <animate attributeName="d" dur="1.3s" repeatCount="indefinite"
+          d="M0,250 C200,90 430,300 650,250 S1080,90 1280,250">
+          <animate attributeName="d" dur="1.2s" begin=".2s" repeatCount="indefinite"
             values="
-              M0,170 C200,90 430,220 650,170 S1080,90 1280,170;
-              M0,170 C200,210 430,120 650,170 S1080,210 1280,170;
-              M0,170 C200,90 430,220 650,170 S1080,90 1280,170"/>
+              M0,250 C200,90  430,300 650,250 S1080,90  1280,250;
+              M0,250 C200,300 430,140 650,250 S1080,300 1280,250;
+              M0,250 C200,90  430,300 650,250 S1080,90  1280,250" />
         </path>
       </g>
     </svg>
   </div>
 
-  <!-- TU TÍTULO -->
-  <h1 class="hero-title">JONATHAN BERDEJO</h1>
-  <p class="hero-sub">Creative mind with a technical edge.</p>
+  <!-- CONTENIDO CENTRADO -->
+  <div class="hero-content">
+    <h1 class="hero-title">JONATHAN BERDEJO</h1>
+    <p class="hero-sub">Creative mind with a technical edge.</p>
+  </div>
 </section>
-
-</section>
-
-</p>
-  <section id="about" class="section">
-    <h2>About</h2>
-    <p>
-      I’m Jonathan Berdejo — a creative mind with a technical side. I care about clarity,
-      aesthetics and reliable execution. This site will grow with my projects and collaborations.
-    </p>
-  </section>
-
-  <section id="contact" class="section">
-    <h2>Contact</h2>
-    <p>
-      Email: <a href="mailto:berdejosanchez@gmail.com">berdejosanchez@gmail.com</a><br/>
-      LinkedIn: <a href="https://www.linkedin.com/in/jonathan-berdejo-sanchez-71365234b" target="_blank">/in/jonathan-berdejo-sanchez-71365234b</a>
-    </p>
-  </section>
-
-  <footer>
-    <p>© 2025 Jonathan Berdejo — All rights reserved.</p>
-  </footer>
-</body>
-</html>
