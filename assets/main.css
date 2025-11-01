@@ -51,3 +51,84 @@
   <h1 class="hero-title">JONATHAN BERDEJO</h1>
   <p class="hero-sub">Creative mind with a technical edge.</p>
 </section>
+/* ======== HERO NEÓN OSCURO ======== */
+.hero{
+  position:relative; min-height:100vh;
+  background:#000; overflow:hidden;
+  display:flex; align-items:center; justify-content:center;
+  padding:0 10%;
+}
+/* viñeta/calma azul tenue de fondo */
+.hero::after{
+  content:""; position:absolute; inset:0; z-index:0;
+  background:
+    radial-gradient(1400px 700px at 20% 10%, rgba(0,234,255,.08), transparent 70%),
+    radial-gradient(1200px 600px at 80% 90%, rgba(0,234,255,.05), transparent 70%);
+}
+
+/* ======== ONDAS ======== */
+.waves{ position:absolute; inset:0; z-index:1; pointer-events:none; }
+.waves svg{
+  width:150%; height:80vh; position:absolute; top:10vh; left:-25%;
+  filter:
+    drop-shadow(0 0 20px rgba(0,234,255,.9))
+    drop-shadow(0 0 50px rgba(0,234,255,.6))
+    drop-shadow(0 0 110px rgba(0,234,255,.35));
+  opacity:.95;
+}
+.wave{
+  stroke:#00eaff; fill:none; stroke-linecap:round; stroke-linejoin:round;
+  filter:url(#neon-glow);
+}
+/* grosores tipo “ribbon” pero limpios (puedes subirlos si quieres más banda) */
+.w1{ stroke-width:120; opacity:.95 }
+.w2{ stroke-width:110; opacity:.92 }
+.w3{ stroke-width:120; opacity:.93 }
+
+/* Movimiento lateral ping-pong (sin cortes) */
+.runner{ animation: slidePing 6s ease-in-out infinite alternate; }
+@keyframes slidePing{
+  from { transform: translateX(-8%); }
+  to   { transform: translateX( 8%); }
+}
+
+/* ======== LATIDO (ritmo de corazón) ======== */
+/* modulamos brillo/grosor de todas a la vez */
+.wave{
+  animation: beat 1.2s ease-in-out infinite;
+}
+@keyframes beat{
+  0%,100%{ filter: url(#neon-glow); opacity:.93 }
+  30%    { stroke-width: calc(var(--w, 1) * 1); filter: url(#neon-glow); }
+  45%    { opacity:1 }
+  50%    { stroke-width: calc(var(--w, 1) * 1.06); }
+  60%    { opacity:.96 }
+}
+/* (si quieres latidos más fuertes, sube 1.06 a 1.12, etc.) */
+
+/* ======== CONTENIDO CENTRADO Y NEÓN ======== */
+.hero-content{ position:relative; z-index:3; text-align:center }
+.hero-title{
+  font-size:clamp(2.6rem,8vw,5.6rem);
+  color:#e8fdff; letter-spacing:.04em;
+  text-shadow:
+    0 0 18px #00eaff,
+    0 0 48px #00eaff,
+    0 0 120px #00eaff;
+}
+.hero-sub{
+  margin-top:10px; color:#cfe7ff; opacity:.9; font-weight:300;
+}
+
+/* ======== HEADER / SECCIONES (si los perdiste) ======== */
+header{
+  position:fixed; top:0; left:0; right:0; height:64px; z-index:1000;
+  display:flex; align-items:center; justify-content:space-between;
+  padding:0 40px; background:rgba(0,0,0,.7); border-bottom:1px solid #0e2233;
+  backdrop-filter: blur(8px);
+}
+.logo{ color:#00eaff; font-weight:700 }
+nav a{ color:#e6f7ff; text-decoration:none; margin-left:24px; font-weight:500 }
+nav a:hover{ color:#00eaff; text-shadow:0 0 10px #00eaff }
+
+.section{ min-height:100vh; padding:120px 10% 96px }
