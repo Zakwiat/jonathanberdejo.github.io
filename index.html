@@ -97,12 +97,21 @@ body{font-family:'Poppins',system-ui,Segoe UI,Roboto,Arial,sans-serif;background
   </div>
 
   <!-- Fondo -->
-  <div class="neon-bg" aria-hidden="true">
-    <div class="stars"></div>
-    <div class="neon-lines">
-      <span class="beam b1"></span><span class="beam b2"></span><span class="beam b3"></span><span class="beam b4"></span><span class="beam b5"></span>
-    </div>
+<div class="neon-bg" aria-hidden="true">
+  <div class="stars"></div>
+
+  <!-- ✨ Canvas para la línea animada -->
+  <canvas id="starLinkCanvas" aria-hidden="true"></canvas>
+
+  <div class="neon-lines">
+    <span class="beam b1"></span>
+    <span class="beam b2"></span>
+    <span class="beam b3"></span>
+    <span class="beam b4"></span>
+    <span class="beam b5"></span>
   </div>
+</div>
+
 
   <!-- HUD -->
   <nav class="hud-nav" aria-label="Principal">
@@ -542,6 +551,282 @@ applyLang('es');
 
 /* ========== Cambio de idioma ========== */
 document.getElementById("langSwitcher").addEventListener("change",(e)=>applyLang(e.target.value));
+  /* ========== Línea enlazando estrellas (medio-rápido) ========== */
+(function(){
+  const canvas = document.getElementById('starLinkCanvas');
+  const starsWrap = document.querySelector('.stars');
+  if(!canvas || !starsWrap) return;
+
+  const ctx = canvas.getContext('2d');
+  let W=0,H=0, DPR = Math.max(1, Math.min(2, window.devicePixelRatio||1));
+
+  // Color neón desde CSS
+  const neon = getComputedStyle(document.documentElement).getPropertyValue('--neon').trim() || '#00eaff';
+
+  function resize(){
+    const r = document.body.getBoundingClientRect();
+    W = Math.round(r.width);
+    H = Math.round(r.height);
+    canvas.width = Math.round(W * DPR);
+    canvas.height = Math.round(H * DPR);
+    canvas.style.width = W+'px';
+    canvas.style.height = H+'px';
+    ctx.setTransform(DPR,0,0,DPR,0,0);
+    ctx.lineWidth = 1;
+    ctx.lineCap = 'round';
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  // Recoger posiciones de estrellas (en px, a partir de left/top en %)
+  function getStarPoints(){
+    const nodes = starsWrap.querySelectorAll('.star');
+    const pts = [];
+    nodes.forEach(n=>{
+      const left = parseFloat(n.style.left||'0'); // %
+      const top  = parseFloat(n.style.top ||'0'); // %
+      if(!isNaN(left) && !isNaN(top)){
+        pts.push({ x: (left/100)*W, y: (top/100)*H });
+      }
+    });
+    return pts;
+  }
+
+  // Easing suave
+  const ease = t => t<.5 ? 2*t*t : 1 - Math.pow(-2*t+2,2)/2;
+
+  // Ajustes de velocidad y pausas
+  const SPEED_PX_PER_S = 650;   // medio-rápido
+  const PAUSE_MS = 180;         // pequeña pausa entre saltos
+
+  let points = getStarPoints();
+  let from = null, to = null;
+  let t0 = 0, dist = 0, dur = 1;
+
+  function pickPair(){
+    if(points.length < 2) { points = getStarPoints(); }
+    const a = Math.floor(Math.random()*points.length);
+    let b = Math.floor(Math.random()*points.length);
+    if (b===a && points.length>1) b = (a+1)%points.length;
+    from = points[a];
+    to = points[b];
+    const dx = to.x - from.x, dy = to.y - from.y;
+    dist = Math.hypot(dx,dy);
+    dur = Math.max(0.4, dist / SPEED_PX_PER_S); // tiempo en s
+    t0 = performance.now();
+  }
+
+  function clear(){
+    ctx.clearRect(0,0,W,H);
+  }
+
+  function drawLine(p,q,prog){
+    // Fondo tenue de rastro opcional: comenta si no lo quieres
+    // ctx.fillStyle = 'rgba(0,0,0,0.10)'; ctx.fillRect(0,0,W,H);
+
+    ctx.save();
+    ctx.shadowBlur = 14;
+    ctx.shadowColor = neon;
+    ctx.strokeStyle = neon;
+    ctx.globalAlpha = 0.9;
+
+    // Interpolación
+    const x = p.x + (q.x - p.x) * prog;
+    const y = p.y + (q.y - p.y) * prog;
+
+    // Línea principal
+    ctx.beginPath();
+    ctx.moveTo(p.x, p.y);
+    ctx.lineTo(x, y);
+    ctx.stroke();
+
+    // “Punta” brillante
+    ctx.beginPath();
+    ctx.arc(x, y, 2.2, 0, Math.PI*2);
+    ctx.fillStyle = neon;
+    ctx.fill();
+
+    // Resplandor extra fino
+    ctx.shadowBlur = 28;
+    ctx.globalAlpha = 0.35;
+    ctx.beginPath();
+    ctx.moveTo(p.x, p.y);
+    ctx.lineTo(x, y);
+    ctx.stroke();
+
+    ctx.restore();
+  }
+
+  let reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  window.matchMedia('(prefers-reduced-motion: reduce)').addEventListener('change', (e)=>{
+    reduced = e.matches;
+  });
+
+  async function loop(now){
+    if (reduced) { clear(); return; }
+
+    if(!from || !to) { pickPair(); }
+
+    const elapsed = (now - t0)/1000;           // s
+    const prog = Math.min(1, ease(elapsed/dur));
+
+    clear();
+    drawLine(from, to, prog);
+
+    if (prog >= 1){
+      // pequeña pausa y nuevo destino
+      setTimeout(()=>{
+        points = getStarPoints(); // refresca por si cambió el layout
+        pickPair();
+        requestAnimationFrame(loop);
+      }, PAUSE_MS);
+      return;
+    }
+    requestAnimationFrame(loop);
+  }
+
+  pickPair();
+  requestAnimationFrame(loop);
+})();/* ========== Línea enlazando estrellas (medio-rápido) ========== */
+(function(){
+  const canvas = document.getElementById('starLinkCanvas');
+  const starsWrap = document.querySelector('.stars');
+  if(!canvas || !starsWrap) return;
+
+  const ctx = canvas.getContext('2d');
+  let W=0,H=0, DPR = Math.max(1, Math.min(2, window.devicePixelRatio||1));
+
+  // Color neón desde CSS
+  const neon = getComputedStyle(document.documentElement).getPropertyValue('--neon').trim() || '#00eaff';
+
+  function resize(){
+    const r = document.body.getBoundingClientRect();
+    W = Math.round(r.width);
+    H = Math.round(r.height);
+    canvas.width = Math.round(W * DPR);
+    canvas.height = Math.round(H * DPR);
+    canvas.style.width = W+'px';
+    canvas.style.height = H+'px';
+    ctx.setTransform(DPR,0,0,DPR,0,0);
+    ctx.lineWidth = 1;
+    ctx.lineCap = 'round';
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  // Recoger posiciones de estrellas (en px, a partir de left/top en %)
+  function getStarPoints(){
+    const nodes = starsWrap.querySelectorAll('.star');
+    const pts = [];
+    nodes.forEach(n=>{
+      const left = parseFloat(n.style.left||'0'); // %
+      const top  = parseFloat(n.style.top ||'0'); // %
+      if(!isNaN(left) && !isNaN(top)){
+        pts.push({ x: (left/100)*W, y: (top/100)*H });
+      }
+    });
+    return pts;
+  }
+
+  // Easing suave
+  const ease = t => t<.5 ? 2*t*t : 1 - Math.pow(-2*t+2,2)/2;
+
+  // Ajustes de velocidad y pausas
+  const SPEED_PX_PER_S = 650;   // medio-rápido
+  const PAUSE_MS = 180;         // pequeña pausa entre saltos
+
+  let points = getStarPoints();
+  let from = null, to = null;
+  let t0 = 0, dist = 0, dur = 1;
+
+  function pickPair(){
+    if(points.length < 2) { points = getStarPoints(); }
+    const a = Math.floor(Math.random()*points.length);
+    let b = Math.floor(Math.random()*points.length);
+    if (b===a && points.length>1) b = (a+1)%points.length;
+    from = points[a];
+    to = points[b];
+    const dx = to.x - from.x, dy = to.y - from.y;
+    dist = Math.hypot(dx,dy);
+    dur = Math.max(0.4, dist / SPEED_PX_PER_S); // tiempo en s
+    t0 = performance.now();
+  }
+
+  function clear(){
+    ctx.clearRect(0,0,W,H);
+  }
+
+  function drawLine(p,q,prog){
+    // Fondo tenue de rastro opcional: comenta si no lo quieres
+    // ctx.fillStyle = 'rgba(0,0,0,0.10)'; ctx.fillRect(0,0,W,H);
+
+    ctx.save();
+    ctx.shadowBlur = 14;
+    ctx.shadowColor = neon;
+    ctx.strokeStyle = neon;
+    ctx.globalAlpha = 0.9;
+
+    // Interpolación
+    const x = p.x + (q.x - p.x) * prog;
+    const y = p.y + (q.y - p.y) * prog;
+
+    // Línea principal
+    ctx.beginPath();
+    ctx.moveTo(p.x, p.y);
+    ctx.lineTo(x, y);
+    ctx.stroke();
+
+    // “Punta” brillante
+    ctx.beginPath();
+    ctx.arc(x, y, 2.2, 0, Math.PI*2);
+    ctx.fillStyle = neon;
+    ctx.fill();
+
+    // Resplandor extra fino
+    ctx.shadowBlur = 28;
+    ctx.globalAlpha = 0.35;
+    ctx.beginPath();
+    ctx.moveTo(p.x, p.y);
+    ctx.lineTo(x, y);
+    ctx.stroke();
+
+    ctx.restore();
+  }
+
+  let reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  window.matchMedia('(prefers-reduced-motion: reduce)').addEventListener('change', (e)=>{
+    reduced = e.matches;
+  });
+
+  async function loop(now){
+    if (reduced) { clear(); return; }
+
+    if(!from || !to) { pickPair(); }
+
+    const elapsed = (now - t0)/1000;           // s
+    const prog = Math.min(1, ease(elapsed/dur));
+
+    clear();
+    drawLine(from, to, prog);
+
+    if (prog >= 1){
+      // pequeña pausa y nuevo destino
+      setTimeout(()=>{
+        points = getStarPoints(); // refresca por si cambió el layout
+        pickPair();
+        requestAnimationFrame(loop);
+      }, PAUSE_MS);
+      return;
+    }
+    requestAnimationFrame(loop);
+  }
+
+  pickPair();
+  requestAnimationFrame(loop);
+})();
+
+  
+
 </script>
 </body>
 </html>
