@@ -330,6 +330,54 @@ langSel.addEventListener("change", (e)=>{
     if(b.textContent.includes("Solicitar") || b.textContent.includes("Request")) b.textContent = t.btnRequest;
   });
 });
+  // ☄️ Cometas (spawn continuo + ráfagas)
+(function(){
+  const layer = document.querySelector('.comets');
+  if(!layer) return;
+  let maxActive = matchMedia('(max-width: 900px)').matches ? 2 : 4;
+  let active = 0;
+
+  function spawnComet(customDelay=0){
+    if(active >= maxActive) return;
+    const c = document.createElement('i');
+    c.className = 'comet';
+
+    const startX = 8 + Math.random()*84;
+    const driftX = (-10 - Math.random()*22).toFixed(2) + 'vw';
+    const angle  = (12 + Math.random()*12).toFixed(2) + 'deg';
+    const dur    = (2.4 + Math.random()*2.4).toFixed(2) + 's';
+    const size   = (7 + Math.random()*10).toFixed(1) + 'px';
+    const tail   = (170 + Math.random()*180).toFixed(0) + 'px';
+    const hue    = (12 + Math.random()*18).toFixed(0);
+    const lum    = (50 + Math.random()*10).toFixed(0) + '%';
+
+    c.style.setProperty('--startX', startX.toFixed(2));
+    c.style.setProperty('--driftX', driftX);
+    c.style.setProperty('--angle',  angle);
+    c.style.setProperty('--dur',    dur);
+    c.style.setProperty('--size',   size);
+    c.style.setProperty('--tail',   tail);
+    c.style.setProperty('--hue',    hue);
+    c.style.setProperty('--lum',    lum);
+
+    if(Math.random() < 0.20){
+      c.style.setProperty('--size',  (parseFloat(size)*1.35).toFixed(1)+'px');
+      c.style.setProperty('--tail',  (parseFloat(tail)*1.3).toFixed(0)+'px');
+      c.style.filter = 'brightness(1.08)';
+    }
+    if(customDelay) c.style.animationDelay = customDelay + 'ms';
+
+    layer.appendChild(c);
+    active++;
+    c.addEventListener('animationend', ()=>{ c.remove(); active--; }, {once:true});
+  }
+
+  function loop(){ setTimeout(()=>{ spawnComet(); loop(); }, 2500 + Math.random()*2000); }
+  function bursts(){ const burstNow = ()=> { const n = 3 + Math.floor(Math.random()*3); for(let i=0;i<n;i++){ spawnComet(i*220); } }; setInterval(burstNow, 2000); }
+
+  spawnComet(); loop(); bursts();
+})();
+
 </script>
 </body>
 </html>
