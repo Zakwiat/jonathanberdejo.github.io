@@ -541,3 +541,31 @@ body.scrolled .comets{ opacity:.45; transition:opacity .4s }
   pointer-events:none;
 }
 
+/* ===== Cometas (ligeros) ===== */
+.comets{position:absolute;inset:0;pointer-events:none;z-index:1}
+.comet{
+  position:absolute; top:-12vh; left:0;
+  width:8px; height:8px; border-radius:50%;
+  background: radial-gradient(circle at 35% 35%, #fff, rgba(255,255,255,.9) 40%, rgba(255,255,255,.2) 70%, rgba(255,255,255,0) 100%);
+  filter: drop-shadow(0 0 12px rgba(255,255,255,.8));
+  animation:
+    cometFall var(--dur,3.2s) cubic-bezier(.12,.24,.02,1) forwards,
+    cometPulse 1.2s ease-in-out infinite;
+}
+.comet::after{
+  content:""; position:absolute; left:-2px; right:-2px; top:50%;
+  height: var(--tail, 160px); transform: translateY(-100%) skewX(-14deg);
+  background: linear-gradient(to bottom, rgba(0,234,255,.9), rgba(0,234,255,.35) 45%, rgba(0,234,255,0) 100%);
+  filter: blur(1.8px); border-radius:6px;
+}
+@keyframes cometFall{
+  0%{ opacity:0; transform: translate(var(--sx,0), -4vh) rotate(var(--ang,12deg)) }
+  6%{ opacity:1 }
+  100%{ opacity:0; transform: translate(calc(var(--sx,0) + var(--dx,-18vw)), 112vh) rotate(var(--ang,12deg)) }
+}
+@keyframes cometPulse{ 0%,100%{ filter: drop-shadow(0 0 12px rgba(255,255,255,.8)) } 50%{ filter: drop-shadow(0 0 18px rgba(255,255,255,1)) } }
+
+/* Pausar si el usuario prefiere menos movimiento */
+@media (prefers-reduced-motion: reduce){
+  .comet{ animation: none !important }
+}
