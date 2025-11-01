@@ -163,7 +163,7 @@ body.scrolled .beam { animation-play-state: paused; opacity: .06; transition:opa
     radial-gradient(880px 560px at 60% 85%, rgba(255,0,120,.10), transparent 68%);
   filter: blur(10px) saturate(120%);
   mix-blend-mode:screen;
-  animation: nebula-drift 42s ease-in-out infinite alternate;
+  animation: nebula-drift 2s ease-in-out infinite alternate;
 }
 @keyframes nebula-drift{
   from{ transform:translateY(0) translateX(0) }
@@ -201,7 +201,7 @@ body.scrolled .beam { animation-play-state: paused; opacity: .06; transition:opa
   --h: var(--hue, 18);  /* 10–30 = rojo/naranja */
   --l: var(--lum, 55%);
   background:
-    radial-gradient(circle at 30% 30%,
+    radial-gradient(circle at 60% 30%,
       hsl(var(--h),100%,98%),
       hsl(var(--h),100%,80%) 35%,
       hsl(calc(var(--h) + 6),100%,55%) 65%,
@@ -495,19 +495,13 @@ body.scrolled .comets{ opacity:.45; transition:opacity .4s }
 
  
 /* Suaviza los extremos y da sensación de rayo */
-.neon-lines .beam{
-  -webkit-mask-image: linear-gradient(90deg,
-    rgba(0,0,0,0) 8%, #000 18%, #000 82%, rgba(0,0,0,0) 100%);
-          mask-image: linear-gradient(90deg,
-    rgba(0,0,0,0) 8%, #000 18%, #000 82%, rgba(0,0,0,0) 100%);
-  opacity:.9;
+/* ===== Tech Rays (canvas) ===== */
+.tech-rays{
+  position:absolute;
+  inset:0;
+  z-index:2;           /* debajo del contenido (3) y encima de estrellas (0–1) */
+  pointer-events:none; /* no bloquea nada */
 }
-   /* Grosores y velocidades */
-.b1{ top:24%; height:8px;  --speed:1.4s }
-.b2{ top:38%; height:7px;  --speed:1.6s }
-.b3{ top:52%; height:9px;  --speed:1.7s }
-.b4{ top:66%; height:7px;  --speed:1.5s }
-.b5{ top:80%; height:8px;  --speed:1.8s }
 
 
 
