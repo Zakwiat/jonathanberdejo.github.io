@@ -36,30 +36,43 @@ body{
   background:var(--neon); mix-blend-mode:screen;
   filter: brightness(3.2) saturate(250%) blur(.6px);
   box-shadow: 0 0 18px var(--neon),0 0 42px var(--neon),0 0 96px var(--neon),0 0 160px var(--neon);
+
+  /* 👇 NUEVO: componemos la transform con variables */
+  --tx: translateX(-30vw);
+  --sy: scaleY(1);
+  transform: var(--tx) var(--sy);
+
   animation:
     moveX var(--speed,2.1s) linear infinite,
     flicker 1.6s ease-in-out infinite,
     heartbeat var(--beat) ease-in-out infinite;
 }
+
 .b1{ top:24%; height:10px; --speed:1.8s; animation-delay:0s,.05s,0s }
 .b2{ top:38%; height:8px;  --speed:2.0s; animation-delay:.12s,.2s, .02s }
 .b3{ top:52%; height:12px; --speed:2.3s; animation-delay:.24s,.1s, .04s }
 .b4{ top:66%; height:9px;  --speed:2.0s; animation-delay:.36s,.25s, .01s }
 .b5{ top:80%; height:11px; --speed:2.6s; animation-delay:.48s,.15s, .03s }
 
-@keyframes moveX{ from{transform:translateX(-30vw)} to{transform:translateX(135vw)} }
+@keyframes moveX{
+  from{ --tx: translateX(-30vw); }
+  to  { --tx: translateX(135vw); }
+}
+
 @keyframes flicker{
   0%,100%{ opacity:1;   filter:brightness(3.2) saturate(250%) blur(.6px) }
   45%    { opacity:.95; filter:brightness(2.8) saturate(220%) blur(.7px) }
   60%    { opacity:1;   filter:brightness(3.5) saturate(280%) blur(.5px) }
 }
 @keyframes heartbeat{
-  0%{transform:scaleY(1)}
-  7%{transform:scaleY(1.45)}
-  12%{transform:scaleY(1.08)}
-  18%{transform:scaleY(1.25)}
-  26%,100%{transform:scaleY(1)}
+  0%   { --sy: scaleY(1) }
+  7%   { --sy: scaleY(1.45) }
+  12%  { --sy: scaleY(1.08) }
+  18%  { --sy: scaleY(1.25) }
+  26%,
+  100% { --sy: scaleY(1) }
 }
+  
 @keyframes thump{
   0%{opacity:1}
   7%{opacity:1.03;filter:brightness(1.06)}
@@ -142,3 +155,4 @@ body{
 @media (prefers-reduced-motion: reduce){
   .beam,.title,.neon-bg::after{ animation:none }
 }
+
