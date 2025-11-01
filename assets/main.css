@@ -21,9 +21,12 @@ body{
 
 /* ===== Fondo neón fijo (no se pierde al hacer scroll) ===== */
 .neon-bg{
-  position:fixed; inset:0; z-index:-1; overflow:hidden; pointer-events:none;
+  position:fixed; inset:0;
+  z-index:0;                 /* antes: -1 */
+  overflow:hidden; pointer-events:none;
   background: radial-gradient(1200px 600px at 50% 60%, rgba(0,234,255,.06), transparent 70%);
 }
+
 .neon-bg::after{
   content:""; position:absolute; inset:-12%;
   background:
@@ -282,18 +285,23 @@ html, body {
 /* ===== Glass transparente para las tarjetas ===== */
 /* Glass MUY transparente */
 .card{
-  background: rgba(0,0,0,0.08);           /* antes 0.25 */
+  background: rgba(0,0,0,0.08);
   border: 1px solid rgba(0,234,255,0.18);
   border-radius: 18px;
   padding: 24px;
   backdrop-filter: blur(8px) saturate(120%);
   -webkit-backdrop-filter: blur(8px) saturate(120%);
-  box-shadow: 0 8px 30px rgba(0,0,0,.25); /* sin inset que oscurece */
-  transition: background .3s ease, box-shadow .3s ease;
+  box-shadow: 0 8px 30px rgba(0,0,0,.25);
 }
-.card:hover{
-  background: rgba(0,0,0,0.12);
-  box-shadow: 0 10px 36px rgba(0,0,0,.3);
-}
+.card:hover{ background: rgba(0,0,0,0.12) }
 
+
+/* Asegura que el contenido esté encima del fondo */
+.nav,
+.hero,
+.section,
+.footer {
+  position: relative;
+  z-index: 1;
+}
 
