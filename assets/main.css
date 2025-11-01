@@ -31,42 +31,48 @@ body{
   animation: thump var(--beat) ease-in-out infinite;
 }
 .neon-lines{ position:absolute; inset:0 }
+/* === LÍNEAS NEÓN (robusto) === */
 .beam{
   position:absolute;
-  top:0;
-  left:0;
-  width:70vw;
-  height:10px;
+  left:-45vw; width:70vw; height:10px; top:0;
+  /* solo movimiento horizontal aquí */
+  transform: translateX(-30vw);
+  animation: moveX var(--speed,2.2s) linear infinite;
+  mix-blend-mode:screen; /* mantiene el look */
+}
+
+/* El bar real + glow + latido */
+.beam::before{
+  content:""; position:absolute; inset:0;
   background:var(--neon);
-  mix-blend-mode:screen;
   filter: brightness(3.2) saturate(250%) blur(.6px);
   box-shadow: 0 0 18px var(--neon),0 0 42px var(--neon),0 0 96px var(--neon),0 0 160px var(--neon);
   transform-origin:left center;
-  
-  /* variables combinadas */
-  --move-x: 0;
-  --scale-y: 1;
-  transform: translateX(var(--move-x)) scaleY(var(--scale-y));
-
   animation:
-    moveX var(--speed,2.2s) linear infinite,
-    flicker 1.6s ease-in-out infinite,
-    heartbeat var(--beat) ease-in-out infinite;
+    heartbeat var(--beat) ease-in-out infinite,
+    flicker 1.6s ease-in-out infinite;
 }
 
-/* Barrido correcto: izq -> der */
-@keyframes moveX {
-  0%   { --move-x: -25vw; }
-  100% { --move-x: 125vw; }
+/* Posiciones/velocidades (como ya tenías) */
+.b1{ top:24%; height:10px; --speed:1.8s }
+.b2{ top:38%; height:8px;  --speed:2.0s }
+.b3{ top:52%; height:12px; --speed:2.3s }
+.b4{ top:66%; height:9px;  --speed:2.0s }
+.b5{ top:80%; height:11px; --speed:2.6s }
+
+/* Barrido izq -> der */
+@keyframes moveX{
+  from{ transform: translateX(-30vw); }
+  to  { transform: translateX(135vw); }
 }
 
-/* Latido sin interferir con el desplazamiento */
-@keyframes heartbeat {
-  0%,100% { --scale-y: 1; }
-  7%      { --scale-y: 1.45; }
-  12%     { --scale-y: 1.08; }
-  18%     { --scale-y: 1.25; }
-  26%     { --scale-y: 1; }
+/* Latido del grosor sin tocar el translateX */
+@keyframes heartbeat{
+  0%,100%{ transform: scaleY(1) }
+  7%     { transform: scaleY(1.45) }
+  12%    { transform: scaleY(1.08) }
+  18%    { transform: scaleY(1.25) }
+  26%    { transform: scaleY(1) }
 }
 
 
