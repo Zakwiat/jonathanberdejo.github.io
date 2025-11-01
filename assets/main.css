@@ -386,4 +386,65 @@ html, body {
   .hud-nav a{ padding:8px 10px; font-weight:600 }
 }
 
+/* ☄️ Cometas */
+.comets{ position:absolute; inset:0; z-index:0; pointer-events:none; overflow:hidden }
+
+.comet{
+  position:absolute;
+  left: calc(var(--startX, 50) * 1vw);
+  top: -10vh;
+  width: 8px; height: 8px;
+  transform: rotate(var(--angle, 15deg));
+  filter: blur(.2px);
+  /* caída diagonal */
+  animation: cometFall var(--dur, 3.2s) cubic-bezier(.12,.24,.02,1) forwards,
+             cometPulse 1.2s ease-in-out infinite;
+  will-change: transform, opacity;
+}
+
+/* núcleo incandescente */
+.comet::before{
+  content:""; position:absolute; inset:-2px;
+  border-radius:50%;
+  background: radial-gradient(circle at 30% 30%, #fff, #ffd9a0 35%, #ff6a00 65%, rgba(255,64,0,.6));
+  box-shadow:
+    0 0 20px rgba(255,120,40,.9),
+    0 0 48px rgba(255,60,0,.6),
+    0 0 90px rgba(255,40,0,.45);
+}
+
+/* cola */
+.comet::after{
+  content:""; position:absolute;
+  left:-2px; right:-2px; top:40%; height: 160px;
+  transform: translateY(-100%) skewX(-15deg);
+  background: linear-gradient(to bottom,
+    rgba(255,200,120,.95) 0%,
+    rgba(255,120,40,.6) 35%,
+    rgba(255,60,0,.25) 65%,
+    rgba(255,30,0,0) 100%);
+  filter: blur(2px);
+  border-radius: 6px;
+}
+
+/* recorrido: avanza en Y y deriva en X */
+@keyframes cometFall{
+  0%   { transform: translate(0,0) rotate(var(--angle,15deg)); opacity: 0 }
+  6%   { opacity: 1 }
+  100% { transform: translate(var(--driftX, -18vw), 120vh) rotate(var(--angle,15deg)); opacity: 0 }
+}
+
+/* leve respiración de brillo */
+@keyframes cometPulse{
+  0%,100%{ filter: brightness(1) }
+  50%    { filter: brightness(1.2) }
+}
+
+/* Menos distracción al leer */
+body.scrolled .comets { opacity:.35; }
+
+/* Respeto accesibilidad */
+@media (prefers-reduced-motion: reduce){
+  .comet{ animation: none !important }
+}
 
