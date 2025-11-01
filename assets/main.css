@@ -477,5 +477,32 @@ body.scrolled .comets{ opacity:.45; transition:opacity .4s }
   100% { transform: translate(var(--driftX, -18vw), 125vh) rotate(var(--angle,15deg)); opacity: 0 }
 }
 @keyframes cometPulse{ 0%,100%{ filter:brightness(1)} 50%{ filter:brightness(1.25)} }
+   .actions .btn, .actions .btn--ghost{
+  min-width:160px;
+  display:inline-flex; align-items:center; justify-content:center;
+  text-align:center;
+}
 
+
+ 
+/* Suaviza los extremos y da sensación de rayo */
+.neon-lines .beam{
+  -webkit-mask-image: linear-gradient(90deg,
+    rgba(0,0,0,0) 8%, #000 18%, #000 82%, rgba(0,0,0,0) 100%);
+          mask-image: linear-gradient(90deg,
+    rgba(0,0,0,0) 8%, #000 18%, #000 82%, rgba(0,0,0,0) 100%);
+  opacity:.9;
+}
+   /* Grosores y velocidades */
+.b1{ top:24%; height:8px;  --speed:1.4s }
+.b2{ top:38%; height:7px;  --speed:1.6s }
+.b3{ top:52%; height:9px;  --speed:1.7s }
+.b4{ top:66%; height:7px;  --speed:1.5s }
+.b5{ top:80%; height:8px;  --speed:1.8s }
+
+
+
+}
+
+   
 
