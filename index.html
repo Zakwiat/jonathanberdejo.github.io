@@ -824,6 +824,126 @@ document.getElementById("langSwitcher").addEventListener("change",(e)=>applyLang
   pickPair();
   requestAnimationFrame(loop);
 })();
+/* ========== Líneas enlazando estrellas (4 a la vez, rojo neón) ========== */
+(function(){
+  const canvas = document.getElementById('starLinkCanvas');
+  const starsWrap = document.querySelector('.stars');
+  if(!canvas || !starsWrap) return;
+
+  const ctx = canvas.getContext('2d');
+  let W=0,H=0, DPR = Math.max(1, Math.min(2, window.devicePixelRatio||1));
+
+  const neonLine = getComputedStyle(document.documentElement).getPropertyValue('--neonline').trim() || '#ff1744';
+
+  function resize(){
+    W = Math.round(window.innerWidth);
+    H = Math.round(window.innerHeight);
+    canvas.width = Math.round(W * DPR);
+    canvas.height = Math.round(H * DPR);
+    canvas.style.width = W+'px';
+    canvas.style.height = H+'px';
+    ctx.setTransform(DPR,0,0,DPR,0,0);
+    ctx.lineWidth = 1.2;        // Grosor visible pero menor que estrellas (2px)
+    ctx.lineCap = 'round';
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  function getStarPoints(){
+    const nodes = starsWrap.querySelectorAll('.star');
+    const pts = [];
+    nodes.forEach(n=>{
+      const left = parseFloat(n.style.left||'0'); // %
+      const top  = parseFloat(n.style.top ||'0'); // %
+      if(!isNaN(left) && !isNaN(top)){
+        pts.push({ x: (left/100)*W, y: (top/100)*H });
+      }
+    });
+    return pts.length ? pts : [{x:W*0.3,y:H*0.3},{x:W*0.7,y:H*0.7}];
+  }
+
+  const ease = t => t<.5 ? 2*t*t : 1 - Math.pow(-2*t+2,2)/2;
+
+  const N_RAYS = 4;                  // 4 líneas simultáneas
+  const SPEED = 700;                 // px/seg (medio-rápido)
+  const PAUSE_MS = 140;
+
+  let points = getStarPoints();
+
+  function makeRay(){
+    const a = Math.floor(Math.random()*points.length);
+    let b = Math.floor(Math.random()*points.length);
+    if (b===a && points.length>1) b = (a+1)%points.length;
+    const from = points[a], to = points[b];
+    const dist = Math.hypot(to.x-from.x, to.y-from.y);
+    const dur  = Math.max(0.35, dist / SPEED);
+    return { from, to, dist, dur, t0: performance.now() };
+  }
+
+  let rays = Array.from({length:N_RAYS}, makeRay);
+
+  let reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  window.matchMedia('(prefers-reduced-motion: reduce)').addEventListener('change', e=> reduced = e.matches);
+
+  function drawRay({from,to}, prog){
+    const x = from.x + (to.x - from.x) * prog;
+    const y = from.y + (to.y - from.y) * prog;
+
+    // línea principal
+    ctx.save();
+    ctx.strokeStyle = neonLine;
+    ctx.shadowColor = neonLine;
+    ctx.shadowBlur = 16;
+    ctx.globalAlpha = 0.95;
+    ctx.beginPath();
+    ctx.moveTo(from.x, from.y);
+    ctx.lineTo(x, y);
+    ctx.stroke();
+
+    // resplandor fino
+    ctx.shadowBlur = 28;
+    ctx.globalAlpha = 0.35;
+    ctx.beginPath();
+    ctx.moveTo(from.x, from.y);
+    ctx.lineTo(x, y);
+    ctx.stroke();
+
+    // punta pequeña (< 2px de la estrella)
+    ctx.globalAlpha = 0.95;
+    ctx.shadowBlur = 10;
+    ctx.fillStyle = neonLine;
+    ctx.beginPath();
+    ctx.arc(x, y, 1.4, 0, Math.PI*2); // 1.4px, más pequeño que la estrella (2px)
+    ctx.fill();
+    ctx.restore();
+  }
+
+  function tick(now){
+    if (reduced) { ctx.clearRect(0,0,W,H); return; }
+    points = getStarPoints();
+    ctx.clearRect(0,0,W,H);
+
+    for (let i=0;i<rays.length;i++){
+      const r = rays[i];
+      const elapsed = (now - r.t0)/1000;
+      const prog = Math.min(1, ease(elapsed / r.dur));
+      drawRay(r, prog);
+
+      if (prog >= 1){
+        // pequeña pausa y se reemplaza por un nuevo trayecto
+        rays[i] = r._replacing ? r._replacing : r;
+        setTimeout(()=>{
+          const nr = makeRay();
+          rays[i] = nr;
+        }, PAUSE_MS);
+        // Evita varias sustituciones en el mismo frame
+        r._replacing = makeRay();
+      }
+    }
+    requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+})();
 
   
 
