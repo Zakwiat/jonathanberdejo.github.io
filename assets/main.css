@@ -258,3 +258,25 @@ html, body {
   from { transform:translateX(0%) translateY(0%) }
   to   { transform:translateX(-2%) translateY(1.5%) }
 }
+.stars-right {
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  z-index:0;
+  animation: starShiftRight 240s linear infinite alternate;
+  opacity:.6;
+}
+@keyframes starShiftRight {
+  0%   { transform: translate(0,0) }
+  100% { transform: translate(-4%, -1%) }
+}
+.neon-bg::before {
+  content:"";
+  position:absolute;
+  inset:-20%;
+  background:
+    radial-gradient(900px 600px at 80% 50%, rgba(0,234,255,.12), transparent 65%);
+  mix-blend-mode:screen;
+  filter:blur(18px);
+}
+
