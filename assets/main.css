@@ -1,49 +1,68 @@
-/* ===== RESET ===== */
+/* =========================================================
+   RESET
+========================================================= */
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%}
 html{scroll-behavior:smooth}
 
-/* ===== VARIABLES ===== */
+/* =========================================================
+   VARIABLES
+========================================================= */
 :root{
-  --bpm:72;
-  --beat: calc(60s/var(--bpm));
+  --bpm:72;                      /* ritmo del latido del título */
+  --beat: calc(60s/var(--bpm));  /* duración del latido en función del bpm */
   --neon:#00eaff;
   --bg:#000;
   --txt:#eaf6ff;
   --stroke: rgba(0,234,255,.18);
+  --card-bg: rgba(0,0,0,0.08);   /* base de glass */
 }
 
+/* =========================================================
+   BASE
+========================================================= */
 body{
   font-family:'Poppins',system-ui,Segoe UI,Roboto,Arial,sans-serif;
   background:var(--bg);
   color:var(--txt);
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
 }
 
-/* ===== UNIVERSO ===== */
+/* =========================================================
+   UNIVERSO (fondo fijo que no se pierde al hacer scroll)
+========================================================= */
 .neon-bg{
-  position:fixed; inset:0;
-  z-index:0; overflow:hidden;
+  position:fixed;
+  inset:0;
+  z-index:0;                     /* fondo debajo del contenido */
+  overflow:hidden;
   pointer-events:none;
-  background: radial-gradient(1200px 600px at 50% 60%, rgba(0,234,255,.06), transparent 70%);
+  background:
+    radial-gradient(1200px 600px at 50% 60%, rgba(0,234,255,.06), transparent 70%);
 }
 
-/* viñeta — ahora ::before, para que los cometas estén encima */
+/* Viñeta estática (SIN animación) — antes estaba en ::after con pulso */
 .neon-bg::before{
-  content:""; position:absolute; inset:-12%;
+  content:"";
+  position:absolute;
+  inset:-12%;
+  z-index:-1;                    /* detrás de las capas internas */
   background:
     radial-gradient(1200px 600px at 15% 15%, rgba(0,234,255,.06), transparent 70%),
     radial-gradient(1000px 500px at 85% 85%, rgba(0,234,255,.04), transparent 70%),
-    radial-gradient(circle at 50% 55%, rgba(0,0,0,.0) 0, rgba(0,0,0,.75) 70%);
-  animation: thump var(--beat) ease-in-out infinite;
-  z-index:-1;
+    radial-gradient(circle at 50% 55%, rgba(0,0,0,0) 0, rgba(0,0,0,.75) 70%);
+  /* sin animation para evitar parpadeo de toda la página */
 }
 
-/* capas */
-.stars, .nebula-red { z-index:0; }
-.comets             { z-index:1; }
-.neon-lines         { z-index:2; }
+/* Capas internas del universo (orden) */
+.stars, .nebula-red { position:absolute; inset:0; z-index:0; pointer-events:none; }
+.comets             { position:absolute; inset:0; z-index:1; pointer-events:none; }
+.neon-lines         { position:absolute; inset:0; z-index:2; pointer-events:none; }
 
-/* ===== LÍNEAS NEÓN ===== */
+/* =========================================================
+   LÍNEAS NEÓN
+========================================================= */
 .neon-lines{ position:absolute; inset:0; }
 
 .beam{
@@ -54,7 +73,6 @@ body{
   animation: moveX var(--speed,2.2s) linear infinite;
   mix-blend-mode:screen;
 }
-
 .beam::before{
   content:""; position:absolute; inset:0;
   background:var(--neon);
@@ -70,45 +88,46 @@ body{
     flicker 1.6s ease-in-out infinite;
 }
 
+/* posiciones / grosores / velocidades */
 .b1{ top:24%; height:10px; --speed:1.8s }
 .b2{ top:38%; height:8px;  --speed:2.0s }
 .b3{ top:52%; height:12px; --speed:2.3s }
 .b4{ top:66%; height:9px;  --speed:2.0s }
 .b5{ top:80%; height:11px; --speed:2.6s }
 
-/* ===== ANIMACIONES ===== */
-@keyframes moveX{ from{transform:translateX(-30vw)} to{transform:translateX(135vw)} }
+/* Pausar líneas al leer (clase puesta por JS en scroll) */
+body.scrolled .beam { animation-play-state: paused; opacity: .06; transition:opacity .6s }
+
+/* Animaciones de líneas */
+@keyframes moveX{
+  from{ transform: translateX(-30vw) }
+  to  { transform: translateX(135vw) }
+}
 @keyframes heartbeat{
-  0%,100%{transform:scaleY(1)}
-  7%{transform:scaleY(1.45)}
-  12%{transform:scaleY(1.08)}
-  18%{transform:scaleY(1.25)}
-  26%{transform:scaleY(1)}
+  0%,100%{ transform: scaleY(1) }
+  7%     { transform: scaleY(1.45) }
+  12%    { transform: scaleY(1.08) }
+  18%    { transform: scaleY(1.25) }
+  26%    { transform: scaleY(1) }
 }
 @keyframes flicker{
-  0%,100%{opacity:1;filter:brightness(3.2) saturate(250%) blur(.6px)}
-  45%{opacity:.95;filter:brightness(2.8) saturate(220%) blur(.7px)}
-  60%{opacity:1;filter:brightness(3.5) saturate(280%) blur(.5px)}
-}
-@keyframes thump{
-  0%{opacity:1}
-  7%{opacity:1.03;filter:brightness(1.06)}
-  12%{opacity:1}
-  18%{opacity:1.02;filter:brightness(1.04)}
-  26%,100%{opacity:1;filter:none}
+  0%,100%{ opacity:1;   filter:brightness(3.2) saturate(250%) blur(.6px) }
+  45%    { opacity:.95; filter:brightness(2.8) saturate(220%) blur(.7px) }
+  60%    { opacity:1;   filter:brightness(3.5) saturate(280%) blur(.5px) }
 }
 
-/* ===== ESTRELLAS ===== */
+/* =========================================================
+   ESTRELLAS (parpadeo + movimiento orbital sutil)
+========================================================= */
 .stars{
-  position:absolute; inset:0;
-  pointer-events:none;
-  overflow:hidden;
   animation: starShift 180s linear infinite alternate;
 }
 .star{
   position:absolute;
-  width:2px;height:2px;border-radius:50%;
-  background:#fff;opacity:0;
+  width:2px; height:2px;
+  border-radius:50%;
+  background:#fff;
+  opacity:0;
   filter:drop-shadow(0 0 6px rgba(255,255,255,.6));
   animation:twinkle var(--tw,3.5s) ease-in-out infinite var(--td,0s);
   transform:scale(var(--sc,1));
@@ -120,15 +139,15 @@ body{
   90%{opacity:1}
 }
 @keyframes starShift{
-  0%{transform:translate(0,0) rotate(0deg)}
-  50%{transform:translate(-1.5%,-1%) rotate(0.5deg)}
-  100%{transform:translate(1.5%,1%) rotate(-0.5deg)}
+  0%   { transform: translate(0,0) rotate(0deg) }
+  50%  { transform: translate(-1.5%, -1%) rotate(.5deg) }
+  100% { transform: translate(1.5%, 1%) rotate(-.5deg) }
 }
 
-/* ===== NEBULOSA ===== */
+/* =========================================================
+   NEBULOSA ROJA (sutil)
+========================================================= */
 .nebula-red{
-  position:absolute; inset:-20%;
-  pointer-events:none;
   background:
     radial-gradient(700px 480px at 18% 72%, rgba(255,30,90,.22), transparent 60%),
     radial-gradient(560px 420px at 82% 28%, rgba(255,90,40,.14), transparent 62%),
@@ -138,30 +157,45 @@ body{
   animation: nebula-drift 42s ease-in-out infinite alternate;
 }
 @keyframes nebula-drift{
-  from{transform:translateY(0) translateX(0)}
-  to{transform:translateY(-3%) translateX(1.5%)}
+  from{ transform:translateY(0) translateX(0) }
+  to  { transform:translateY(-3%) translateX(1.5%) }
+}
+/* Extensión a la derecha */
+.neon-bg::after{
+  content:"";
+  position:absolute;
+  inset:-10%;
+  background:
+    radial-gradient(640px 420px at 90% 40%, rgba(255,60,100,.18), transparent 65%),
+    radial-gradient(780px 540px at 95% 75%, rgba(255,40,80,.10), transparent 68%);
+  filter: blur(12px) saturate(120%);
+  mix-blend-mode:screen;
+  /* SIN animación aquí para evitar parpadeo global */
 }
 
-/* ===== COMETAS ===== */
-.comets{ position:absolute; inset:0; pointer-events:none; overflow:hidden; z-index:1; }
+/* =========================================================
+   COMETAS (con cola y brillo)
+========================================================= */
 .comet{
   position:absolute;
   left: calc(var(--startX, 50) * 1vw);
-  top:-12vh;
-  --sz: var(--size,9px);
-  width:var(--sz);height:var(--sz);
-  transform: rotate(var(--angle,15deg));
-  animation: cometFall var(--dur,3.2s) cubic-bezier(.12,.24,.02,1) forwards,
+  top: -12vh;
+  --sz: var(--size, 9px);
+  width: var(--sz); height: var(--sz);
+  transform: rotate(var(--angle, 15deg));
+  animation: cometFall var(--dur, 3.2s) cubic-bezier(.12,.24,.02,1) forwards,
              cometPulse 1.2s ease-in-out infinite;
+  will-change: transform, opacity, filter;
 }
 .comet::before{
   content:""; position:absolute; inset:-2px; border-radius:50%;
-  --h: var(--hue,18); --l: var(--lum,55%);
+  --h: var(--hue, 18);  /* 10–30 = rojo/naranja */
+  --l: var(--lum, 55%);
   background:
     radial-gradient(circle at 30% 30%,
       hsl(var(--h),100%,98%),
       hsl(var(--h),100%,80%) 35%,
-      hsl(calc(var(--h)+6),100%,55%) 65%,
+      hsl(calc(var(--h) + 6),100%,55%) 65%,
       hsla(var(--h),100%,50%,.65));
   box-shadow:
     0 0 32px hsla(var(--h),100%,60%,.95),
@@ -181,43 +215,106 @@ body{
   border-radius:8px;
 }
 @keyframes cometFall{
-  0%{transform:translate(0,0) rotate(var(--angle,15deg));opacity:0}
-  5%{opacity:1}
-  100%{transform:translate(var(--driftX,-18vw),125vh) rotate(var(--angle,15deg));opacity:0}
+  0%   { transform: translate(0,0) rotate(var(--angle,15deg)); opacity: 0 }
+  5%   { opacity: 1 }
+  100% { transform: translate(var(--driftX, -18vw), 125vh) rotate(var(--angle,15deg)); opacity: 0 }
 }
-@keyframes cometPulse{0%,100%{filter:brightness(1)}50%{filter:brightness(1.25)}}
+@keyframes cometPulse{ 0%,100%{ filter:brightness(1)} 50%{ filter:brightness(1.25)} }
 
-/* ===== CONTENIDO ===== */
-.nav, .hero, .section, .footer{ position:relative; z-index:2; }
-.section{padding:96px 20px;}
-.container{max-width:1100px;margin:0 auto;}
-.card{
-  background:transparent;
-  border:1px solid rgba(0,234,255,.22);
-  border-radius:18px;
-  padding:24px;
-  backdrop-filter:blur(4px);
-  -webkit-backdrop-filter:blur(4px);
+/* Menos distracción al leer */
+body.scrolled .stars{ opacity:.12 !important; transition:opacity .4s }
+body.scrolled .nebula-red{ opacity:.35; transition:opacity .4s }
+body.scrolled .comets{ opacity:.45; transition:opacity .4s }
+
+/* =========================================================
+   CONTENIDO (por encima del universo)
+========================================================= */
+.nav, .hero, .section, .footer, .hud-nav{
+  position:relative;
+  z-index:3; /* por encima del universo (0–2) */
 }
+
+/* HERO centrado vertical/ horizontalmente */
+.hero{
+  min-height:100vh;           /* asegura centro real */
+  display:grid;
+  place-items:center;
+  text-align:center;
+  padding-top:0;
+}
+
+/* Título con latido (solo él) */
 .title{
   font-weight:900;
-  font-size:clamp(2.8rem,9vw,6.2rem);
+  letter-spacing:.04em;
+  font-size:clamp(2.8rem,9vw,6.4rem);
   color:#e8fdff;
-  text-shadow:0 0 18px var(--neon),0 0 48px var(--neon),0 0 120px var(--neon);
+  text-shadow:
+    0 0 18px var(--neon),
+    0 0 48px var(--neon),
+    0 0 120px var(--neon);
   animation: titleBeat var(--beat) ease-in-out infinite;
 }
 @keyframes titleBeat{
-  0%{transform:scale(1)}
-  8%{transform:scale(1.015)}
-  18%{transform:scale(1.009)}
-  26%,100%{transform:scale(1)}
+  0%      { transform:scale(1) }
+  8%      { transform:scale(1.015) }
+  18%     { transform:scale(1.009) }
+  26%,100%{ transform:scale(1) }
 }
 
-/* ===== HUD NAV ===== */
+/* Secciones y contenedor */
+.section{ padding:96px 20px }
+.container{ max-width:1100px; margin:0 auto }
+
+/* Tarjeta glass transparente */
+.card{
+  background: var(--card-bg);
+  border: 1px solid rgba(0,234,255,0.22);
+  border-radius: 18px;
+  padding: 24px;
+  backdrop-filter: blur(8px) saturate(120%);
+  -webkit-backdrop-filter: blur(8px) saturate(120%);
+  box-shadow: 0 8px 30px rgba(0,0,0,.25);
+  transition: background .3s ease, box-shadow .3s ease, border-color .3s ease;
+}
+.card:hover{
+  background: rgba(0,0,0,0.12);
+  box-shadow: 0 10px 40px rgba(0,0,0,.32);
+}
+.section h2{
+  font-weight:800; letter-spacing:.02em; margin-bottom:14px;
+  color:#eafcff; text-shadow:0 0 14px rgba(0,234,255,.6);
+}
+.grid{ display:grid; gap:18px }
+.grid-2{ grid-template-columns: repeat(2, minmax(0,1fr)) }
+
+/* Badges y acciones */
+.badges{ display:flex; flex-wrap:wrap; gap:10px; margin-top:8px }
+.badges span{
+  border:1px solid var(--stroke); padding:6px 10px; border-radius:999px; font-size:.9rem;
+  background:rgba(0,234,255,.06)
+}
+.actions{ display:flex; gap:12px; margin-top:16px; flex-wrap:wrap }
+.btn{
+  border:1px solid var(--neon); border-radius:12px; padding:10px 14px; font-weight:700;
+  color:#001a1f; background:linear-gradient(90deg,#00eaff,#8ff6ff);
+  text-decoration:none; box-shadow:0 0 18px rgba(0,234,255,.35);
+}
+.btn--ghost{
+  background:transparent; color:#bfe7f1; border-color:var(--stroke);
+}
+
+/* Footer */
+.footer{ padding:40px 20px; color:#a9d7e5; text-align:center; border-top:1px solid var(--stroke) }
+
+/* =========================================================
+   HUD / NAV inferior con spotlight + indicador
+========================================================= */
 .hud-nav{
   position:fixed; bottom:22px; left:50%; transform:translateX(-50%);
   z-index:5; display:flex; gap:18px; padding:10px 14px;
   background:rgba(0,0,0,.35); backdrop-filter: blur(10px) saturate(120%);
+  -webkit-backdrop-filter: blur(10px) saturate(120%);
   border:1px solid rgba(0,234,255,.22); border-radius:999px;
   box-shadow:0 0 24px rgba(0,234,255,.18), inset 0 0 10px rgba(0,234,255,.08);
   isolation:isolate;
@@ -230,6 +327,7 @@ body{
   mix-blend-mode:screen; opacity:.9;
 }
 .hud-nav a{
+  position:relative; z-index:1;
   color:#c9faff; text-decoration:none; font-weight:700; letter-spacing:.02em;
   padding:8px 12px; border-radius:10px;
   transition: color .2s ease, background .2s ease, text-shadow .2s ease;
@@ -238,10 +336,28 @@ body{
   color:#001a1f; background:linear-gradient(90deg,#00eaff,#8ff6ff);
   text-shadow:0 0 12px #00eaff;
 }
+.hud-nav a.active{
+  color:#eaffff;
+  text-shadow:0 0 10px #00eaff, 0 0 24px #00eaff;
+}
 .hud-indicator{
   position:absolute; left:0; bottom:6px; height:2px; border-radius:2px;
   width:var(--indW,40px); transform:translateX(var(--indX,0));
   background:linear-gradient(90deg,transparent,#00eaff,transparent);
   box-shadow:0 0 14px #00eaff;
-  transition:transform .25s ease, width .25s ease;
+  transition: transform .25s ease, width .25s ease;
 }
+
+/* =========================================================
+   RESPONSIVE / ACCESIBILIDAD
+========================================================= */
+@media (max-width:900px){
+  .grid-2{ grid-template-columns:1fr }
+  .hud-nav{ gap:8px; padding:8px 10px; bottom:16px }
+  .hud-nav a{ padding:8px 10px; font-weight:600 }
+  .beam{ width:80vw; left:-55vw }
+}
+@media (prefers-reduced-motion: reduce){
+  .beam,.title,.stars,.comet{ animation:none !important }
+}
+
