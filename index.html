@@ -4,7 +4,10 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Jonathan Berdejo</title>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700;900&display=swap" rel="stylesheet"/>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700;900&display=swap" rel="stylesheet">
+
 <style>
 /* ===== Reset & Vars ===== */
 *{box-sizing:border-box;margin:0;padding:0}
@@ -87,14 +90,22 @@ body{font-family:'Poppins',system-ui,Segoe UI,Roboto,Arial,sans-serif;background
   </select>
 </div>
 
-  <!-- Fondo -->
+   <!-- Fondo -->
   <div class="neon-bg" aria-hidden="true">
     <div class="stars"></div>
     <div class="neon-lines">
-      <span class="beam b1"></span><span class="beam b2"></span><span class="beam b3"></span><span class="beam b4"></span><span class="beam b5"></span>
+      <span class="beam b1"></span>
+      <span class="beam b2"></span>
+      <span class="beam b3"></span>
+      <span class="beam b4"></span>
+      <span class="beam b5"></span>
     </div>
     <div class="comets"></div>
+    
+    <!-- 🎨 Canvas de trazos tecnológicos -->
+    <canvas id="techRays" class="tech-rays" aria-hidden="true"></canvas>
   </div>
+
 
   <!-- HUD -->
   <nav class="hud-nav" aria-label="Principal">
