@@ -61,7 +61,9 @@
           </div>
 
           <div class="actions">
-            <a class="btn" href="assets/Jonathan-Berdejo-CV.pdf" download>Descargar CV (PDF)</a>
+            <button class="btn" id="requestCVBtn" type="button">Solicitar CV</button>
+<span id="cvStatus" style="margin-left:8px;opacity:.8;"></span>
+
             <a class="btn btn--ghost" href="mailto:berdejosanchez@gmail.com">berdejosanchez@gmail.com</a>
           </div>
         </div>
@@ -321,8 +323,8 @@ Gracias.`
       close();
     });
   })();
+     document.querySelectorAll('a[download]').forEach(a => a.remove());
 </script>
-  </script>
   <div class="modal" id="cvModal" aria-hidden="true" role="dialog" aria-labelledby="cvTitle">
   <div class="modal__backdrop" data-close></div>
   <div class="modal__panel" role="document">
