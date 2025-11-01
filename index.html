@@ -7,12 +7,40 @@
   <link rel="stylesheet" href="assets/main.css?v=neon-fixed" />
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700;900&display=swap" rel="stylesheet"/>
 </head>
+    <footer class="footer">© <span id="year"></span> Jonathan Berdejo</footer>
+
   <script>
-window.addEventListener('scroll',()=>{
-  const top = window.scrollY;
-  document.body.classList.toggle('scrolled', top > window.innerHeight*0.7);
-});
-</script>
+    // Actualizar año
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Pausar líneas al hacer scroll
+    window.addEventListener('scroll', () => {
+      document.body.classList.toggle('scrolled', window.scrollY > innerHeight * 0.7);
+    });
+
+    // ⭐ Generar estrellas
+    (function(){
+      const wrap = document.querySelector('.stars');
+      if(!wrap) return;
+      const isMobile = matchMedia('(max-width: 900px)').matches;
+      const N = isMobile ? 90 : 160;
+      const frag = document.createDocumentFragment();
+      for(let i=0;i<N;i++){
+        const s = document.createElement('i');
+        s.className = 'star';
+        s.style.left = (Math.random()*100).toFixed(3) + '%';
+        s.style.top  = (Math.random()*100).toFixed(3) + '%';
+        s.style.setProperty('--sc',  (0.6 + Math.random()*1.6).toFixed(2));
+        s.style.setProperty('--tw',  (2.2 + Math.random()*4.2).toFixed(2) + 's');
+        s.style.setProperty('--td',  (Math.random()*5).toFixed(2) + 's');
+        frag.appendChild(s);
+      }
+      wrap.appendChild(frag);
+    })();
+  </script>
+</body>
+</html>
+
 <div class="neon-bg" aria-hidden="true">
   <!-- ⭐ Capa de estrellas -->
   <div class="stars"></div>
