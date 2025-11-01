@@ -110,24 +110,17 @@ footer{text-align:center;padding:28px 0;background:var(--bg);border-top:1px soli
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(90deg, rgba(0,255,255,0.1) 0%, rgba(0,255,255,0.6) 50%, rgba(0,255,255,0.1) 100%),
-    linear-gradient(90deg, rgba(0,255,255,0.1) 0%, rgba(0,255,255,0.5) 50%, rgba(0,255,255,0.1) 100%),
-    linear-gradient(90deg, rgba(0,255,255,0.05) 0%, rgba(0,255,255,0.3) 50%, rgba(0,255,255,0.05) 100%);
-  background-repeat: no-repeat;
-  background-size: 200% 3px, 150% 2px, 100% 1px;
-  background-position: -200% 30%, -150% 60%, -100% 80%;
-  animation: lightBeams 6s linear infinite;
+    repeating-linear-gradient(
+      0deg,
+      rgba(0,255,255,0.0) 0%,
+      rgba(0,255,255,0.15) 2%,
+      rgba(0,255,255,0.0) 4%
+    );
+  background-size: 100% 6px;
+  mask-image: radial-gradient(circle at 50% 50%, black 40%, transparent 100%);
   mix-blend-mode: screen;
+  filter: blur(1.5px) brightness(3) saturate(250%); /* 💡 aquí está el brillo */
+  animation: neonBeams 5s linear infinite;
+  opacity: 1; /* 💡 aquí está la opacidad máxima */
   z-index: 0;
-  opacity: 0.8;
-  filter: blur(1px);
-}
-
-@keyframes lightBeams {
-  0% {
-    background-position: -200% 30%, -150% 60%, -100% 80%;
-  }
-  100% {
-    background-position: 200% 30%, 150% 60%, 100% 80%;
-  }
 }
