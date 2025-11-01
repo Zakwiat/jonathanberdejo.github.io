@@ -170,3 +170,40 @@ body{
 }
 /* Añade al final del CSS */
 body.scrolled .beam { animation-play-state: paused; opacity: 0.05; transition:opacity .6s }
+
+
+/* =====⭐ Estrellas (parpadeo) ===== */
+.stars{ position:absolute; inset:0; z-index:0; }
+.star{
+  position:absolute; width:2px; height:2px; border-radius:50%;
+  background:#fff; opacity:0;
+  filter: drop-shadow(0 0 6px rgba(255,255,255,.6));
+  animation: twinkle var(--tw,3.5s) ease-in-out infinite var(--td,0s);
+  transform: scale(var(--sc,1));
+}
+@keyframes twinkle{
+  0%,100%{ opacity:0 }
+  10%    { opacity:.95 }
+  50%    { opacity:.35 }
+  90%    { opacity:1 }
+}
+
+/* =====🌋 Nebulosa roja (sutil) ===== */
+.nebula-red{
+  position:absolute; inset:-20%; z-index:0; pointer-events:none;
+  background:
+    radial-gradient(700px 480px at 18% 72%, rgba(255,30,90,.22), transparent 60%),
+    radial-gradient(560px 420px at 82% 28%, rgba(255,90,40,.14), transparent 62%),
+    radial-gradient(880px 560px at 60% 85%, rgba(255,0,120,.10), transparent 68%);
+  filter: blur(10px) saturate(120%);
+  mix-blend-mode:screen;
+  animation: nebula-drift 42s ease-in-out infinite alternate;
+}
+@keyframes nebula-drift{
+  from{ transform:translateY(0) translateX(0) }
+  to  { transform:translateY(-3%) translateX(1.5%) }
+}
+
+/* Opcional: menos distracción al leer (baja intensidad fuera del hero) */
+body.scrolled .star{ opacity:.12 !important; }
+body.scrolled .nebula-red{ opacity:.35; }
