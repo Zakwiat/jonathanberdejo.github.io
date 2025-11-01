@@ -26,8 +26,6 @@ body{font-family:'Poppins',system-ui,Segoe UI,Roboto,Arial,sans-serif;background
 .beam{position:absolute;left:-60vw;width:80vw;height:4px;opacity:.22;filter:blur(1.5px) brightness(1.2);mix-blend-mode:screen;transform:translateX(-40vw);background:linear-gradient(90deg,transparent 0%, var(--neon) 40%, var(--neon) 60%, transparent 100%);animation:beamX var(--s,2.2s) linear infinite}
 .b1{top:22%;--s:1.8s}.b2{top:38%;--s:2.1s}.b3{top:54%;--s:2.4s}.b4{top:70%;--s:2.8s}.b5{top:86%;--s:3.2s}
 @keyframes beamX{from{transform:translateX(-40vw)}to{transform:translateX(120vw)}}
-  <div class="comets" id="cometsLayer" aria-hidden="true"></div>
-
 /* ===== Content on top ===== */
 .nav,.hero,.section,.footer,.hud-nav,.modal{position:relative;z-index:5}
 .hero{min-height:100vh;display:grid;place-items:center;text-align:center}
@@ -127,11 +125,7 @@ body{font-family:'Poppins',system-ui,Segoe UI,Roboto,Arial,sans-serif;background
       <div class="card">
         <h2 data-t="aboutTitle">Sobre mí</h2>
         <p data-t="aboutText">
-         Soy una persona práctica, pero también observadora. Me gusta analizar, estructurar y encontrar la forma más clara de hacer las cosas. No creo en improvisar sin propósito; creo en mejorar hasta que funcione.
-
-Trabajo con método, pero también con curiosidad. Y en un mundo que gira entre pantallas, encuentro mi espacio en la tecnología, la música y la escritura: tres formas de pensar que aplico en todo lo que hago.
-
-Esta web no solo refleja mi relación con la tecnología, sino también mi manera de aprender: aplicando mis conocimientos en programación, herramientas ofimáticas avanzadas y procesos administrativos, áreas donde realmente disfruto optimizando y dando forma a las ideas.
+         Me mueven la curiosidad y el progreso. Analizo, estructuro y hago que lo complejo sea claro. Trabajo con método y criterio; optimizo procesos con tecnología, programación y ofimática avanzada, cuidando la comunicación.
         </p>
         <!-- Badges traducibles -->
         <div class="badges" id="aboutBadges"></div>
@@ -314,7 +308,7 @@ const T = {
   es:{
     navHome:"Inicio", navAbout:"Sobre mí", navWork:"Experiencia", navSkills:"Competencias", navContact:"Contacto",
     aboutTitle:"Sobre mí",
-    aboutText:"Soy apasionado en todo lo que hago. Me mueven la curiosidad y la mejora continua: analizar, estructurar y convertir lo complejo en claro. Trabajo con método y criterio; disfruto optimizando procesos con tecnología, ofimática y una comunicación cuidada.
+    aboutText:"Me mueven la curiosidad y el progreso. Analizo, estructuro y hago que lo complejo sea claro. Trabajo con método y criterio; optimizo procesos con tecnología, programación y ofimática avanzada, cuidando la comunicación.",
     badges:["Excel avanzado","Google Workspace","ERP / SAP (básico)","Data entry","Atención al cliente","Coordinación logística"],
     workTitle:"Experiencia & Servicios",
     recentExp:"Experiencia reciente",
@@ -548,70 +542,6 @@ applyLang('es');
 
 /* ========== Cambio de idioma ========== */
 document.getElementById("langSwitcher").addEventListener("change",(e)=>applyLang(e.target.value));
-  (function(){
-  const layer = document.getElementById('cometsLayer');
-  if(!layer) return;
-
-  // Rendimiento
-  const isMobile = matchMedia('(max-width: 900px)').matches;
-  const prefersReduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const MAX = prefersReduced ? 0 : (isMobile ? 2 : 4);
-  let active = 0;
-
-  function spawnComet(delayMs=0){
-    if(active >= MAX) return;
-    const el = document.createElement('i');
-    el.className = 'comet';
-
-    // parámetros aleatorios controlados
-    const startXvw = (8 + Math.random()*84).toFixed(2);         // 8–92 vw
-    const driftXvw = (-10 - Math.random()*22).toFixed(2);       // -10 a -32 vw
-    const angleDeg = (10 + Math.random()*16).toFixed(1);        // 10–26°
-    const durSec   = (2.2 + Math.random()*2.4).toFixed(2);      // 2.2–4.6s
-    const tailPx   = (140 + Math.random()*160).toFixed(0);      // 140–300px
-
-    el.style.setProperty('--sx', startXvw+'vw');
-    el.style.setProperty('--dx', driftXvw+'vw');
-    el.style.setProperty('--ang', angleDeg+'deg');
-    el.style.setProperty('--dur', durSec+'s');
-    el.style.setProperty('--tail', tailPx+'px');
-
-    if(delayMs) el.style.animationDelay = delayMs+'ms';
-
-    layer.appendChild(el);
-    active++;
-
-    el.addEventListener('animationend', ()=>{
-      el.remove();
-      active--;
-    }, {once:true});
-  }
-
-  // bucle suave (sin saturar)
-  function loop(){
-    const next = 2000 + Math.random()*2200; // 2.0–4.2s
-    setTimeout(()=>{
-      spawnComet();
-      loop();
-    }, next);
-  }
-
-  // ráfagas suaves
-  function bursts(){
-    if(MAX < 2) return;
-    setInterval(()=>{
-      const n = 2 + Math.floor(Math.random()*2); // 2–3
-      for(let i=0;i<n;i++) spawnComet(i*200);
-    }, 3500);
-  }
-
-  // init
-  if(MAX > 0){
-    spawnComet();
-    loop();
-    bursts();
-  }
-})();
 </script>
 </body>
 </html>
