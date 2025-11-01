@@ -1,134 +1,42 @@
-/* === BASE === */
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-body {
-  font-family: 'Poppins', sans-serif;
-  background-color: #000;
-  color: #fff;
-  scroll-behavior: smooth;
-}
-
-/* === HEADER === */
-header {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  background: rgba(0, 0, 0, 0.8);
-  border-bottom: 1px solid #b30000;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 15px 40px;
-  z-index: 1000;
-  backdrop-filter: blur(5px);
-}
-
-.logo {
-  font-weight: 700;
-  font-size: 1.2rem;
-  color: #ff3333;
-  letter-spacing: 1px;
-}
-
-nav a {
-  color: #fff;
-  margin-left: 25px;
-  text-decoration: none;
-  font-weight: 500;
-  transition: color 0.3s ease;
-}
-
-nav a:hover {
-  color: #ff3333;
-}
-
-/* === SECTIONS === */
-.section {
-  padding: 120px 10%;
+/* --- PORTADA ANIMADA (sin tocar HTML) --- */
+#home {
+  position: relative;
+  overflow: hidden;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: flex-start;
-  background-color: #000;
-  border-bottom: 1px solid #111;
 }
 
-/* === HOME / PORTADA === */
-#home {
-  background: radial-gradient(circle at 20% 20%, #1a0000, #000);
-  background-size: 200% 200%;
-  animation: pulse 10s infinite alternate;
-  text-align: left;
+/* Capa de “luces” rojas animadas */
+#home::before {
+  content: "";
+  position: absolute;
+  inset: -20%;
+  background:
+    radial-gradient(60vmax 60vmax at 10% 20%, rgba(255, 0, 0, 0.18), transparent 60%),
+    radial-gradient(50vmax 50vmax at 80% 30%, rgba(255, 80, 80, 0.14), transparent 60%),
+    radial-gradient(40vmax 40vmax at 30% 80%, rgba(255, 0, 0, 0.10), transparent 60%);
+  filter: blur(40px);
+  animation: drift 16s ease-in-out infinite alternate;
+  z-index: 0;
 }
 
-#home h1 {
-  font-size: 2.8rem;
-  color: #ff3333;
-  margin-bottom: 15px;
+/* (Opcional) Imagen artística con blend, si la subes */
+#home::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: url('assets/hero.jpg') center/cover no-repeat;
+  opacity: 0.18;              /* ajusta 0.10–0.35 */
+  mix-blend-mode: screen;     /* prueba overlay/multiply/screen */
+  z-index: 0;
 }
 
-#home p {
-  font-size: 1.2rem;
-  color: #ddd;
-  max-width: 600px;
-}
+/* Asegura que el texto quede encima */
+#home h1, #home p { position: relative; z-index: 1; }
 
-@keyframes pulse {
-  0% { background-position: 0% 0%; }
-  100% { background-position: 100% 100%; }
-}
-
-/* === ABOUT === */
-#about {
-  background-color: #0a0a0a;
-}
-
-#about h2 {
-  color: #ff3333;
-  font-size: 2rem;
-  margin-bottom: 15px;
-}
-
-#about p {
-  color: #ccc;
-  line-height: 1.8;
-  max-width: 700px;
-}
-
-/* === CONTACT === */
-#contact {
-  background-color: #111;
-  text-align: left;
-}
-
-#contact h2 {
-  color: #ff3333;
-  font-size: 2rem;
-  margin-bottom: 10px;
-}
-
-#contact a {
-  color: #ff3333;
-  text-decoration: none;
-  transition: color 0.3s;
-}
-
-#contact a:hover {
-  color: #fff;
-}
-
-/* === FOOTER === */
-footer {
-  text-align: center;
-  padding: 30px 0;
-  background-color: #000;
-  border-top: 1px solid #b30000;
-  color: #666;
-  font-size: 0.9rem;
+@keyframes drift {
+  0%   { transform: translate3d(-6%, -3%, 0) scale(1); }
+  100% { transform: translate3d(6%, 3%, 0)  scale(1.07); }
 }
