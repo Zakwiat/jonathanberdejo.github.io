@@ -103,3 +103,31 @@ footer{text-align:center;padding:28px 0;background:var(--bg);border-top:1px soli
   .section{padding:110px 6% 80px}
   nav a{margin-left:16px}
 }
+
+/* ==== HACES DE LUZ HORIZONTALES ==== */
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, rgba(0,255,255,0.1) 0%, rgba(0,255,255,0.6) 50%, rgba(0,255,255,0.1) 100%),
+    linear-gradient(90deg, rgba(0,255,255,0.1) 0%, rgba(0,255,255,0.5) 50%, rgba(0,255,255,0.1) 100%),
+    linear-gradient(90deg, rgba(0,255,255,0.05) 0%, rgba(0,255,255,0.3) 50%, rgba(0,255,255,0.05) 100%);
+  background-repeat: no-repeat;
+  background-size: 200% 3px, 150% 2px, 100% 1px;
+  background-position: -200% 30%, -150% 60%, -100% 80%;
+  animation: lightBeams 6s linear infinite;
+  mix-blend-mode: screen;
+  z-index: 0;
+  opacity: 0.8;
+  filter: blur(1px);
+}
+
+@keyframes lightBeams {
+  0% {
+    background-position: -200% 30%, -150% 60%, -100% 80%;
+  }
+  100% {
+    background-position: 200% 30%, 150% 60%, 100% 80%;
+  }
+}
