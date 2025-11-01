@@ -168,3 +168,5 @@ body{
 @media (prefers-reduced-motion: reduce){
   .beam,.title,.neon-bg::after{ animation:none }
 }
+/* Añade al final del CSS */
+body.scrolled .beam { animation-play-state: paused; opacity: 0.05; transition:opacity .6s }
