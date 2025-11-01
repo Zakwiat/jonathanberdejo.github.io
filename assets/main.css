@@ -335,3 +335,55 @@ html, body {
   z-index: 0;                               /* mismo plano que .neon-bg */
   pointer-events: none;
 }
+/* === HUD FUTURISTA === */
+.hud-nav{
+  position:fixed; bottom:22px; left:50%; transform:translateX(-50%);
+  z-index:5; display:flex; gap:18px; padding:10px 14px;
+  background:rgba(0,0,0,.35); backdrop-filter: blur(10px) saturate(120%);
+  -webkit-backdrop-filter: blur(10px) saturate(120%);
+  border:1px solid rgba(0,234,255,.22); border-radius:999px;
+  box-shadow:0 0 24px rgba(0,234,255,.18), inset 0 0 10px rgba(0,234,255,.08);
+  isolation:isolate; /* para el spotlight */
+}
+
+/* “spotlight” dinámico según el ratón */
+.hud-nav::before{
+  content:""; position:absolute; inset:-1px; border-radius:inherit; pointer-events:none;
+  background:
+    radial-gradient(220px 220px at var(--mx,50%) var(--my,50%), rgba(0,234,255,.28), transparent 65%),
+    radial-gradient(800px 480px at 50% 50%, rgba(0,234,255,.10), transparent 70%);
+  mix-blend-mode:screen; opacity:.9; transition: opacity .2s ease;
+}
+
+/* enlaces */
+.hud-nav a{
+  position:relative; z-index:1;
+  color:#c9faff; text-decoration:none; font-weight:700; letter-spacing:.02em;
+  padding:8px 12px; border-radius:10px;
+  transition: color .2s ease, background .2s ease, text-shadow .2s ease;
+}
+.hud-nav a:hover{
+  color:#001a1f; background:linear-gradient(90deg,#00eaff,#8ff6ff);
+  text-shadow:0 0 12px #00eaff;
+}
+.hud-nav a.active{
+  color:#eaffff;
+  text-shadow:0 0 10px #00eaff, 0 0 24px #00eaff;
+}
+
+/* indicador inferior que se mueve bajo el link activo */
+.hud-indicator{
+  position:absolute; left:0; bottom:6px; height:2px; border-radius:2px;
+  width:var(--indW,40px); transform:translateX(var(--indX,0));
+  background:linear-gradient(90deg,transparent,#00eaff,transparent);
+  box-shadow:0 0 14px #00eaff;
+  transition: transform .25s ease, width .25s ease;
+}
+
+/* en móvil, compactamos y subimos un poco */
+@media (max-width:900px){
+  .hud-nav{ gap:8px; padding:8px 10px; bottom:16px }
+  .hud-nav a{ padding:8px 10px; font-weight:600 }
+}
+
+
