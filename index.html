@@ -152,5 +152,58 @@ Esta web no solo refleja mi relación con la tecnología, sino también mi maner
       wrap.appendChild(frag);
     })();
   </script>
+  <script>
+  // === HUD: spotlight por ratón
+  (function(){
+    const hud = document.querySelector('.hud-nav');
+    if(!hud) return;
+    hud.addEventListener('mousemove', (e)=>{
+      const r = hud.getBoundingClientRect();
+      const x = e.clientX - r.left, y = e.clientY - r.top;
+      hud.style.setProperty('--mx', x + 'px');
+      hud.style.setProperty('--my', y + 'px');
+    });
+    hud.addEventListener('mouseleave', ()=>{
+      hud.style.removeProperty('--mx');
+      hud.style.removeProperty('--my');
+    });
+  })();
+
+  // === HUD: resalta link activo por sección + mueve indicador
+  (function(){
+    const links = [...document.querySelectorAll('.hud-nav a[data-link]')];
+    const ind = document.querySelector('.hud-indicator');
+    if(!links.length || !ind) return;
+
+    function setActiveByHash(hash){
+      links.forEach(a=>a.classList.toggle('active', a.getAttribute('href')===hash));
+      const active = links.find(a=>a.classList.contains('active')) || links[0];
+      const r = active.getBoundingClientRect();
+      const navR = active.parentElement.getBoundingClientRect();
+      ind.style.setProperty('--indX', (r.left - navR.left + 8) + 'px');  // +8 por padding
+      ind.style.setProperty('--indW', (r.width - 16) + 'px');            // -16 por padding
+    }
+
+    // al hacer scroll, detectar sección visible
+    const sections = links.map(a => document.querySelector(a.getAttribute('href'))).filter(Boolean);
+    function onScroll(){
+      let cur = '#home';
+      for (const sec of sections){
+        const rect = sec.getBoundingClientRect();
+        if (rect.top <= innerHeight*0.38 && rect.bottom >= innerHeight*0.38){
+          cur = '#'+sec.id; break;
+        }
+      }
+      setActiveByHash(cur);
+    }
+
+    // al hacer click, activar al instante
+    links.forEach(a=>a.addEventListener('click',()=>setActiveByHash(a.getAttribute('href'))));
+    window.addEventListener('scroll', onScroll, {passive:true});
+    window.addEventListener('resize', onScroll);
+    onScroll(); // inicial
+  })();
+</script>
+
 </body>
 </html>
