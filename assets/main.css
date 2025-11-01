@@ -387,64 +387,67 @@ html, body {
 }
 
 /* ☄️ Cometas */
+/* ☄️ Cometas — más vistosos y escalables */
 .comets{ position:absolute; inset:0; z-index:0; pointer-events:none; overflow:hidden }
 
 .comet{
   position:absolute;
   left: calc(var(--startX, 50) * 1vw);
-  top: -10vh;
-  width: 8px; height: 8px;
+  top: -12vh;
+  /* tamaño variable */
+  --sz: var(--size, 9px);
+  width: var(--sz); height: var(--sz);
   transform: rotate(var(--angle, 15deg));
-  filter: blur(.2px);
-  /* caída diagonal */
+  filter: blur(.15px);
   animation: cometFall var(--dur, 3.2s) cubic-bezier(.12,.24,.02,1) forwards,
              cometPulse 1.2s ease-in-out infinite;
-  will-change: transform, opacity;
+  will-change: transform, opacity, filter;
 }
 
-/* núcleo incandescente */
+/* núcleo incandescente (con tono variable) */
 .comet::before{
-  content:""; position:absolute; inset:-2px;
-  border-radius:50%;
-  background: radial-gradient(circle at 30% 30%, #fff, #ffd9a0 35%, #ff6a00 65%, rgba(255,64,0,.6));
+  content:""; position:absolute; inset:-2px; border-radius:50%;
+  /* color controlado por variables HSL */
+  --h: var(--hue, 18);  /* 10–30 = rojo/naranja */
+  --l: var(--lum, 55%);
+  background:
+    radial-gradient(circle at 30% 30%,
+      hsl(var(--h),100%,98%),
+      hsl(var(--h),100%,80%) 35%,
+      hsl(calc(var(--h) + 6),100%,55%) 65%,
+      hsla(var(--h),100%,50%,.65));
   box-shadow:
-    0 0 20px rgba(255,120,40,.9),
-    0 0 48px rgba(255,60,0,.6),
-    0 0 90px rgba(255,40,0,.45);
+    0 0 26px hsla(var(--h),100%,60%,.95),
+    0 0 60px hsla(var(--h),100%,50%,.70),
+    0 0 110px hsla(var(--h),100%,45%,.5);
 }
 
-/* cola */
+/* cola más larga y brillante (ajustable) */
 .comet::after{
-  content:""; position:absolute;
-  left:-2px; right:-2px; top:40%; height: 160px;
+  content:""; position:absolute; left:-2px; right:-2px; top:45%;
+  height: var(--tail, 200px);                       /* cola */
   transform: translateY(-100%) skewX(-15deg);
   background: linear-gradient(to bottom,
-    rgba(255,200,120,.95) 0%,
-    rgba(255,120,40,.6) 35%,
-    rgba(255,60,0,.25) 65%,
+    hsla(var(--h),100%,85%,.95) 0%,
+    hsla(var(--h),100%,60%,.65) 35%,
+    hsla(var(--h),100%,50%,.30) 70%,
     rgba(255,30,0,0) 100%);
-  filter: blur(2px);
-  border-radius: 6px;
+  filter: blur(2.2px);
+  border-radius: 8px;
 }
 
-/* recorrido: avanza en Y y deriva en X */
+/* trayecto */
 @keyframes cometFall{
   0%   { transform: translate(0,0) rotate(var(--angle,15deg)); opacity: 0 }
-  6%   { opacity: 1 }
-  100% { transform: translate(var(--driftX, -18vw), 120vh) rotate(var(--angle,15deg)); opacity: 0 }
+  5%   { opacity: 1 }
+  100% { transform: translate(var(--driftX, -18vw), 125vh) rotate(var(--angle,15deg)); opacity: 0 }
 }
+@keyframes cometPulse{ 0%,100%{ filter:brightness(1)} 50%{ filter:brightness(1.25)} }
 
-/* leve respiración de brillo */
-@keyframes cometPulse{
-  0%,100%{ filter: brightness(1) }
-  50%    { filter: brightness(1.2) }
-}
+/* pausa al leer */
+body.scrolled .comets { opacity:.35 }
 
-/* Menos distracción al leer */
-body.scrolled .comets { opacity:.35; }
-
-/* Respeto accesibilidad */
+/* reduce motion */
 @media (prefers-reduced-motion: reduce){
-  .comet{ animation: none !important }
+  .comet{ animation:none !important }
 }
-
