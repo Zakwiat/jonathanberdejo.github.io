@@ -4,10 +4,21 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Jonathan Berdejo</title>
-  <link rel="stylesheet" href="assets/main.css?v=neon-heartbeat" />
+  <link rel="stylesheet" href="assets/main.css?v=neon-fixed" />
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700;900&display=swap" rel="stylesheet"/>
 </head>
 <body>
+  <!-- Capa neón global (queda fija al hacer scroll) -->
+  <div class="neon-bg" aria-hidden="true">
+    <div class="neon-lines">
+      <span class="beam b1"></span>
+      <span class="beam b2"></span>
+      <span class="beam b3"></span>
+      <span class="beam b4"></span>
+      <span class="beam b5"></span>
+    </div>
+  </div>
+
   <!-- NAV -->
   <nav class="nav" aria-label="Principal">
     <a href="#home">Inicio</a>
@@ -16,29 +27,91 @@
     <a href="#contact">Contacto</a>
   </nav>
 
-  <!-- PORTADA -->
-  <section id="home" class="hero" aria-label="Portada">
-    <div class="neon-lines" aria-hidden="true">
-      <span class="beam b1"></span>
-      <span class="beam b2"></span>
-      <span class="beam b3"></span>
-      <span class="beam b4"></span>
-      <span class="beam b5"></span>
-    </div>
+  <!-- HERO -->
+  <header id="home" class="hero">
     <h1 class="title">JONATHAN BERDEJO</h1>
-  </section>
+  </header>
 
-  <!-- SECCIONES BASE PARA DESARROLLAR -->
+  <!-- SOBRE MÍ -->
   <section id="about" class="section">
-    <h2>Sobre mí</h2>
-    <p>
-      Profesional de tecnología, ofimática y logística. Enfocado en colaboración, proyectos
-      de oficina/remoto y mejoras de procesos. (Aquí metemos tu bio corta y links a CV).
-    </p>
+    <div class="container">
+      <div class="card grid grid-2">
+        <div>
+          <h2>Sobre mí</h2>
+          <p>
+            Perfil administrativo y logístico con enfoque tecnológico. Experiencia reciente en
+            entornos internacionales (DHL) gestionando <strong>trazabilidad, control de calidad</strong> y
+            soporte documental en sistemas ERP. Comunicación bilingüe <strong>español–inglés (C1)</strong> y
+            mecanografía +100 WPM. Busco un puesto de oficina o remoto donde aportar
+            <strong>organización, claridad operativa y servicio al cliente</strong>.
+          </p>
+          <div class="badges">
+            <span>Excel avanzado</span><span>Google Workspace</span><span>ERP / SAP (básico)</span>
+            <span>Data entry</span><span>Atención al cliente</span><span>Coordinación logística</span>
+          </div>
+          <div class="actions">
+            <a class="btn" href="assets/Jonathan-Berdejo-CV.pdf" download>Descargar CV (PDF)</a>
+            <a class="btn btn--ghost" href="mailto:berdejosanchez@gmail.com">berdejosanchez@gmail.com</a>
+          </div>
+        </div>
+        <div>
+          <!-- si aún no hay foto, este bloque queda vacío limpio -->
+          <!-- <img src="assets/avatar.jpg" alt="Jonathan Berdejo" style="width:100%;border-radius:14px;border:1px solid var(--stroke)"> -->
+        </div>
+      </div>
+    </div>
   </section>
 
+  <!-- EXPERIENCIA / SERVICIOS -->
   <section id="work" class="section">
-    <h2>Experiencia & Servicios</h2>
-    <p>
-      Resume de logística (DHL), atención al cliente, coordinación, ERP/Excel/Google Workspace.
-      Ofrezco: soporte administrativo, coordinac
+    <div class="container">
+      <div class="card">
+        <h2>Experiencia & Servicios</h2>
+        <div class="grid grid-2">
+          <div>
+            <h3>Lo que he hecho</h3>
+            <ul>
+              <li>Logística y calidad: recepción, control de stock y <strong>trazabilidad</strong> de paquetes.</li>
+              <li>Gestión de incidencias y registro en <strong>Excel / ERP</strong> (entornos Honeywell).</li>
+              <li>Soporte administrativo: documentación, correo bilingüe, organización de agendas.</li>
+              <li>Atención al cliente y seguimiento de casos con enfoque a <strong>SLA</strong>.</li>
+            </ul>
+          </div>
+          <div>
+            <h3>Lo que ofrezco</h3>
+            <ul>
+              <li>Soporte administrativo remoto y <strong>data entry</strong> bilingüe.</li>
+              <li>Coordinación logística y reporting operativo.</li>
+              <li>Hojas de cálculo y <strong>dashboards</strong> sencillos en Excel/Sheets.</li>
+              <li>Documentación de procesos y mejora continua.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="actions" style="margin-top:18px">
+          <a class="btn" href="#contact">Hablemos</a>
+          <a class="btn btn--ghost" href="https://www.linkedin.com/in/" target="_blank" rel="noopener">LinkedIn</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACTO -->
+  <section id="contact" class="section">
+    <div class="container">
+      <div class="card">
+        <h2>Contacto</h2>
+        <p>¿Colaboramos? Escríbeme y te contesto en el mismo día laboral.</p>
+        <div class="actions">
+          <a class="btn" href="mailto:berdejosanchez@gmail.com?subject=Colaboración%20-%20Jonathan%20Berdejo">Enviar email</a>
+          <!-- Si luego quieres formulario real: EmailJS o Netlify Forms -->
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">© <span id="year"></span> Jonathan Berdejo</footer>
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
