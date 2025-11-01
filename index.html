@@ -292,6 +292,44 @@ Gracias.`);
     form.reset(); close();
   });
 })();
+  const translations = {
+  es: {
+    aboutTitle: "Sobre mí",
+    aboutText: "He aprendido que el tiempo solo vale cuando se usa bien. Me mueven la curiosidad y la mejora continua: analizar, estructurar y convertir lo complejo en claro. Trabajo con método y criterio; disfruto optimizando procesos con tecnología, ofimática y una comunicación cuidada.",
+    workTitle: "Experiencia & Servicios",
+    contactTitle: "Contacto",
+    contactText: "¿Colaboramos? Te respondo en el mismo día laboral.",
+    btnTalk: "Hablemos",
+    btnRequest: "Solicitar CV"
+  },
+  en: {
+    aboutTitle: "About me",
+    aboutText: "I've learned that time only matters when used well. I'm driven by curiosity and improvement—analyzing, structuring, and turning complexity into clarity. I work methodically, enjoy optimizing processes through technology and precise communication.",
+    workTitle: "Experience & Services",
+    contactTitle: "Contact",
+    contactText: "Let's collaborate! I usually reply the same business day.",
+    btnTalk: "Let's talk",
+    btnRequest: "Request CV"
+  }
+};
+
+const langSel = document.getElementById("langSwitcher");
+langSel.addEventListener("change", (e)=>{
+  const lang = e.target.value;
+  const t = translations[lang];
+  if(!t) return;
+
+  document.querySelector("#about h2").textContent = t.aboutTitle;
+  document.querySelector("#about p").textContent = t.aboutText;
+  document.querySelector("#work h2").textContent = t.workTitle;
+  document.querySelector("#contact h2").textContent = t.contactTitle;
+  document.querySelector("#contact p").textContent = t.contactText;
+
+  document.querySelectorAll(".btn").forEach(b=>{
+    if(b.textContent.includes("Hablemos") || b.textContent.includes("Let's")) b.textContent = t.btnTalk;
+    if(b.textContent.includes("Solicitar") || b.textContent.includes("Request")) b.textContent = t.btnRequest;
+  });
+});
 </script>
 </body>
 </html>
