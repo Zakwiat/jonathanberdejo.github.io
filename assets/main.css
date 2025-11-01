@@ -279,4 +279,24 @@ html, body {
   mix-blend-mode:screen;
   filter:blur(18px);
 }
+/* ===== Glass transparente para las tarjetas ===== */
+.card{
+  background: rgba(0, 10, 20, 0.25); /* más transparente */
+  border: 1px solid rgba(0, 234, 255, 0.15);
+  border-radius: 18px;
+  padding: 24px;
+  backdrop-filter: blur(18px) saturate(140%) brightness(1.05);
+  -webkit-backdrop-filter: blur(18px) saturate(140%) brightness(1.05);
+  box-shadow:
+    0 0 25px rgba(0, 234, 255, 0.05),
+    inset 0 0 12px rgba(0, 234, 255, 0.08);
+  transition: background .4s ease, box-shadow .4s ease;
+}
+
+.card:hover {
+  background: rgba(0, 20, 40, 0.32);
+  box-shadow:
+    0 0 30px rgba(0, 234, 255, 0.12),
+    inset 0 0 14px rgba(0, 234, 255, 0.12);
+}
 
