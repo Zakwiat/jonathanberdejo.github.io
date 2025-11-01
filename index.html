@@ -41,9 +41,11 @@
 
   <!-- SOBRE MÍ -->
   <section id="about" class="section">
-    <div class="container">
-      <div class="card grid grid-2">
-        <div>
+    <div class="actions">
+  <button class="btn" id="requestCVBtn" type="button">Solicitar CV</button>
+  <a class="btn btn--ghost" href="mailto:berdejosanchez@gmail.com">berdejosanchez@gmail.com</a>
+  <span id="cvStatus" style="margin-left:8px;opacity:.8;"></span>
+</div>
           <h2>Sobre mí</h2>
           <p>
             He aprendido que el tiempo solo vale cuando se usa bien. Por eso me muevo, avanzo y busco entender cada cosa que hago.
@@ -265,5 +267,30 @@
       }
     })();
   </script>
+  <div class="modal" id="cvModal" aria-hidden="true" role="dialog" aria-labelledby="cvTitle">
+  <div class="modal__backdrop" data-close></div>
+  <div class="modal__panel" role="document">
+    <h3 id="cvTitle" class="modal__title">Solicitar CV</h3>
+    <p class="modal__text">Déjame tus datos y te lo envío al correo.</p>
+    <form id="cvForm" class="modal__form">
+      <label class="modal__label">
+        Nombre
+        <input class="modal__input" name="name" required placeholder="Tu nombre">
+      </label>
+      <label class="modal__label">
+        Email
+        <input class="modal__input" name="email" type="email" required placeholder="tucorreo@ejemplo.com">
+      </label>
+      <label class="modal__label">
+        Mensaje (opcional)
+        <textarea class="modal__input" name="msg" rows="3" placeholder="Cuéntame el uso o el puesto objetivo"></textarea>
+      </label>
+      <div class="modal__actions">
+        <button type="submit" class="btn">Enviar solicitud</button>
+        <button type="button" class="btn btn--ghost" data-close>Cancelar</button>
+      </div>
+    </form>
+  </div>
+</div>
 </body>
 </html>
