@@ -1,31 +1,94 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Jonathan Berdejo</title>
-  <link rel="stylesheet" href="assets/main.css?v=neon-fixed" />
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700;900&display=swap" rel="stylesheet"/>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Jonathan Berdejo</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700;900&display=swap" rel="stylesheet"/>
+<style>
+/* ===== Reset & Vars ===== */
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+html{scroll-behavior:smooth}
+:root{
+  --bpm:72; --beat: calc(60s/var(--bpm));
+  --neon:#00eaff; --bg:#000; --txt:#eaf6ff; --stroke: rgba(0,234,255,.18);
+}
+/* ===== Base ===== */
+body{font-family:'Poppins',system-ui,Segoe UI,Roboto,Arial,sans-serif;background:var(--bg);color:var(--txt);-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;}
+/* ===== Universe (no bloquea clics) ===== */
+.neon-bg{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none;background:
+  radial-gradient(1200px 600px at 50% 60%, rgba(0,234,255,.06), transparent 70%);}
+.neon-bg::before{content:"";position:absolute;inset:-12%;z-index:-1;background:
+  radial-gradient(1200px 600px at 15% 15%, rgba(0,234,255,.06), transparent 70%),
+  radial-gradient(1000px 500px at 85% 85%, rgba(0,234,255,.04), transparent 70%),
+  radial-gradient(circle at 50% 55%, rgba(0,0,0,0) 0, rgba(0,0,0,.75) 70%);}
+.stars,.comets,.neon-lines{position:absolute;inset:0;pointer-events:none}
+.neon-lines .beam{position:absolute;left:-45vw;top:0;width:70vw;height:10px;transform:translateX(-30vw);
+  animation: moveX var(--speed,2.2s) linear infinite;mix-blend-mode:screen}
+.neon-lines .beam::before{content:"";position:absolute;inset:0;background:var(--neon);
+  filter:brightness(3.2) saturate(250%) blur(.6px);box-shadow:0 0 18px var(--neon),0 0 42px var(--neon),0 0 96px var(--neon),0 0 160px var(--neon);
+  transform-origin:left center;animation: heartbeat var(--beat) ease-in-out infinite, flicker 1.6s ease-in-out infinite;}
+.b1{top:24%;height:10px;--speed:1.8s}.b2{top:38%;height:8px;--speed:2.0s}.b3{top:52%;height:12px;--speed:2.3s}.b4{top:66%;height:9px;--speed:2.0s}.b5{top:80%;height:11px;--speed:2.6s}
+@keyframes moveX{from{transform:translateX(-30vw)}to{transform:translateX(135vw)}}
+@keyframes heartbeat{0%,100%{transform:scaleY(1)}7%{transform:scaleY(1.45)}12%{transform:scaleY(1.08)}18%{transform:scaleY(1.25)}26%{transform:scaleY(1)}}
+@keyframes flicker{0%,100%{opacity:1;filter:brightness(3.2) saturate(250%) blur(.6px)}45%{opacity:.95;filter:brightness(2.8) saturate(220%) blur(.7px)}60%{opacity:1;filter:brightness(3.5) saturate(280%) blur(.5px)}}
+.star{position:absolute;width:2px;height:2px;border-radius:50%;background:#fff;opacity:0;filter:drop-shadow(0 0 6px rgba(255,255,255,.6));
+  animation:twinkle var(--tw,3.5s) ease-in-out infinite var(--td,0s);transform:scale(var(--sc,1))}
+@keyframes twinkle{0%,100%{opacity:0}10%{opacity:.9}50%{opacity:.3}90%{opacity:1}}
+/* ===== Content on top ===== */
+.nav,.hero,.section,.footer,.hud-nav,.modal{position:relative;z-index:5}
+.hero{min-height:100vh;display:grid;place-items:center;text-align:center}
+.title{font-weight:900;letter-spacing:.04em;font-size:clamp(2.8rem,9vw,6.4rem);color:#e8fdff;text-shadow:0 0 18px var(--neon),0 0 48px var(--neon),0 0 120px var(--neon);
+  animation:titleBeat var(--beat) ease-in-out infinite}
+@keyframes titleBeat{0%{transform:scale(1)}8%{transform:scale(1.015)}18%{transform:scale(1.009)}26%,100%{transform:scale(1)}}
+.section{padding:96px 20px}.container{max-width:1100px;margin:0 auto}
+.card{background:rgba(0,0,0,0.08);border:1px solid rgba(0,234,255,0.18);border-radius:18px;padding:24px;box-shadow:0 8px 30px rgba(0,0,0,.25)}
+.section h2{font-weight:800;letter-spacing:.02em;margin-bottom:14px;color:#eafcff;text-shadow:0 0 14px rgba(0,234,255,.6)}
+.grid{display:grid;gap:18px}.grid-2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.badges{display:flex;flex-wrap:wrap;gap:10px;margin-top:8px}
+.badges span{border:1px solid var(--stroke);padding:6px 10px;border-radius:999px;font-size:.9rem;background:rgba(0,234,255,.06)}
+.actions{display:flex;gap:12px;margin-top:16px;flex-wrap:wrap}
+.btn{border:1px solid var(--neon);border-radius:12px;padding:10px 14px;font-weight:700;color:#001a1f;background:linear-gradient(90deg,#00eaff,#8ff6ff);text-decoration:none;box-shadow:0 0 18px rgba(0,234,255,.35);cursor:pointer}
+.btn--ghost{background:transparent;color:#bfe7f1;border-color:var(--stroke)}
+.footer{padding:40px 20px;color:#a9d7e5;text-align:center;border-top:1px solid var(--stroke)}
+/* ===== HUD Nav ===== */
+.hud-nav{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);z-index:6;display:flex;gap:18px;padding:10px 14px;background:rgba(0,0,0,.35);
+  backdrop-filter: blur(10px) saturate(120%);-webkit-backdrop-filter: blur(10px) saturate(120%);border:1px solid rgba(0,234,255,.22);border-radius:999px;box-shadow:0 0 24px rgba(0,234,255,.18), inset 0 0 10px rgba(0,234,255,.08);isolation:isolate}
+.hud-nav a{position:relative;z-index:1;color:#c9faff;text-decoration:none;font-weight:700;letter-spacing:.02em;padding:8px 12px;border-radius:10px;transition: color .2s ease, background .2s ease, text-shadow .2s ease}
+.hud-nav a:hover{color:#001a1f;background:linear-gradient(90deg,#00eaff,#8ff6ff);text-shadow:0 0 12px #00eaff}
+.hud-nav a.active{color:#eaffff;text-shadow:0 0 10px #00eaff, 0 0 24px #00eaff}
+.hud-indicator{position:absolute;left:0;bottom:6px;height:2px;border-radius:2px;width:var(--indW,40px);transform:translateX(var(--indX,0));
+  background:linear-gradient(90deg,transparent,#00eaff,transparent);box-shadow:0 0 14px #00eaff;transition: transform .25s ease, width .25s ease}
+/* ===== Modal Solicitar CV ===== */
+.modal{display:none}
+.modal.is-open{display:block}
+.modal__backdrop{position:fixed;inset:0;background:rgba(0,0,0,.6);backdrop-filter:blur(4px)}
+.modal__panel{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);width:min(560px,92vw);
+  background:rgba(0,0,0,.6);border:1px solid rgba(0,234,255,.22);border-radius:18px;padding:22px;box-shadow:0 12px 40px rgba(0,0,0,.5), 0 0 24px rgba(0,234,255,.18) inset}
+.modal__title{margin-bottom:8px;text-shadow:0 0 12px rgba(0,234,255,.5)}
+.modal__text{opacity:.85;margin-bottom:14px}
+.modal__form{display:grid;gap:12px}
+.modal__label{display:grid;gap:6px;font-weight:600}
+.modal__input{background:rgba(0,0,0,.35);color:var(--txt);border:1px solid var(--stroke);border-radius:12px;padding:10px 12px;outline:none;box-shadow: inset 0 0 12px rgba(0,234,255,.05)}
+.modal__input:focus{border-color:#00eaff;box-shadow:0 0 0 3px rgba(0,234,255,.15)}
+.modal__actions{display:flex;gap:10px;justify-content:flex-end;margin-top:8px}
+/* ===== Responsive ===== */
+@media (max-width:900px){.grid-2{grid-template-columns:1fr}.hud-nav{gap:8px;padding:8px 10px;bottom:16px}.hud-nav a{padding:8px 10px;font-weight:600}.neon-lines .beam{width:80vw;left:-55vw}}
+@media (prefers-reduced-motion: reduce){.neon-lines .beam,.title,.star{animation:none !important}}
+</style>
 </head>
-
 <body>
-  <!-- 🌌 FONDO COMPLETO -->
+  <!-- Fondo -->
   <div class="neon-bg" aria-hidden="true">
-    <div class="stars"></div>        <!-- ⭐ Estrellas -->
-    <div class="nebula-red"></div>   <!-- ☄️ Nebulosa roja -->
-    <div class="comets"></div>       <!-- ☄️ Cometas -->
-
-    <!-- Líneas neón -->
+    <div class="stars"></div>
     <div class="neon-lines">
-      <span class="beam b1"></span>
-      <span class="beam b2"></span>
-      <span class="beam b3"></span>
-      <span class="beam b4"></span>
-      <span class="beam b5"></span>
+      <span class="beam b1"></span><span class="beam b2"></span><span class="beam b3"></span><span class="beam b4"></span><span class="beam b5"></span>
     </div>
+    <div class="comets"></div>
   </div>
 
-  <!-- NAV HUD -->
+  <!-- HUD -->
   <nav class="hud-nav" aria-label="Principal">
     <a href="#home" data-link>Inicio</a>
     <a href="#about" data-link>Sobre mí</a>
@@ -34,321 +97,192 @@
     <span class="hud-indicator" aria-hidden="true"></span>
   </nav>
 
-  <!-- HERO -->
+  <!-- Hero -->
   <header id="home" class="hero">
     <h1 class="title">JONATHAN BERDEJO</h1>
   </header>
 
-  <!-- SOBRE MÍ -->
+  <!-- Sobre mí -->
   <section id="about" class="section">
-    <div class="actions">
-  <button class="btn" id="requestCVBtn" type="button">Solicitar CV</button>
-  <a class="btn btn--ghost" href="mailto:berdejosanchez@gmail.com">berdejosanchez@gmail.com</a>
-  <span id="cvStatus" style="margin-left:8px;opacity:.8;"></span>
-</div>
+    <div class="container">
+      <div class="card grid grid-2">
+        <div>
           <h2>Sobre mí</h2>
           <p>
-            He aprendido que el tiempo solo vale cuando se usa bien. Por eso me muevo, avanzo y busco entender cada cosa que hago.
-            Soy una persona práctica, pero también observadora. Me gusta analizar, estructurar y encontrar la forma más clara de hacer las cosas.
-            No creo en improvisar sin propósito; creo en mejorar hasta que funcione.
-            Trabajo con método, pero también con curiosidad. Y en un mundo que gira entre pantallas, encuentro mi espacio en la tecnología, la música y la escritura: tres formas de pensar que aplico en todo lo que hago.
-            Esta web no solo refleja mi relación con la tecnología, sino también mi manera de aprender: aplicando mis conocimientos en programación, herramientas ofimáticas avanzadas y procesos administrativos, áreas donde realmente disfruto optimizando y dando forma a las ideas.
+            He aprendido que el tiempo solo vale cuando se usa bien. Me mueven la curiosidad y la mejora continua: analizar, estructurar y convertir lo complejo en claro.
+            Trabajo con método y criterio; disfruto optimizando procesos con tecnología, ofimática y una comunicación cuidada.
           </p>
-
           <div class="badges">
             <span>Excel avanzado</span><span>Google Workspace</span><span>ERP / SAP (básico)</span>
             <span>Data entry</span><span>Atención al cliente</span><span>Coordinación logística</span>
           </div>
-
           <div class="actions">
-            <button class="btn" id="requestCVBtn" type="button">Solicitar CV</button>
-<span id="cvStatus" style="margin-left:8px;opacity:.8;"></span>
-
-            <a class="btn btn--ghost" href="mailto:berdejosanchez@gmail.com">berdejosanchez@gmail.com</a>
+            <button class="btn" id="requestCVBtn" type="button" aria-haspopup="dialog">Solicitar CV</button>
+            <span id="cvStatus" style="margin-left:8px;opacity:.8;"></span>
           </div>
+        </div>
+        <div>
+          <h3 style="margin-bottom:10px">Qué puedo aportar</h3>
+          <ul style="opacity:.95;line-height:1.6">
+            <li>Soporte administrativo bilingüe y documentación clara.</li>
+            <li>Dashboards sencillos en Excel/Sheets y reporting.</li>
+            <li>Coordinación operativa y resolución de incidencias.</li>
+          </ul>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- EXPERIENCIA / SERVICIOS -->
+  <!-- Experiencia / Servicios -->
   <section id="work" class="section">
     <div class="container">
       <div class="card">
         <h2>Experiencia & Servicios</h2>
         <div class="grid grid-2">
           <div>
-            <h3>Lo que he hecho</h3>
+            <h3>Experiencia reciente</h3>
             <ul>
-              <li>Logística y calidad: recepción, control de stock y <strong>trazabilidad</strong> de paquetes.</li>
-              <li>Gestión de incidencias y registro en <strong>Excel / ERP</strong> (entornos Honeywell).</li>
-              <li>Soporte administrativo: documentación, correo bilingüe, organización de agendas.</li>
-              <li>Atención al cliente y seguimiento de casos con enfoque a <strong>SLA</strong>.</li>
+              <li>Logística y calidad (DHL): recepción, control de stock y trazabilidad.</li>
+              <li>Gestión de incidencias y registro en Excel / ERP (entornos Honeywell).</li>
+              <li>Soporte administrativo: documentación, correo bilingüe, agendas.</li>
             </ul>
           </div>
-
           <div>
-            <h3>Lo que ofrezco</h3>
+            <h3>Servicios</h3>
             <ul>
-              <li>Soporte administrativo remoto y <strong>data entry</strong> bilingüe.</li>
-              <li>Coordinación logística y reporting operativo.</li>
-              <li>Hojas de cálculo y <strong>dashboards</strong> sencillos en Excel/Sheets.</li>
+              <li>Data entry y soporte administrativo remoto.</li>
+              <li>Reporting operativo y hojas de cálculo.</li>
               <li>Documentación de procesos y mejora continua.</li>
             </ul>
           </div>
         </div>
-
         <div class="actions" style="margin-top:18px">
           <a class="btn" href="#contact">Hablemos</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contacto (aquí van email y LinkedIn) -->
+  <section id="contact" class="section">
+    <div class="container">
+      <div class="card">
+        <h2>Contacto</h2>
+        <p>¿Colaboramos? Te respondo en el mismo día laboral.</p>
+        <div class="actions">
+          <a class="btn" href="mailto:berdejosanchez@gmail.com?subject=Contacto%20-%20Jonathan%20Berdejo">Enviar email</a>
           <a class="btn btn--ghost" href="https://www.linkedin.com/in/" target="_blank" rel="noopener">LinkedIn</a>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- CONTACTO -->
-  <section id="contact" class="section">
-    <div class="container">
-      <div class="card">
-        <h2>Contacto</h2>
-        <p>¿Colaboramos? Escríbeme y te contesto en el mismo día laboral.</p>
-        <div class="actions">
-          <a class="btn" href="mailto:berdejosanchez@gmail.com?subject=Colaboración%20-%20Jonathan%20Berdejo">Enviar email</a>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- FOOTER -->
   <footer class="footer">© <span id="year"></span> Jonathan Berdejo</footer>
 
-  <!-- 🚀 SCRIPT -->
-  <script>
-    // Año actual
-    document.getElementById('year').textContent = new Date().getFullYear();
+  <!-- Modal Solicitar CV -->
+  <div class="modal" id="cvModal" aria-hidden="true" role="dialog" aria-labelledby="cvTitle">
+    <div class="modal__backdrop" data-close></div>
+    <div class="modal__panel" role="document">
+      <h3 id="cvTitle" class="modal__title">Solicitar CV</h3>
+      <p class="modal__text">Déjame tus datos y te lo envío por email.</p>
+      <form id="cvForm" class="modal__form">
+        <label class="modal__label">Nombre
+          <input class="modal__input" name="name" required placeholder="Tu nombre">
+        </label>
+        <label class="modal__label">Email
+          <input class="modal__input" name="email" type="email" required placeholder="tucorreo@ejemplo.com">
+        </label>
+        <label class="modal__label">Mensaje (opcional)
+          <textarea class="modal__input" name="msg" rows="3" placeholder="Puesto objetivo o contexto"></textarea>
+        </label>
+        <div class="modal__actions">
+          <button type="submit" class="btn">Enviar solicitud</button>
+          <button type="button" class="btn btn--ghost" data-close>Cancelar</button>
+        </div>
+      </form>
+    </div>
+  </div>
 
-    // Pausa líneas al hacer scroll
-    window.addEventListener('scroll', () => {
-      document.body.classList.toggle('scrolled', window.scrollY > innerHeight * 0.7);
-    });
+<script>
+// Año
+document.getElementById('year').textContent = new Date().getFullYear();
 
-    // ⭐ Estrellas
-   (function(){
-  const wrap = document.querySelector('.stars');
-  if(!wrap) return;
-
-  const isMobile = matchMedia('(max-width: 900px)').matches;
-  const N = isMobile ? 140 : 260;                 // más cantidad
-
+// Estrellas
+(function(){
+  const wrap = document.querySelector('.stars'); if(!wrap) return;
+  const isMobile = matchMedia('(max-width: 900px)').matches; const N = isMobile ? 120 : 220;
   const frag = document.createDocumentFragment();
-  for (let i = 0; i < N; i++) {
-    const s = document.createElement('i');
-    s.className = 'star';
-    s.style.left = (Math.random() * 100).toFixed(3) + '%';
-    s.style.top  = (Math.random() * 100).toFixed(3) + '%';
-    s.style.setProperty('--sc', (0.6 + Math.random() * 1.8).toFixed(2));         // tamaño
-    s.style.setProperty('--tw', (1.8 + Math.random() * 4.8).toFixed(2) + 's');   // parpadeo
-    s.style.setProperty('--td', (Math.random() * 6).toFixed(2) + 's');           // desfase
-    frag.appendChild(s);
-  }
+  for (let i=0;i<N;i++){ const s=document.createElement('i'); s.className='star';
+    s.style.left=(Math.random()*100).toFixed(3)+'%'; s.style.top=(Math.random()*100).toFixed(3)+'%';
+    s.style.setProperty('--sc',(0.6+Math.random()*1.8).toFixed(2));
+    s.style.setProperty('--tw',(1.8+Math.random()*4.8).toFixed(2)+'s');
+    s.style.setProperty('--td',(Math.random()*6).toFixed(2)+'s'); frag.appendChild(s); }
   wrap.appendChild(frag);
 })();
 
-    // === HUD: spotlight por ratón
-    (function(){
-      const hud = document.querySelector('.hud-nav');
-      if(!hud) return;
-      hud.addEventListener('mousemove', (e)=>{
-        const r = hud.getBoundingClientRect();
-        const x = e.clientX - r.left, y = e.clientY - r.top;
-        hud.style.setProperty('--mx', x + 'px');
-        hud.style.setProperty('--my', y + 'px');
-      });
-      hud.addEventListener('mouseleave', ()=>{
-        hud.style.removeProperty('--mx');
-        hud.style.removeProperty('--my');
-      });
-    })();
+// HUD activo
+(function(){
+  const links=[...document.querySelectorAll('.hud-nav a[data-link]')];
+  const ind=document.querySelector('.hud-indicator'); if(!links.length||!ind) return;
+  function setActiveByHash(hash){
+    links.forEach(a=>a.classList.toggle('active',a.getAttribute('href')===hash));
+    const active=links.find(a=>a.classList.contains('active'))||links[0];
+    const r=active.getBoundingClientRect(); const navR=active.parentElement.getBoundingClientRect();
+    ind.style.setProperty('--indX',(r.left-navR.left+8)+'px'); ind.style.setProperty('--indW',(r.width-16)+'px');
+  }
+  const sections=links.map(a=>document.querySelector(a.getAttribute('href'))).filter(Boolean);
+  function onScroll(){let cur='#home'; for(const sec of sections){const rect=sec.getBoundingClientRect();
+    if(rect.top<=innerHeight*0.38 && rect.bottom>=innerHeight*0.38){cur='#'+sec.id;break;}} setActiveByHash(cur);}
+  links.forEach(a=>a.addEventListener('click',()=>setActiveByHash(a.getAttribute('href'))));
+  window.addEventListener('scroll',onScroll,{passive:true}); window.addEventListener('resize',onScroll); onScroll();
+})();
 
-    // === HUD: resalta link activo por sección + mueve indicador
-    (function(){
-      const links = [...document.querySelectorAll('.hud-nav a[data-link]')];
-      const ind = document.querySelector('.hud-indicator');
-      if(!links.length || !ind) return;
+// Solicitar CV (modal + mailto + estado)
+(function(){
+  const btn=document.getElementById('requestCVBtn');
+  const modal=document.getElementById('cvModal');
+  const form=document.getElementById('cvForm');
+  const statusEl=document.getElementById('cvStatus');
+  const KEY='cvRequestedAt';
 
-      function setActiveByHash(hash){
-        links.forEach(a=>a.classList.toggle('active', a.getAttribute('href')===hash));
-        const active = links.find(a=>a.classList.contains('active')) || links[0];
-        const r = active.getBoundingClientRect();
-        const navR = active.parentElement.getBoundingClientRect();
-        ind.style.setProperty('--indX', (r.left - navR.left + 8) + 'px');
-        ind.style.setProperty('--indW', (r.width - 16) + 'px');
-      }
+  // estado previo
+  const prev=localStorage.getItem(KEY);
+  if(prev){ const d=new Date(prev); statusEl.textContent=`CV solicitado el ${d.toLocaleDateString()} ${d.toLocaleTimeString()}`;}
 
-      const sections = links.map(a => document.querySelector(a.getAttribute('href'))).filter(Boolean);
-      function onScroll(){
-        let cur = '#home';
-        for (const sec of sections){
-          const rect = sec.getBoundingClientRect();
-          if (rect.top <= innerHeight*0.38 && rect.bottom >= innerHeight*0.38){
-            cur = '#'+sec.id; break;
-          }
-        }
-        setActiveByHash(cur);
-      }
+  const panel=modal.querySelector('.modal__panel');
+  const firstInput=modal.querySelector('input[name="name"]');
 
-      links.forEach(a=>a.addEventListener('click',()=>setActiveByHash(a.getAttribute('href'))));
-      window.addEventListener('scroll', onScroll, {passive:true});
-      window.addEventListener('resize', onScroll);
-      onScroll();
-    })();
+  function open(){ modal.classList.add('is-open'); modal.setAttribute('aria-hidden','false'); setTimeout(()=>firstInput?.focus(),0); }
+  function close(){ modal.classList.remove('is-open'); modal.setAttribute('aria-hidden','true'); btn?.focus(); }
 
-    // ☄️ Cometas
-    (function(){
-      const layer = document.querySelector('.comets');
-      if(!layer) return;
+  btn?.addEventListener('click',open);
+  modal?.addEventListener('click',e=>{ if (e.target.hasAttribute('data-close')) close(); });
+  window.addEventListener('keydown',e=>{ if(e.key==='Escape' && modal.classList.contains('is-open')) close(); });
 
-      let maxActive = matchMedia('(max-width: 900px)').matches ? 2 : 4;
-      let active = 0;
+  form?.addEventListener('submit',(e)=>{
+    e.preventDefault();
+    const data=new FormData(form);
+    const name=(data.get('name')||'').toString().trim();
+    const email=(data.get('email')||'').toString().trim();
+    const msg=(data.get('msg')||'').toString().trim();
 
-      function spawnComet(customDelay=0){
-        if(active >= maxActive) return;
-        const c = document.createElement('i');
-        c.className = 'comet';
-
-        const startX = 8 + Math.random()*84;
-        const driftX = (-10 - Math.random()*22).toFixed(2) + 'vw';
-        const angle  = (12 + Math.random()*12).toFixed(2) + 'deg';
-        const dur    = (2.4 + Math.random()*2.4).toFixed(2) + 's';
-        const size   = (7 + Math.random()*10).toFixed(1) + 'px';
-        const tail   = (170 + Math.random()*180).toFixed(0) + 'px';
-        const hue    = (12 + Math.random()*18).toFixed(0);
-        const lum    = (50 + Math.random()*10).toFixed(0) + '%';
-
-        c.style.setProperty('--startX', startX.toFixed(2));
-        c.style.setProperty('--driftX', driftX);
-        c.style.setProperty('--angle',  angle);
-        c.style.setProperty('--dur',    dur);
-        c.style.setProperty('--size',   size);
-        c.style.setProperty('--tail',   tail);
-        c.style.setProperty('--hue',    hue);
-        c.style.setProperty('--lum',    lum);
-
-        if(Math.random() < 0.20){
-          c.style.setProperty('--size',  (parseFloat(size)*1.35).toFixed(1)+'px');
-          c.style.setProperty('--tail',  (parseFloat(tail)*1.3).toFixed(0)+'px');
-          c.style.filter = 'brightness(1.08)';
-        }
-
-        if(customDelay) c.style.animationDelay = customDelay + 'ms';
-
-        layer.appendChild(c);
-        active++;
-        c.addEventListener('animationend', ()=>{ c.remove(); active--; }, {once:true});
-      }
-
-      function loop(){
-        const t = 2500 + Math.random()*2000;
-        setTimeout(()=>{ spawnComet(); loop(); }, t);
-      }
-
-      function bursts(){
-        const burstNow = ()=> {
-          const n = 3 + Math.floor(Math.random()*3);
-          for(let i=0;i<n;i++){ spawnComet(i*220); }
-        };
-        setInterval(burstNow, 2000);
-      }
-
-      spawnComet();
-      loop();
-      bursts();
-
-      if (matchMedia('(max-width: 900px)').matches && (window.devicePixelRatio||1) < 1.5){
-        maxActive = 2;
-      }
-    })();
-    (function(){
-    const btn = document.getElementById('requestCVBtn');
-    const modal = document.getElementById('cvModal');
-    const form = document.getElementById('cvForm');
-    const statusEl = document.getElementById('cvStatus');
-
-    // Estado previo desde localStorage
-    const KEY = 'cvRequestedAt';
-    const prev = localStorage.getItem(KEY);
-    if (prev){
-      const d = new Date(prev);
-      statusEl.textContent = `CV solicitado el ${d.toLocaleDateString()} ${d.toLocaleTimeString()}`;
-    }
-
-    const open = ()=> modal.classList.add('is-open');
-    const close = ()=> modal.classList.remove('is-open');
-
-    btn?.addEventListener('click', open);
-    modal?.addEventListener('click', e => { if (e.target.dataset.close !== undefined) close(); });
-    window.addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
-
-    form?.addEventListener('submit', (e)=>{
-      e.preventDefault();
-      const data = new FormData(form);
-      const name = (data.get('name')||'').toString().trim();
-      const email = (data.get('email')||'').toString().trim();
-      const msg = (data.get('msg')||'').toString().trim();
-
-      // Construye mailto
-      const subject = encodeURIComponent(`Solicitud de CV - ${name}`);
-      const body = encodeURIComponent(
+    const subject=encodeURIComponent(`Solicitud de CV - ${name}`);
+    const body=encodeURIComponent(
 `Hola Jonathan,
 
 Me gustaría recibir tu CV.
 
 Nombre: ${name}
 Email: ${email}
-${msg ? `Mensaje: ${msg}\n` : ''}
+${msg?`Mensaje: ${msg}\n`:''}
+Gracias.`);
 
-Gracias.`
-      );
-
-      // Marca como solicitado en este navegador
-      const now = new Date();
-      localStorage.setItem(KEY, now.toISOString());
-      statusEl.textContent = `CV solicitado el ${now.toLocaleDateString()} ${now.toLocaleTimeString()}`;
-
-      // Abre el cliente de correo
-      window.location.href = `mailto:berdejosanchez@gmail.com?subject=${subject}&body=${body}`;
-
-      // Limpia y cierra
-      form.reset();
-      close();
-    });
-  })();
-     document.querySelectorAll('a[download]').forEach(a => a.remove());
+    const now=new Date(); localStorage.setItem(KEY,now.toISOString());
+    statusEl.textContent=`CV solicitado el ${now.toLocaleDateString()} ${now.toLocaleTimeString()}`;
+    window.location.href=`mailto:berdejosanchez@gmail.com?subject=${subject}&body=${body}`;
+    form.reset(); close();
+  });
+})();
 </script>
-  <div class="modal" id="cvModal" aria-hidden="true" role="dialog" aria-labelledby="cvTitle">
-  <div class="modal__backdrop" data-close></div>
-  <div class="modal__panel" role="document">
-    <h3 id="cvTitle" class="modal__title">Solicitar CV</h3>
-    <p class="modal__text">Déjame tus datos y te lo envío al correo.</p>
-    <form id="cvForm" class="modal__form">
-      <label class="modal__label">
-        Nombre
-        <input class="modal__input" name="name" required placeholder="Tu nombre">
-      </label>
-      <label class="modal__label">
-        Email
-        <input class="modal__input" name="email" type="email" required placeholder="tucorreo@ejemplo.com">
-      </label>
-      <label class="modal__label">
-        Mensaje (opcional)
-        <textarea class="modal__input" name="msg" rows="3" placeholder="Cuéntame el uso o el puesto objetivo"></textarea>
-      </label>
-      <div class="modal__actions">
-        <button type="submit" class="btn">Enviar solicitud</button>
-        <button type="button" class="btn btn--ghost" data-close>Cancelar</button>
-      </div>
-    </form>
-  </div>
-</div>
 </body>
 </html>
