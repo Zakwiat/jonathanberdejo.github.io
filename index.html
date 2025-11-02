@@ -1190,6 +1190,242 @@ document.getElementById("langSwitcher").addEventListener("change",(e)=>applyLang
   }
   requestAnimationFrame(tick);
 })();
+  /* ========== 2 cometas: nearest sin repetir, cola y curva suave ========== */
+(function(){
+  const canvas = document.getElementById('starLinkCanvas');
+  const starsWrap = document.querySelector('.stars');
+  if(!canvas || !starsWrap) return;
+
+  const ctx = canvas.getContext('2d');
+  let W=0,H=0, DPR = Math.max(1, Math.min(2, window.devicePixelRatio||1));
+
+  const neonLine = getComputedStyle(document.documentElement).getPropertyValue('--neonline').trim() || '#ff1744';
+
+  function resize(){
+    W = Math.round(window.innerWidth);
+    H = Math.round(window.innerHeight);
+    canvas.width = Math.round(W * DPR);
+    canvas.height = Math.round(H * DPR);
+    canvas.style.width = W+'px';
+    canvas.style.height = H+'px';
+    ctx.setTransform(DPR,0,0,DPR,0,0);
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  function getStarPoints(){
+    const nodes = starsWrap.querySelectorAll('.star');
+    const pts = [];
+    nodes.forEach(n=>{
+      const left = parseFloat(n.style.left||'0');
+      const top  = parseFloat(n.style.top ||'0');
+      if(!isNaN(left) && !isNaN(top)){
+        pts.push({ x: (left/100)*W, y: (top/100)*H });
+      }
+    });
+    return pts.length ? pts : [{x:W*0.3,y:H*0.3},{x:W*0.7,y:H*0.7}];
+  }
+
+  let points = getStarPoints();
+
+  // ---------- Parámetros ----------
+  const RAYS = 2;
+  const SPEED = 780;           // px/s (más rápido y fluido)
+  const MIN_DIST = 40;
+  const DUR_MIN = 0.42;        // acota saltos muy cortos
+  const DUR_MAX = 1.35;        // acota saltos largos
+  const TABU_LEN = 3;
+  const ANGLE_MIN = Math.PI/6;     // 30°
+  const ANGLE_MAX = (5*Math.PI)/6; // 150°
+  const CURVE_FACTOR = 0.22;   // curvatura del arco (0 = línea recta)
+  const TRAIL_LEN = 18;        // longitud de la cola
+  const HEAD_RADIUS = 1.6;     // cabeza < estrella (2px aprox)
+  const BASE_WIDTH = 1.2;      // “grosor” de trazo
+  const EASE = t => t<.5 ? 2*t*t : 1 - Math.pow(-2*t+2,2)/2;
+
+  function norm(vx,vy){ const m=Math.hypot(vx,vy)||1; return [vx/m, vy/m]; }
+
+  function nearestIndex(p, avoidIdx){
+    let best = -1, bestD2 = Infinity;
+    for (let i=0;i<points.length;i++){
+      if (i===avoidIdx) continue;
+      const dx = points[i].x - p.x;
+      const dy = points[i].y - p.y;
+      const d2 = dx*dx + dy*dy;
+      if (d2 < bestD2){ bestD2 = d2; best = i; }
+    }
+    return best;
+  }
+
+  function pickNext(fromIdx, prevDir, tabu){
+    const from = points[fromIdx];
+    const order = points.map((p,i)=>({i, d2:(p.x-from.x)**2 + (p.y-from.y)**2}))
+                        .filter(o=>o.i!==fromIdx)
+                        .sort((a,b)=>a.d2-b.d2);
+
+    for (const cand of order){
+      if (tabu.has(cand.i)) continue;
+      const dx = points[cand.i].x - from.x;
+      const dy = points[cand.i].y - from.y;
+      const dist = Math.hypot(dx,dy);
+      if (dist < MIN_DIST) continue;
+
+      if (prevDir){
+        const [ux,uy] = prevDir;
+        const [vx,vy] = norm(dx,dy);
+        const dot = Math.max(-1, Math.min(1, ux*vx + uy*vy));
+        const ang = Math.acos(dot);
+        if (ang < ANGLE_MIN || ang > ANGLE_MAX) continue;
+      }
+      return cand.i;
+    }
+    // fallback: el más cercano que no esté en tabu
+    for (const cand of order){ if (!tabu.has(cand.i)) return cand.i; }
+    return order.length ? order[0].i : fromIdx;
+  }
+
+  function makeRay(){
+    points = getStarPoints();
+    const startIdx = Math.floor(Math.random()*points.length);
+    return {
+      fromIdx: startIdx,
+      toIdx: null,
+      t0: performance.now(),
+      dur: 1,
+      prevDir: null,
+      tabu: new Set(),
+      ctrl: null,        // punto de control (curva)
+      curveSign: Math.random()<0.5 ? -1 : 1,
+      history: []        // cola (puntos de cabeza)
+    };
+  }
+
+  function startHop(ray){
+    if (!ray.tabu.has(ray.fromIdx)){
+      ray.tabu.add(ray.fromIdx);
+      if (ray.tabu.size > TABU_LEN){
+        const arr=[...ray.tabu]; arr.shift(); ray.tabu=new Set(arr);
+      }
+    }
+
+    const nextIdx = pickNext(ray.fromIdx, ray.prevDir, ray.tabu);
+    ray.toIdx = nextIdx;
+
+    const a = points[ray.fromIdx], b = points[ray.toIdx];
+    const dx = b.x - a.x, dy = b.y - a.y;
+    const dist = Math.max(MIN_DIST, Math.hypot(dx,dy));
+    const rawDur = dist / SPEED;
+    ray.dur = Math.max(DUR_MIN, Math.min(DUR_MAX, rawDur));
+    ray.t0 = performance.now();
+
+    // Punto de control para curva (bezier cuadrática)
+    const mid = { x:(a.x+b.x)/2, y:(a.y+b.y)/2 };
+    const [ux,uy] = norm(dx,dy);
+    const px = -uy, py = ux; // perpendicular
+    const bend = dist * CURVE_FACTOR * ray.curveSign;
+    ray.ctrl = { x: mid.x + px*bend, y: mid.y + py*bend };
+
+    // ligera variación en cada salto
+    ray.curveSign = Math.random()<0.5 ? -ray.curveSign : ray.curveSign;
+  }
+
+  function advance(ray){
+    const a = points[ray.fromIdx], b = points[ray.toIdx];
+    const [ux,uy] = norm(b.x-a.x, b.y-a.y);
+    ray.prevDir = [ux,uy];
+    ray.fromIdx = ray.toIdx;
+    startHop(ray);
+  }
+
+  // Bezier cuadrática
+  function qbezPoint(a,c,b,t){
+    const u = 1-t;
+    return {
+      x: u*u*a.x + 2*u*t*c.x + t*t*b.x,
+      y: u*u*a.y + 2*u*t*c.y + t*t*b.y
+    };
+  }
+
+  function drawComet(ray, prog){
+    const a = points[ray.fromIdx], b = points[ray.toIdx], c = ray.ctrl;
+    // cabeza
+    const head = qbezPoint(a,c,b, EASE(prog));
+
+    // Añadir cabeza a la cola
+    ray.history.push(head);
+    if (ray.history.length > TRAIL_LEN) ray.history.shift();
+
+    // Dibujar cola (segmentos de atrás hacia delante)
+    ctx.save();
+    ctx.globalCompositeOperation = 'lighter';
+
+    for (let i=1;i<ray.history.length;i++){
+      const p0 = ray.history[i-1];
+      const p1 = ray.history[i];
+
+      const t = i/(ray.history.length);            // 0..1
+      const alpha = 0.12 + t*0.38;                 // más opaco cerca de la cabeza
+      const width = 0.6 + t*(BASE_WIDTH*1.2);      // más ancho cerca de la cabeza
+
+      ctx.strokeStyle = neonLine;
+      ctx.shadowColor = neonLine;
+      ctx.shadowBlur = 18;
+      ctx.globalAlpha = alpha;
+      ctx.lineWidth = width;
+
+      ctx.beginPath();
+      ctx.moveTo(p0.x, p0.y);
+      ctx.lineTo(p1.x, p1.y);
+      ctx.stroke();
+    }
+
+    // cabeza brillante
+    ctx.shadowBlur = 22;
+    ctx.globalAlpha = 0.95;
+    ctx.fillStyle = neonLine;
+    ctx.beginPath();
+    ctx.arc(head.x, head.y, HEAD_RADIUS, 0, Math.PI*2);
+    ctx.fill();
+
+    // halo suave
+    ctx.shadowBlur = 32;
+    ctx.globalAlpha = 0.35;
+    ctx.beginPath();
+    ctx.arc(head.x, head.y, HEAD_RADIUS+1.2, 0, Math.PI*2);
+    ctx.fill();
+
+    ctx.restore();
+  }
+
+  let rays = Array.from({length:RAYS}, makeRay);
+  rays.forEach(r => startHop(r));
+
+  let reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  window.matchMedia('(prefers-reduced-motion: reduce)').addEventListener('change', e=> reduced = e.matches);
+
+  function tick(now){
+    if (reduced) { ctx.clearRect(0,0,W,H); return; }
+
+    points = getStarPoints();
+    ctx.clearRect(0,0,W,H);
+
+    for (const ray of rays){
+      const elapsed = (now - ray.t0)/1000;
+      const prog = Math.min(1, elapsed / ray.dur);
+
+      if (ray.toIdx == null) startHop(ray);
+
+      drawComet(ray, prog);
+
+      if (prog >= 1){
+        advance(ray);
+      }
+    }
+    requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+})();
+
 
 </script>
 </body>
