@@ -802,6 +802,225 @@ document.getElementById("langSwitcher").addEventListener("change",(e)=>applyLang
   });
   window.addEventListener('resize', update);
 })();
+  /* ========== Canvas: 2 cometas ========== */
+(function(){
+  const canvas = document.getElementById('starLinkCanvas');
+  const starsWrap = document.querySelector('.stars');
+  if(!canvas || !starsWrap) return;
+
+  const ctx = canvas.getContext('2d');
+  let W=0, H=0, DPR = Math.max(1, Math.min(2, window.devicePixelRatio||1));
+  const neonLine = getComputedStyle(document.documentElement).getPropertyValue('--neonline').trim() || '#ff1744';
+
+  function resize(){
+    const Wcss = Math.max(document.documentElement.scrollWidth, document.documentElement.clientWidth, window.innerWidth);
+    const Hcss = Math.max(document.documentElement.scrollHeight, document.documentElement.clientHeight, window.innerHeight);
+    W = Math.round(Wcss); H = Math.round(Hcss);
+    canvas.width = Math.round(W * DPR);
+    canvas.height = Math.round(H * DPR);
+    canvas.style.width = W+'px';
+    canvas.style.height = H+'px';
+    ctx.setTransform(DPR,0,0,DPR,0,0);
+    ctx.lineCap = 'round';
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  function getStarPoints(){
+    const nodes = starsWrap.querySelectorAll('.star');
+    const pts = [];
+    nodes.forEach(n=>{
+      const left = parseFloat(n.style.left||'0');
+      const top  = parseFloat(n.style.top ||'0');
+      if(!isNaN(left) && !isNaN(top)){
+        pts.push({ x:(left/100)*W, y:(top/100)*H });
+      }
+    });
+    return pts.length ? pts : [{x:W*0.3,y:H*0.3},{x:W*0.7,y:H*0.7}];
+  }
+  let points = getStarPoints();
+
+  // ===== Parámetros =====
+  const RAYS = 2, SPEED = 650;
+  const DUR_MIN = 0.36, DUR_MAX = 1.5, MIN_DIST = 40, TABU_LEN = 3;
+  const ANGLE_MIN = Math.PI/6, ANGLE_MAX = (5*Math.PI)/6;
+  const BASE_WIDTH = 1.2, TRAIL_LEN = 36, TRAIL_FADE = 0.9;
+  const CURVE_MIN = 14, CURVE_MAX = 30, K_NEAREST = 15;
+  const OFFSCREEN_TIMEOUT = 1200, VIEW_MARGIN = 200;
+  const EASE = t => t<.5 ? 4*t*t*t : 1 - Math.pow(-2*t+2,3)/2;
+
+  const norm = (vx,vy)=>{ const m=Math.hypot(vx,vy)||1; return [vx/m, vy/m]; };
+  const rr   = (a,b)=> a + Math.random()*(b-a);
+  const sgn  = ()=> Math.random()<0.5 ? -1 : 1;
+
+  const viewport = ()=> {
+    const top = window.scrollY, bottom = top + innerHeight;
+    return { left:-VIEW_MARGIN, right:innerWidth+VIEW_MARGIN, top:top-VIEW_MARGIN, bottom:bottom+VIEW_MARGIN };
+  };
+  const isVisiblePoint = (p,vp)=> p.x>=vp.left && p.x<=vp.right && p.y>=vp.top && p.y<=vp.bottom;
+  const visibleIndices = (vp)=>{ const idx=[]; for(let i=0;i<points.length;i++){ if(isVisiblePoint(points[i], vp)) idx.push(i); } return idx; };
+
+  function pickKthNearest(fromIdx, prevDir, tabu, candidateIdx){
+    const from = points[fromIdx];
+    const baseIdx = candidateIdx && candidateIdx.length ? candidateIdx.filter(i => i !== fromIdx) : [...Array(points.length).keys()].filter(i => i !== fromIdx);
+    const sorted = baseIdx.map(i => ({ i, d2: (points[i].x-from.x)**2 + (points[i].y-from.y)**2 })).sort((a,b)=>a.d2-b.d2);
+    const valid = [];
+    for (const cand of sorted){
+      if (tabu.has(cand.i)) continue;
+      const dx = points[cand.i].x - from.x, dy = points[cand.i].y - from.y;
+      const dist = Math.hypot(dx,dy); if (dist < MIN_DIST) continue;
+      if (prevDir){
+        const m = Math.hypot(dx,dy) || 1, vx = dx/m, vy = dy/m;
+        const dot = Math.max(-1, Math.min(1, prevDir[0]*vx + prevDir[1]*vy));
+        const ang = Math.acos(dot);
+        if (ang < ANGLE_MIN || ang > ANGLE_MAX) continue;
+      }
+      valid.push(cand.i);
+    }
+    if (valid.length >= K_NEAREST) return valid[K_NEAREST - 1];
+    if (valid.length > 0) return valid[valid.length - 1];
+    return sorted.length ? sorted[0].i : fromIdx;
+  }
+
+  function makeRay(){
+    points = getStarPoints();
+    const startIdx = Math.floor(Math.random()*points.length);
+    return { fromIdx: startIdx, toIdx: null, t0: performance.now(), dur: 1, prevDir: null, tabu: new Set(), trail: [], curveAmp: rr(CURVE_MIN, CURVE_MAX) * sgn(), offStart: 0 };
+  }
+
+  function startHop(ray){
+    if (!ray.tabu.has(ray.fromIdx)){
+      ray.tabu.add(ray.fromIdx);
+      if (ray.tabu.size > TABU_LEN){
+        const arr=[...ray.tabu]; arr.shift(); ray.tabu=new Set(arr);
+      }
+    }
+    const vp = viewport();
+    let cand = visibleIndices(vp);
+    if (cand.length < 30) cand = null;
+    const nextIdx = pickKthNearest(ray.fromIdx, ray.prevDir, ray.tabu, cand);
+    ray.toIdx = nextIdx;
+
+    const a = points[ray.fromIdx], b = points[ray.toIdx];
+    const dist = Math.max(MIN_DIST, Math.hypot(b.x-a.x, b.y-a.y));
+    const rawDur = dist / SPEED;
+    ray.dur = Math.max(DUR_MIN, Math.min(DUR_MAX, rawDur));
+    ray.t0 = performance.now();
+    ray.curveAmp = rr(CURVE_MIN, CURVE_MAX) * sgn();
+  }
+
+  function advance(ray){
+    const a = points[ray.fromIdx], b = points[ray.toIdx];
+    ray.prevDir = norm(b.x-a.x, b.y-a.y);
+    ray.fromIdx = ray.toIdx;
+    startHop(ray);
+  }
+
+  function getPos(ray, prog){
+    const p = points[ray.fromIdx], q = points[ray.toIdx];
+    const t = EASE(prog);
+    const x = p.x + (q.x - p.x)*t;
+    const y = p.y + (q.y - p.y)*t;
+    const dx = q.x - p.x, dy = q.y - p.y;
+    const [ux,uy] = norm(dx,dy);
+    const nx = -uy, ny = ux;
+    const offset = Math.sin(t*Math.PI) * ray.curveAmp;
+    return { x: x + nx*offset, y: y + ny*offset };
+  }
+
+  function drawComet(ray, head){
+    const L = ray.trail.length;
+    for(let i=1;i<L;i++){
+      const a = ray.trail[i-1], b = ray.trail[i];
+      const k = i/L;
+      ctx.save();
+      ctx.strokeStyle = neonLine;
+      ctx.shadowColor = neonLine;
+      ctx.globalAlpha = (k*TRAIL_FADE)*0.9;
+      ctx.shadowBlur = 16*k;
+      ctx.lineWidth = BASE_WIDTH * (k*0.9);
+      ctx.beginPath();
+      ctx.moveTo(a.x, a.y);
+      ctx.lineTo(b.x, b.y);
+      ctx.stroke();
+      ctx.restore();
+    }
+    const last = ray.trail[L-2] || head;
+    ctx.save();
+    ctx.strokeStyle = neonLine;
+    ctx.shadowColor = neonLine;
+    ctx.globalAlpha = 1;
+    ctx.shadowBlur = 20;
+    ctx.lineWidth = BASE_WIDTH;
+    ctx.beginPath();
+    ctx.moveTo(last.x, last.y);
+    ctx.lineTo(head.x, head.y);
+    ctx.stroke();
+    ctx.fillStyle = neonLine;
+    ctx.shadowBlur = 12;
+    ctx.beginPath();
+    ctx.arc(head.x, head.y, 1.3, 0, Math.PI*2);
+    ctx.fill();
+    ctx.restore();
+  }
+
+  let rays = Array.from({length:RAYS}, makeRay);
+  rays.forEach(r => startHop(r));
+
+  function loop(now){
+    if (motionOff || document.body.dataset.motion === 'off'){
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+      requestAnimationFrame(loop);
+      return;
+    }
+
+    points = getStarPoints();
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+
+    const vpNow = viewport();
+
+    for (const ray of rays){
+      const elapsed = (now - ray.t0)/1000;
+      const prog = Math.min(1, elapsed / ray.dur);
+      const head = getPos(ray, prog);
+
+      if (!isVisiblePoint(head, vpNow)) {
+        if (!ray.offStart) ray.offStart = now;
+      } else {
+        ray.offStart = 0;
+      }
+      if (ray.offStart && (now - ray.offStart) > OFFSCREEN_TIMEOUT) {
+        const vis = visibleIndices(vpNow);
+        if (vis.length) {
+          let best = vis[0], bestD = Infinity;
+          for (const i of vis){
+            const d = (points[i].x - head.x)**2 + (points[i].y - head.y)**2;
+            if (d < bestD) { bestD = d; best = i; }
+          }
+          ray.fromIdx = best;
+          ray.prevDir = null;
+          ray.trail = [];
+          ray.offStart = 0;
+          startHop(ray);
+          continue;
+        }
+      }
+
+      ray.trail.push(head);
+      if (ray.trail.length > TRAIL_LEN) ray.trail.shift();
+
+      drawComet(ray, head);
+
+      if (prog >= 1){
+        ray.trail = [head];
+        advance(ray);
+      }
+    }
+    requestAnimationFrame(loop);
+  }
+  requestAnimationFrame(loop);
+})();
+
 </script>
 </body>
 </html>
