@@ -581,3 +581,10 @@ body.scrolled .comets{ opacity:.45; transition:opacity .4s }
   z-index:1;
   pointer-events:none;
 }
+/* Desactivar animaciones y cometas */
+.no-anim .beam,
+.no-anim .title,
+.no-anim .star { animation: none !important; }
+
+.no-anim #starLinkCanvas { display:none; } /* oculta el lienzo de cometas */
+
