@@ -621,3 +621,13 @@ body[data-motion="off"] .backtop{ transition:none; } /* sin animaciones cuando d
 /* Evita solaparse con la HUD en móviles */
 @media (max-width:900px){ .backtop{ bottom:86px; right:16px; } }
 
+/* Prioridad de capas en el carrusel */
+.carousel { position: relative; }
+.carousel__track { position: relative; z-index: 1; }
+
+/* Botones por encima y clicables siempre */
+.carousel__btn {
+  z-index: 5;              /* por encima del track y de la imagen */
+  pointer-events: auto;    /* acepta clics incluso si algo superpone */
+}
+   
