@@ -106,7 +106,7 @@ body{font-family:'Poppins',system-ui,Segoe UI,Roboto,Arial,sans-serif;background
           title="Activar o desactivar animación"
           style="margin-left:8px;font-weight:700;color:#00eaff;background:transparent;
                  border:1px solid rgba(0,234,255,.25);border-radius:10px;padding:6px 10px;">
-    Animación: ON
+    🪄
   </button>
 </div>
 
@@ -117,6 +117,18 @@ body{font-family:'Poppins',system-ui,Segoe UI,Roboto,Arial,sans-serif;background
     <div class="neon-lines">
       <span class="beam b1"></span><span class="beam b2"></span><span class="beam b3"></span><span class="beam b4"></span><span class="beam b5"></span>
     </div>
+    <!-- Selector de idioma + botón animación (ahora clicable) -->
+  <div id="langBox">
+    <select id="langSwitcher" aria-label="Idioma">
+      <option value="es" selected>ES</option>
+      <option value="en">EN</option>
+    </select>
+    <button id="animToggle" type="button" aria-pressed="false"
+      style="margin-left:8px;font-weight:700;color:#00eaff;background:transparent;
+             border:1px solid rgba(0,234,255,.25);border-radius:10px;padding:6px 10px;">
+      Animación: ON
+    </button>
+  </div>
     <!-- Canvas para líneas/cometas -->
     <canvas id="starLinkCanvas" aria-hidden="true"></canvas>
   </div>
