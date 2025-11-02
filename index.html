@@ -805,6 +805,45 @@ document.getElementById("langSwitcher").addEventListener("change",(e)=>applyLang
 
 /* ========== Cambio de idioma ========== */
 document.getElementById("langSwitcher").addEventListener("change",(e)=>applyLang(e.target.value));
+  /* ========== Botón Volver Arriba ========== */
+(function(){
+  const btn = document.getElementById('backTop');
+  if(!btn) return;
+
+  const SHOW_AT = 300; // px de scroll para mostrar
+  let ticking = false;
+
+  function setVisible(v){
+    btn.classList.toggle('is-visible', v);
+  }
+
+  function onScroll(){
+    if(!ticking){
+      requestAnimationFrame(()=>{
+        setVisible(window.scrollY > SHOW_AT);
+        ticking = false;
+      });
+      ticking = true;
+    }
+  }
+
+  // Mostrar/ocultar con scroll
+  window.addEventListener('scroll', onScroll, {passive:true});
+  onScroll();
+
+  // Subida suave (respeta reduce-motion y tu botón de animación)
+  btn.addEventListener('click', ()=>{
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const motionOff = document.body.dataset.motion === 'off';
+    const behavior = (prefersReduced || motionOff) ? 'auto' : 'smooth';
+    window.scrollTo({ top: 0, left: 0, behavior });
+  });
+})();
+
 </script>
+  <button id="backTop" class="backtop" aria-label="Volver arriba" title="Volver arriba">
+  ↑
+</button>
+
 </body>
 </html>
