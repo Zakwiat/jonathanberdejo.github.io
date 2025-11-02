@@ -120,7 +120,13 @@ body[data-motion="off"] #starLinkCanvas{display:none} /* apaga el canvas */
       <option value="es" selected>ES</option>
       <option value="en">EN</option>
     </select>
-    <button id="animToggle" type="button" aria-pressed="false" title="Activar o desactivar animación">Animación: ON</button>
+  <button id="animToggle" type="button" aria-pressed="false"
+        title="Activar o desactivar animación"
+        data-on-label="⚡ Animación: ON"
+        data-off-label="🌙 Animación: OFF">
+  ⚡ Animación: ON
+</button>
+
   </div>
 
   <!-- Fondo -->
@@ -551,12 +557,19 @@ document.getElementById("langSwitcher").addEventListener("change",(e)=>applyLang
   if(saved === 'off') startOff = true;
 
   function apply(off){
-    motionOff = !!off; // afecta al canvas
-    document.body.dataset.motion = off ? 'off' : 'on';
-    btn.setAttribute('aria-pressed', off ? 'true' : 'false');
-    btn.textContent = `Animación: ${off ? 'OFF' : 'ON'}`;
-    localStorage.setItem(MOTION_KEY, off ? 'off' : 'on');
-  }
+  motionOff = !!off; // afecta al canvas
+  document.body.dataset.motion = off ? 'off' : 'on';
+
+  const onLabel  = btn.getAttribute('data-on-label')  || 'Animación: ON';
+  const offLabel = btn.getAttribute('data-off-label') || 'Animación: OFF';
+
+  btn.setAttribute('aria-pressed', off ? 'true' : 'false');
+  btn.textContent = off ? offLabel : onLabel;
+  btn.title = off ? 'Activar animación' : 'Desactivar animación';
+
+  localStorage.setItem(MOTION_KEY, off ? 'off' : 'on');
+}
+
 
   apply(startOff);
 
