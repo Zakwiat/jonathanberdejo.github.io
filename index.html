@@ -95,22 +95,43 @@ body{font-family:'Poppins',system-ui,Segoe UI,Roboto,Arial,sans-serif;background
 /* ===== Motion OFF ===== */
 body[data-motion="off"] .star,
 body[data-motion="off"] .beam,
-body[data-motion="off"] .title{
-  animation: none !important;
-}
-body[data-motion="off"] #starLinkCanvas{display:none} /* apaga el canvas */
+body[data-motion="off"] .title{animation: none !important;}
+body[data-motion="off"] #starLinkCanvas{display:none}
 @media (prefers-reduced-motion: reduce){
   .star,.beam,.title{animation: none !important}
   #starLinkCanvas{display:none}
 }
 
-/* ===== Responsive ===== */
-@media (max-width:900px){
-  .grid-2{grid-template-columns:1fr}
-  .hud-nav{gap:8px;padding:8px 10px;bottom:16px}
-  .hud-nav a{padding:8px 10px;font-weight:600}
-  .beam{width:90vw;left:-65vw}
+/* ===== Carrusel “Sobre mí” ===== */
+.about-grid{display:grid;gap:18px;grid-template-columns:1.05fr .95fr}
+@media (max-width:900px){ .about-grid{grid-template-columns:1fr} }
+
+.carousel{position:relative;border:1px solid var(--stroke);border-radius:16px;overflow:hidden;background:rgba(0,0,0,.22)}
+.carousel__track{display:grid;grid-auto-flow:column;grid-auto-columns:100%;transition:transform .35s ease;will-change:transform}
+.carousel__slide{position:relative;aspect-ratio:4/3;background:#05080a}
+.carousel__slide img{width:100%;height:100%;object-fit:cover;display:block;filter:contrast(1.08) brightness(.95)}
+.carousel__btn{position:absolute;top:50%;transform:translateY(-50%);width:42px;height:42px;border-radius:12px;border:1px solid var(--stroke);background:rgba(0,0,0,.55);backdrop-filter:blur(8px);color:#eaf6ff;font-size:20px;font-weight:900;line-height:42px;text-align:center;cursor:pointer;z-index:2}
+.carousel__btn:hover{box-shadow:0 0 0 3px rgba(0,234,255,.12), 0 0 22px rgba(0,234,255,.25) inset}
+.carousel__btn--prev{left:10px}
+.carousel__btn--next{right:10px}
+.carousel__dots{position:absolute;left:50%;bottom:10px;transform:translateX(-50%);display:flex;gap:8px;z-index:2}
+.carousel__dot{width:8px;height:8px;border-radius:50%;border:1px solid var(--stroke);background:rgba(255,255,255,.08);cursor:pointer}
+.carousel__dot[aria-current="true"]{background:linear-gradient(90deg,#00eaff,#8ff6ff);box-shadow:0 0 10px rgba(0,234,255,.6)}
+
+/* Back to Top */
+.backtop{
+  position:fixed; right:22px; bottom:92px; z-index:8;
+  width:44px; height:44px; border-radius:12px; cursor:pointer;
+  border:1px solid var(--stroke); background:rgba(0,0,0,.45);
+  color:#c9faff; font-size:20px; font-weight:900; line-height:44px; text-align:center;
+  box-shadow:0 0 18px rgba(0,234,255,.18);
+  opacity:0; transform:translateY(10px); pointer-events:none;
+  transition:opacity .22s ease, transform .22s ease, box-shadow .15s ease;
+  backdrop-filter: blur(8px) saturate(120%);
 }
+.backtop:hover{box-shadow:0 0 0 3px rgba(0,234,255,.12), 0 0 22px rgba(0,234,255,.25) inset}
+.backtop.is-visible{opacity:1;transform:translateY(0);pointer-events:auto}
+@media (max-width:900px){ .backtop{ bottom:86px; right:16px } }
 </style>
 </head>
 <body>
@@ -120,13 +141,10 @@ body[data-motion="off"] #starLinkCanvas{display:none} /* apaga el canvas */
       <option value="es" selected>ES</option>
       <option value="en">EN</option>
     </select>
-  <button id="animToggle" type="button" aria-pressed="false"
+    <button id="animToggle" type="button" aria-pressed="false"
         title="Activar o desactivar animación"
-        data-on-label="⚡ ON"
-        data-off-label="🌙 OFF">
-  ⚡ Animación: ON
-</button>
-
+        data-on-label="⚡ Animación: ON"
+        data-off-label="🌙 Animación: OFF">⚡ Animación: ON</button>
   </div>
 
   <!-- Fondo -->
@@ -157,11 +175,33 @@ body[data-motion="off"] #starLinkCanvas{display:none} /* apaga el canvas */
   <section id="about" class="section">
     <div class="container">
       <div class="card">
-        <h2 data-t="aboutTitle">Sobre mí</h2>
-        <p data-t="aboutText">
-          Soy apasionado en todo lo que hago. Tengo 24 años y me mueven la curiosidad y la mejora continua: analizar, estructurar y administrar datos. Desde mi adolescencia he dedicado mi tiempo libre a la escritura, la música y la tecnología, de forma autodidacta más formaciones complementarias. Del mismo modo que mis habilidades técnico-creativas son tangibles, mi experiencia y formación en logística han fortalecido mi capacidad de organización, gestión y resolución práctica.
-        </p>
-        <div class="badges" id="aboutBadges"></div>
+        <div class="about-grid">
+          <div>
+            <h2 data-t="aboutTitle">Sobre mí</h2>
+            <p data-t="aboutText">
+              Soy apasionado en todo lo que hago. Tengo 24 años y me mueven la curiosidad y la mejora continua: analizar, estructurar y administrar datos. Desde mi adolescencia he dedicado mi tiempo libre a la escritura, la música y la tecnología, de forma autodidacta más formaciones complementarias. Del mismo modo que mis habilidades técnico-creativas son tangibles, mi experiencia y formación en logística han fortalecido mi capacidad de organización, gestión y resolución práctica.
+            </p>
+            <div class="badges" id="aboutBadges"></div>
+          </div>
+
+          <!-- Carrusel lateral -->
+          <figure class="carousel" aria-label="Galería de fotos - Sobre mí">
+            <button class="carousel__btn carousel__btn--prev" aria-label="Anterior">‹</button>
+            <div class="carousel__track" id="aboutTrack">
+              <div class="carousel__slide">
+                <img src="assets/images/jon-music-1.jpg" alt="Jonathan tocando el teclado en directo (1)" loading="lazy" />
+              </div>
+              <div class="carousel__slide">
+                <img src="assets/images/jon-music-2.jpg" alt="Jonathan en escenario, ensayo con teclado (2)" loading="lazy" />
+              </div>
+              <div class="carousel__slide">
+                <img src="assets/images/jon-music-3.jpg" alt="Retrato en camerino/ensayo con fondo azul (3)" loading="lazy" />
+              </div>
+            </div>
+            <button class="carousel__btn carousel__btn--next" aria-label="Siguiente">›</button>
+            <div class="carousel__dots" id="aboutDots" role="tablist" aria-label="Paginación del carrusel"></div>
+          </figure>
+        </div>
       </div>
     </div>
   </section>
@@ -557,19 +597,18 @@ document.getElementById("langSwitcher").addEventListener("change",(e)=>applyLang
   if(saved === 'off') startOff = true;
 
   function apply(off){
-  motionOff = !!off; // afecta al canvas
-  document.body.dataset.motion = off ? 'off' : 'on';
+    motionOff = !!off; // afecta al canvas
+    document.body.dataset.motion = off ? 'off' : 'on';
 
-  const onLabel  = btn.getAttribute('data-on-label')  || 'Animación: ON';
-  const offLabel = btn.getAttribute('data-off-label') || 'Animación: OFF';
+    const onLabel  = btn.getAttribute('data-on-label')  || '⚡ Animación: ON';
+    const offLabel = btn.getAttribute('data-off-label') || '🌙 Animación: OFF';
 
-  btn.setAttribute('aria-pressed', off ? 'true' : 'false');
-  btn.textContent = off ? offLabel : onLabel;
-  btn.title = off ? 'Activar animación' : 'Desactivar animación';
+    btn.setAttribute('aria-pressed', off ? 'true' : 'false');
+    btn.textContent = off ? offLabel : onLabel;
+    btn.title = off ? 'Activar animación' : 'Desactivar animación';
 
-  localStorage.setItem(MOTION_KEY, off ? 'off' : 'on');
-}
-
+    localStorage.setItem(MOTION_KEY, off ? 'off' : 'on');
+  }
 
   apply(startOff);
 
@@ -749,7 +788,6 @@ document.getElementById("langSwitcher").addEventListener("change",(e)=>applyLang
   rays.forEach(r => startHop(r));
 
   function loop(now){
-    // Si motionOff o body[data-motion="off"], no dibujamos (y mantenemos el frame vivo por si reactivas)
     if (motionOff || document.body.dataset.motion === 'off'){
       ctx.clearRect(0,0,canvas.width,canvas.height);
       requestAnimationFrame(loop);
@@ -805,33 +843,22 @@ document.getElementById("langSwitcher").addEventListener("change",(e)=>applyLang
 
 /* ========== Cambio de idioma ========== */
 document.getElementById("langSwitcher").addEventListener("change",(e)=>applyLang(e.target.value));
-  /* ========== Botón Volver Arriba ========== */
+
+/* ========== Botón Volver Arriba ========== */
 (function(){
   const btn = document.getElementById('backTop');
   if(!btn) return;
-
-  const SHOW_AT = 300; // px de scroll para mostrar
+  const SHOW_AT = 300;
   let ticking = false;
-
-  function setVisible(v){
-    btn.classList.toggle('is-visible', v);
-  }
-
+  function setVisible(v){ btn.classList.toggle('is-visible', v); }
   function onScroll(){
     if(!ticking){
-      requestAnimationFrame(()=>{
-        setVisible(window.scrollY > SHOW_AT);
-        ticking = false;
-      });
+      requestAnimationFrame(()=>{ setVisible(window.scrollY > SHOW_AT); ticking = false; });
       ticking = true;
     }
   }
-
-  // Mostrar/ocultar con scroll
   window.addEventListener('scroll', onScroll, {passive:true});
   onScroll();
-
-  // Subida suave (respeta reduce-motion y tu botón de animación)
   btn.addEventListener('click', ()=>{
     const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const motionOff = document.body.dataset.motion === 'off';
@@ -840,10 +867,72 @@ document.getElementById("langSwitcher").addEventListener("change",(e)=>applyLang
   });
 })();
 
-</script>
-  <button id="backTop" class="backtop" aria-label="Volver arriba" title="Volver arriba">
-  ↑
-</button>
+/* ========== Carrusel “Sobre mí” ========== */
+(function(){
+  const root = document.querySelector('#about .carousel');
+  if(!root) return;
+  const track = root.querySelector('.carousel__track');
+  const slides = [...root.querySelectorAll('.carousel__slide')];
+  const prev = root.querySelector('.carousel__btn--prev');
+  const next = root.querySelector('.carousel__btn--next');
+  const dotsBox = root.querySelector('#aboutDots');
+  let idx = 0;
 
+  // dots
+  slides.forEach((_,i)=>{
+    const b=document.createElement('button');
+    b.className='carousel__dot';
+    b.type='button';
+    b.setAttribute('role','tab');
+    b.setAttribute('aria-label',`Ir a la foto ${i+1}`);
+    if(i===0) b.setAttribute('aria-current','true');
+    b.addEventListener('click',()=>go(i));
+    dotsBox.appendChild(b);
+  });
+  const dots = [...dotsBox.children];
+
+  function update(){
+    track.style.transform = `translateX(${-idx*100}%)`;
+    dots.forEach((d,i)=> d.setAttribute('aria-current', i===idx ? 'true' : 'false'));
+  }
+  function go(i){
+    idx = (i + slides.length) % slides.length;
+    update();
+  }
+  prev.addEventListener('click',()=>go(idx-1));
+  next.addEventListener('click',()=>go(idx+1));
+
+  // teclado
+  root.setAttribute('tabindex','0');
+  root.addEventListener('keydown',e=>{
+    if(e.key==='ArrowLeft') go(idx-1);
+    else if(e.key==='ArrowRight') go(idx+1);
+  });
+
+  // swipe
+  let sx=0, dx=0, dragging=false;
+  root.addEventListener('pointerdown',e=>{ dragging=true; sx=e.clientX; root.setPointerCapture(e.pointerId); });
+  root.addEventListener('pointermove',e=>{
+    if(!dragging) return;
+    dx = e.clientX - sx;
+    track.style.transition='none';
+    track.style.transform=`translateX(calc(${-idx*100}% + ${dx}px))`;
+  });
+  const end=()=>{
+    if(!dragging) return;
+    dragging=false;
+    track.style.transition='';
+    if(Math.abs(dx)>60) go(idx + (dx<0?1:-1)); else update();
+    dx=0;
+  };
+  root.addEventListener('pointerup', end);
+  root.addEventListener('pointercancel', end);
+  root.addEventListener('pointerleave', end);
+
+  update();
+})();
+</script>
+
+<button id="backTop" class="backtop" aria-label="Volver arriba" title="Volver arriba">↑</button>
 </body>
 </html>
