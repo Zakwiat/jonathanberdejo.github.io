@@ -172,39 +172,47 @@ body[data-motion="off"] #starLinkCanvas{display:none}
   </header>
 
   <!-- Sobre mí -->
-  <section id="about" class="section">
-    <div class="container">
-      <div class="card">
-        <div class="about-grid">
-          <div>
-            <h2 data-t="aboutTitle">Sobre mí</h2>
-            <p data-t="aboutText">
-              Soy apasionado en todo lo que hago. Tengo 24 años y me mueven la curiosidad y la mejora continua: analizar, estructurar y administrar datos. Desde mi adolescencia he dedicado mi tiempo libre a la escritura, la música y la tecnología, de forma autodidacta más formaciones complementarias. Del mismo modo que mis habilidades técnico-creativas son tangibles, mi experiencia y formación en logística han fortalecido mi capacidad de organización, gestión y resolución práctica.
-            </p>
-            <div class="badges" id="aboutBadges"></div>
+<section id="about" class="section">
+  <div class="container">
+    <div class="card">
+      <div class="about-grid">
+        <!-- Texto -->
+        <div>
+          <h2 data-t="aboutTitle">Sobre mí</h2>
+          <p data-t="aboutText">
+            Soy apasionado en todo lo que hago. Tengo 24 años y me mueven la curiosidad y la mejora continua:
+            analizar, estructurar y administrar datos. Desde mi adolescencia he dedicado mi tiempo libre a la
+            escritura, la música y la tecnología, de forma autodidacta más formaciones complementarias. Del
+            mismo modo que mis habilidades técnico-creativas son tangibles, mi experiencia y formación en
+            logística han fortalecido mi capacidad de organización, gestión y resolución práctica.
+          </p>
+          <div class="badges" id="aboutBadges"></div>
+        </div>
+
+        <!-- Carrusel lateral -->
+        <figure class="carousel" aria-label="Galería de fotos - Sobre mí">
+          <button class="carousel__btn carousel__btn--prev" aria-label="Anterior">‹</button>
+
+          <div class="carousel__track" id="aboutTrack">
+            <div class="carousel__slide">
+              <img src="assets/images/jon-music-1.jpg" alt="Jonathan tocando el teclado en directo (1)" loading="lazy" />
+            </div>
+            <div class="carousel__slide">
+              <img src="assets/images/jon-music-2.jpg" alt="Jonathan ensayando al teclado (2)" loading="lazy" />
+            </div>
+            <div class="carousel__slide">
+              <img src="assets/images/jon-music-3.jpg" alt="Retrato con fondo azul (3)" loading="lazy" />
+            </div>
           </div>
 
-          <!-- Carrusel lateral -->
-          <figure class="carousel" aria-label="Galería de fotos - Sobre mí">
-            <button class="carousel__btn carousel__btn--prev" aria-label="Anterior">‹</button>
-            <div class="carousel__track" id="aboutTrack">
-              <div class="carousel__slide">
-                <img src="assets/images/jon-music-1.jpg" alt="Jonathan tocando el teclado en directo (1)" loading="lazy" />
-              </div>
-              <div class="carousel__slide">
-                <img src="assets/images/jon-music-2.jpg" alt="Jonathan en escenario, ensayo con teclado (2)" loading="lazy" />
-              </div>
-              <div class="carousel__slide">
-                <img src="assets/images/jon-music-3.jpg" alt="Retrato en camerino/ensayo con fondo azul (3)" loading="lazy" />
-              </div>
-            </div>
-            <button class="carousel__btn carousel__btn--next" aria-label="Siguiente">›</button>
-            <div class="carousel__dots" id="aboutDots" role="tablist" aria-label="Paginación del carrusel"></div>
-          </figure>
-        </div>
+          <button class="carousel__btn carousel__btn--next" aria-label="Siguiente">›</button>
+          <div class="carousel__dots" id="aboutDots" role="tablist" aria-label="Paginación del carrusel"></div>
+        </figure>
       </div>
     </div>
-  </section>
+  </div>
+</section>
+
 
   <!-- Experiencia / Servicios + Qué aporto -->
   <section id="work" class="section">
@@ -931,6 +939,8 @@ document.getElementById("langSwitcher").addEventListener("change",(e)=>applyLang
 
   update();
 })();
+  <script src="assets/main.js" defer></script>
+
 </script>
 
 <button id="backTop" class="backtop" aria-label="Volver arriba" title="Volver arriba">↑</button>
