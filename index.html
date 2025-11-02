@@ -608,29 +608,39 @@ document.getElementById("langSwitcher").addEventListener("change",(e)=>applyLang
   function sign(){ return Math.random()<0.5 ? -1 : 1; }
 
   // Elige la **segunda estrella más cercana** válida (no tabu, respeta ángulo)
-  function pickSecondNearest(fromIdx, prevDir, tabu){
-    const from = points[fromIdx];
-    const sorted = points.map((p,i)=>({i, d2:(p.x-from.x)**2 + (p.y-from.y)**2}))
-                         .filter(o=>o.i!==fromIdx)
-                         .sort((a,b)=>a.d2-b.d2);
+  // --- Parámetro: K-ésima más cercana ---
+const K_NEAREST = 25;
 
-    let valid=[];
-    for(const cand of sorted){
-      if (tabu.has(cand.i)) continue;
-      const dx = points[cand.i].x - from.x, dy = points[cand.i].y - from.y;
-      const dist = Math.hypot(dx,dy); if (dist < MIN_DIST) continue;
-      if (prevDir){
-        const [ux,uy] = prevDir, [vx,vy] = norm(dx,dy);
-        const ang = Math.acos(Math.max(-1,Math.min(1, ux*vx + uy*vy)));
-        if (ang < ANGLE_MIN || ang > ANGLE_MAX) continue;
-      }
-      valid.push(cand.i);
-      if (valid.length >= 2) break;
+// Devuelve la K-ésima estrella más cercana válida (o la mejor posible si hay menos)
+function pickKthNearest(fromIdx, prevDir, tabu){
+  const from = points[fromIdx];
+  const sorted = points
+    .map((p,i)=>({i, d2:(p.x-from.x)**2 + (p.y-from.y)**2}))
+    .filter(o=>o.i!==fromIdx)
+    .sort((a,b)=>a.d2-b.d2);
+
+  const valid = [];
+  for (const cand of sorted){
+    if (tabu.has(cand.i)) continue;
+    const dx = points[cand.i].x - from.x, dy = points[cand.i].y - from.y;
+    const dist = Math.hypot(dx,dy); if (dist < MIN_DIST) continue;
+
+    if (prevDir){
+      const [ux,uy] = prevDir;
+      const m = Math.hypot(dx,dy) || 1;
+      const vx = dx/m, vy = dy/m;
+      const dot = Math.max(-1, Math.min(1, ux*vx + uy*vy));
+      const ang = Math.acos(dot);
+      if (ang < ANGLE_MIN || ang > ANGLE_MAX) continue;
     }
-    if (valid.length >= 2) return valid[1];
-    if (valid.length === 1) return valid[0];
-    return sorted.length ? sorted[0].i : fromIdx;
+    valid.push(cand.i);
   }
+
+  if (valid.length >= K_NEAREST) return valid[K_NEAREST - 1];
+  if (valid.length > 0) return valid[valid.length - 1];
+  return sorted.length ? sorted[0].i : fromIdx;
+}
+
 
   function makeRay(){
     points = getStarPoints();
@@ -654,7 +664,8 @@ document.getElementById("langSwitcher").addEventListener("change",(e)=>applyLang
         const arr=[...ray.tabu]; arr.shift(); ray.tabu=new Set(arr);
       }
     }
-    const nextIdx = pickSecondNearest(ray.fromIdx, ray.prevDir, ray.tabu);
+    const nextIdx = pickKthNearest(ray.fromIdx, ray.prevDir, ray.tabu);
+
     ray.toIdx = nextIdx;
 
     const a = points[ray.fromIdx], b = points[ray.toIdx];
