@@ -517,22 +517,41 @@ function renderBadges(arr){
 function renderAccordion(cats){
   const acc = document.getElementById('skillsAcc');
   acc.innerHTML = cats.map((cat,i)=>`
-    <div class="acc-item${i<2?' open':''}">
-      <button class="acc-h" type="button">
+    <div class="acc-item">
+      <button class="acc-h" type="button" aria-expanded="false">
         <span>${cat.title}</span>
         <span class="chev">›</span>
       </button>
-      <div class="acc-c">
+      <div class="acc-c" role="region" aria-hidden="true">
         <ul class="acc-list">
           ${cat.items.map(li=>`<li>${li}</li>`).join('')}
         </ul>
       </div>
     </div>
   `).join('');
+
   acc.querySelectorAll('.acc-h').forEach(btn=>{
-    btn.addEventListener('click',()=>btn.parentElement.classList.toggle('open'));
+    btn.addEventListener('click',()=>{
+      const item = btn.parentElement;
+      const isOpen = item.classList.contains('open');
+
+
+      acc.querySelectorAll('.acc-item.open').forEach(x=>{
+        x.classList.remove('open');
+        x.querySelector('.acc-h').setAttribute('aria-expanded','false');
+        x.querySelector('.acc-c').setAttribute('aria-hidden','true');
+      });
+
+     
+      if(!isOpen){
+        item.classList.add('open');
+        btn.setAttribute('aria-expanded','true');
+        item.querySelector('.acc-c').setAttribute('aria-hidden','false');
+      }
+    });
   });
 }
+
 function applyLang(lang){
   const t=T[lang]||T.es;
   document.querySelector('[data-t="navHome"]').textContent=t.navHome;
