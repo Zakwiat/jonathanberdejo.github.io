@@ -16,6 +16,8 @@ html{ scroll-behavior:smooth }
   --txt:#eaf6ff;                      /* texto                                      */
   --stroke: rgba(0,234,255,.18);      /* borde sutil                                */
   --card-bg: rgba(0,0,0,0.08);        /* base de glass                              */
+     --neonline:#ff1744; /* Rojo neón para las líneas */
+
 }
 
 /* =========================================================
@@ -572,4 +574,10 @@ body.scrolled .comets{ opacity:.45; transition:opacity .4s }
 #starLinkCanvas{
   position:fixed; inset:0; z-index:1; pointer-events:none;
   /* Ocupa toda la pantalla por encima de las estrellas pero bajo el contenido */
+}
+#starLinkCanvas{
+  position:fixed;
+  inset:0;
+  z-index:1;
+  pointer-events:none;
 }
