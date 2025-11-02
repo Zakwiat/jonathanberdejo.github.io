@@ -1190,7 +1190,8 @@ document.getElementById("langSwitcher").addEventListener("change",(e)=>applyLang
   }
   requestAnimationFrame(tick);
 })();
-  /* ========== 2 cometas: nearest sin repetir, cola y curva suave ========== */
+
+/* ========== 2 líneas: nearest sin repetir + cola de cometa y curva suave ========== */
 (function(){
   const canvas = document.getElementById('starLinkCanvas');
   const starsWrap = document.querySelector('.stars');
@@ -1209,6 +1210,7 @@ document.getElementById("langSwitcher").addEventListener("change",(e)=>applyLang
     canvas.style.width = W+'px';
     canvas.style.height = H+'px';
     ctx.setTransform(DPR,0,0,DPR,0,0);
+    ctx.lineCap = 'round';
   }
   resize();
   window.addEventListener('resize', resize);
@@ -1225,64 +1227,48 @@ document.getElementById("langSwitcher").addEventListener("change",(e)=>applyLang
     });
     return pts.length ? pts : [{x:W*0.3,y:H*0.3},{x:W*0.7,y:H*0.7}];
   }
-
   let points = getStarPoints();
 
-  // ---------- Parámetros ----------
+  // ===== Parámetros (ajusta aquí para más/menos rapidez y cola) =====
   const RAYS = 2;
-  const SPEED = 780;           // px/s (más rápido y fluido)
+  const SPEED = 780;          // px/s (más rápido que antes)
+  const DUR_MIN = 0.42, DUR_MAX = 1.5;
   const MIN_DIST = 40;
-  const DUR_MIN = 0.42;        // acota saltos muy cortos
-  const DUR_MAX = 1.35;        // acota saltos largos
   const TABU_LEN = 3;
-  const ANGLE_MIN = Math.PI/6;     // 30°
-  const ANGLE_MAX = (5*Math.PI)/6; // 150°
-  const CURVE_FACTOR = 0.22;   // curvatura del arco (0 = línea recta)
-  const TRAIL_LEN = 18;        // longitud de la cola
-  const HEAD_RADIUS = 1.6;     // cabeza < estrella (2px aprox)
-  const BASE_WIDTH = 1.2;      // “grosor” de trazo
-  const EASE = t => t<.5 ? 2*t*t : 1 - Math.pow(-2*t+2,2)/2;
+  const ANGLE_MIN = Math.PI/6, ANGLE_MAX = (5*Math.PI)/6;
+  const BASE_WIDTH = 1.2;
+  const TRAIL_LEN = 28;       // nº de puntos guardados en la cola
+  const TRAIL_FADE = 0.8;     // opacidad total de la cola
+  const CURVE_MIN = 10, CURVE_MAX = 22; // amplitud de curva (px)
+  const EASE = t => t<.5 ? 4*t*t*t : 1 - Math.pow(-2*t+2,3)/2; // cúbico suave
 
   function norm(vx,vy){ const m=Math.hypot(vx,vy)||1; return [vx/m, vy/m]; }
-
-  function nearestIndex(p, avoidIdx){
-    let best = -1, bestD2 = Infinity;
-    for (let i=0;i<points.length;i++){
-      if (i===avoidIdx) continue;
-      const dx = points[i].x - p.x;
-      const dy = points[i].y - p.y;
-      const d2 = dx*dx + dy*dy;
-      if (d2 < bestD2){ bestD2 = d2; best = i; }
-    }
-    return best;
-  }
 
   function pickNext(fromIdx, prevDir, tabu){
     const from = points[fromIdx];
     const order = points.map((p,i)=>({i, d2:(p.x-from.x)**2 + (p.y-from.y)**2}))
                         .filter(o=>o.i!==fromIdx)
                         .sort((a,b)=>a.d2-b.d2);
-
-    for (const cand of order){
+    // preferimos cercana válida (no tabu, buen ángulo)
+    for(const cand of order){
       if (tabu.has(cand.i)) continue;
-      const dx = points[cand.i].x - from.x;
-      const dy = points[cand.i].y - from.y;
-      const dist = Math.hypot(dx,dy);
-      if (dist < MIN_DIST) continue;
-
+      const dx = points[cand.i].x - from.x, dy = points[cand.i].y - from.y;
+      const dist = Math.hypot(dx,dy); if (dist < MIN_DIST) continue;
       if (prevDir){
-        const [ux,uy] = prevDir;
-        const [vx,vy] = norm(dx,dy);
-        const dot = Math.max(-1, Math.min(1, ux*vx + uy*vy));
-        const ang = Math.acos(dot);
+        const [ux,uy] = prevDir, [vx,vy] = norm(dx,dy);
+        const ang = Math.acos(Math.max(-1,Math.min(1, ux*vx + uy*vy)));
         if (ang < ANGLE_MIN || ang > ANGLE_MAX) continue;
       }
       return cand.i;
     }
-    // fallback: el más cercano que no esté en tabu
-    for (const cand of order){ if (!tabu.has(cand.i)) return cand.i; }
+    // si no hay ideal, segunda oportunidad: la más cercana no tabu
+    for(const cand of order){ if(!tabu.has(cand.i)) return cand.i; }
+    // último recurso
     return order.length ? order[0].i : fromIdx;
   }
+
+  function randRange(a,b){ return a + Math.random()*(b-a); }
+  function sign(){ return Math.random()<0.5 ? -1 : 1; }
 
   function makeRay(){
     points = getStarPoints();
@@ -1294,9 +1280,8 @@ document.getElementById("langSwitcher").addEventListener("change",(e)=>applyLang
       dur: 1,
       prevDir: null,
       tabu: new Set(),
-      ctrl: null,        // punto de control (curva)
-      curveSign: Math.random()<0.5 ? -1 : 1,
-      history: []        // cola (puntos de cabeza)
+      trail: [],              // historial de posiciones (cola)
+      curveAmp: randRange(CURVE_MIN, CURVE_MAX) * sign(), // amplitud curva
     };
   }
 
@@ -1307,7 +1292,6 @@ document.getElementById("langSwitcher").addEventListener("change",(e)=>applyLang
         const arr=[...ray.tabu]; arr.shift(); ray.tabu=new Set(arr);
       }
     }
-
     const nextIdx = pickNext(ray.fromIdx, ray.prevDir, ray.tabu);
     ray.toIdx = nextIdx;
 
@@ -1318,82 +1302,71 @@ document.getElementById("langSwitcher").addEventListener("change",(e)=>applyLang
     ray.dur = Math.max(DUR_MIN, Math.min(DUR_MAX, rawDur));
     ray.t0 = performance.now();
 
-    // Punto de control para curva (bezier cuadrática)
-    const mid = { x:(a.x+b.x)/2, y:(a.y+b.y)/2 };
-    const [ux,uy] = norm(dx,dy);
-    const px = -uy, py = ux; // perpendicular
-    const bend = dist * CURVE_FACTOR * ray.curveSign;
-    ray.ctrl = { x: mid.x + px*bend, y: mid.y + py*bend };
-
-    // ligera variación en cada salto
-    ray.curveSign = Math.random()<0.5 ? -ray.curveSign : ray.curveSign;
+    // nueva curvatura para el siguiente trayecto
+    ray.curveAmp = randRange(CURVE_MIN, CURVE_MAX) * sign();
   }
 
   function advance(ray){
     const a = points[ray.fromIdx], b = points[ray.toIdx];
-    const [ux,uy] = norm(b.x-a.x, b.y-a.y);
-    ray.prevDir = [ux,uy];
+    ray.prevDir = norm(b.x-a.x, b.y-a.y);
     ray.fromIdx = ray.toIdx;
     startHop(ray);
   }
 
-  // Bezier cuadrática
-  function qbezPoint(a,c,b,t){
-    const u = 1-t;
-    return {
-      x: u*u*a.x + 2*u*t*c.x + t*t*b.x,
-      y: u*u*a.y + 2*u*t*c.y + t*t*b.y
-    };
+  // posición con curva suave (normal al vector de avance)
+  function getPos(fromIdx, toIdx, prog){
+    const p = points[fromIdx], q = points[toIdx];
+    const t = EASE(prog);
+    const x = p.x + (q.x - p.x)*t;
+    const y = p.y + (q.y - p.y)*t;
+
+    const [dx,dy] = [q.x - p.x, q.y - p.y];
+    const [ux,uy] = norm(dx,dy);
+    const nx = -uy, ny = ux;
+    // seno para “cometa” que se ensancha a mitad y vuelve
+    const offset = Math.sin(t*Math.PI) * currentRay.curveAmp;
+    return { x: x + nx*offset, y: y + ny*offset };
   }
 
-  function drawComet(ray, prog){
-    const a = points[ray.fromIdx], b = points[ray.toIdx], c = ray.ctrl;
-    // cabeza
-    const head = qbezPoint(a,c,b, EASE(prog));
-
-    // Añadir cabeza a la cola
-    ray.history.push(head);
-    if (ray.history.length > TRAIL_LEN) ray.history.shift();
-
-    // Dibujar cola (segmentos de atrás hacia delante)
-    ctx.save();
-    ctx.globalCompositeOperation = 'lighter';
-
-    for (let i=1;i<ray.history.length;i++){
-      const p0 = ray.history[i-1];
-      const p1 = ray.history[i];
-
-      const t = i/(ray.history.length);            // 0..1
-      const alpha = 0.12 + t*0.38;                 // más opaco cerca de la cabeza
-      const width = 0.6 + t*(BASE_WIDTH*1.2);      // más ancho cerca de la cabeza
-
+  function drawComet(ray, head){
+    // Cola (trail): segmentos con alpha y grosor decreciente
+    const L = ray.trail.length;
+    for(let i=1;i<L;i++){
+      const a = ray.trail[i-1], b = ray.trail[i];
+      const k = i/L; // 0..1
+      ctx.save();
       ctx.strokeStyle = neonLine;
       ctx.shadowColor = neonLine;
-      ctx.shadowBlur = 18;
-      ctx.globalAlpha = alpha;
-      ctx.lineWidth = width;
-
+      ctx.globalAlpha = (k*TRAIL_FADE)*0.9;
+      ctx.shadowBlur = 16*k;
+      ctx.lineWidth = BASE_WIDTH * (k*0.9);
       ctx.beginPath();
-      ctx.moveTo(p0.x, p0.y);
-      ctx.lineTo(p1.x, p1.y);
+      ctx.moveTo(a.x, a.y);
+      ctx.lineTo(b.x, b.y);
       ctx.stroke();
+      ctx.restore();
     }
 
-    // cabeza brillante
-    ctx.shadowBlur = 22;
-    ctx.globalAlpha = 0.95;
+    // Cabeza (más brillante)
+    ctx.save();
+    ctx.strokeStyle = neonLine;
+    ctx.shadowColor = neonLine;
+    ctx.globalAlpha = 1;
+    ctx.shadowBlur = 20;
+    ctx.lineWidth = BASE_WIDTH;
+    // pequeño segmento final para “brillo punta”
+    const last = ray.trail[L-2] || head;
+    ctx.beginPath();
+    ctx.moveTo(last.x, last.y);
+    ctx.lineTo(head.x, head.y);
+    ctx.stroke();
+
+    // núcleo
     ctx.fillStyle = neonLine;
+    ctx.shadowBlur = 12;
     ctx.beginPath();
-    ctx.arc(head.x, head.y, HEAD_RADIUS, 0, Math.PI*2);
+    ctx.arc(head.x, head.y, 1.3, 0, Math.PI*2);
     ctx.fill();
-
-    // halo suave
-    ctx.shadowBlur = 32;
-    ctx.globalAlpha = 0.35;
-    ctx.beginPath();
-    ctx.arc(head.x, head.y, HEAD_RADIUS+1.2, 0, Math.PI*2);
-    ctx.fill();
-
     ctx.restore();
   }
 
@@ -1403,30 +1376,35 @@ document.getElementById("langSwitcher").addEventListener("change",(e)=>applyLang
   let reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   window.matchMedia('(prefers-reduced-motion: reduce)').addEventListener('change', e=> reduced = e.matches);
 
+  // Usamos un “currentRay” temporal para getPos (evitar pasar muchos args)
+  let currentRay = null;
+
   function tick(now){
     if (reduced) { ctx.clearRect(0,0,W,H); return; }
-
     points = getStarPoints();
     ctx.clearRect(0,0,W,H);
 
     for (const ray of rays){
+      currentRay = ray;
       const elapsed = (now - ray.t0)/1000;
       const prog = Math.min(1, elapsed / ray.dur);
 
-      if (ray.toIdx == null) startHop(ray);
+      const head = getPos(ray.fromIdx, ray.toIdx, prog);
 
-      drawComet(ray, prog);
+      // actualizar trail
+      ray.trail.push(head);
+      if (ray.trail.length > TRAIL_LEN) ray.trail.shift();
+
+      drawComet(ray, head);
 
       if (prog >= 1){
+        // al llegar, “arranca” el siguiente salto desde la última cabeza
+        ray.trail = [head]; // cola corta al empezar nuevo trayecto
         advance(ray);
       }
     }
+
     requestAnimationFrame(tick);
   }
   requestAnimationFrame(tick);
 })();
-
-
-</script>
-</body>
-</html>
