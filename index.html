@@ -95,12 +95,21 @@ body{font-family:'Poppins',system-ui,Segoe UI,Roboto,Arial,sans-serif;background
 </head>
 <body>
   <!-- Selector de idioma -->
-  <div id="langBox">
-    <select id="langSwitcher" aria-label="Idioma">
-      <option value="es" selected>ES</option>
-      <option value="en">EN</option>
-    </select>
-  </div>
+<div id="langBox">
+  <select id="langSwitcher" aria-label="Idioma">
+    <option value="es" selected>ES</option>
+    <option value="en">EN</option>
+  </select>
+
+  <!-- Botón para activar/desactivar animación -->
+  <button id="animToggle" type="button" aria-pressed="false"
+          title="Activar o desactivar animación"
+          style="margin-left:8px;font-weight:700;color:#00eaff;background:transparent;
+                 border:1px solid rgba(0,234,255,.25);border-radius:10px;padding:6px 10px;">
+    Animación: ON
+  </button>
+</div>
+
 
   <!-- Fondo -->
   <div class="neon-bg" aria-hidden="true">
