@@ -630,4 +630,8 @@ body[data-motion="off"] .backtop{ transition:none; } /* sin animaciones cuando d
   z-index: 5;              /* por encima del track y de la imagen */
   pointer-events: auto;    /* acepta clics incluso si algo superpone */
 }
-   
+
+/* Carrusel auto sin controles */
+.carousel__btn,
+.carousel__dots { display:none !important; }
+
