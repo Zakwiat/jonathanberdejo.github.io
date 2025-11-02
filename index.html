@@ -9,1402 +9,199 @@
 /* ===== Reset & Vars ===== */
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%}
-html{scroll-behavior:smooth}
 :root{
-  --bpm:72; --beat: calc(60s/var(--bpm));
-  --neon:#00eaff; --bg:#000; --txt:#eaf6ff; --stroke: rgba(0,234,255,.18);
+  --bpm:72; --beat:calc(60s/var(--bpm));
+  --neon:#00eaff; --bg:#000; --txt:#eaf6ff; --stroke:rgba(0,234,255,.18);
+  --neonline:#ff1744;
 }
 /* ===== Base ===== */
-body{font-family:'Poppins',system-ui,Segoe UI,Roboto,Arial,sans-serif;background:var(--bg);color:var(--txt);-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;}
-/* ===== Universe (ligero) ===== */
-.neon-bg{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none;background:
-  radial-gradient(1200px 600px at 50% 60%, rgba(0,234,255,.06), transparent 70%)}
-.stars{position:absolute;inset:0;pointer-events:none}
+body{font-family:'Poppins',system-ui;background:var(--bg);color:var(--txt);overflow-x:hidden}
+/* ===== Fondo ===== */
+.neon-bg{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none;background:radial-gradient(1200px 600px at 50% 60%,rgba(0,234,255,.06),transparent 70%)}
+.stars{position:absolute;inset:0}
 .star{position:absolute;width:2px;height:2px;border-radius:50%;background:#fff;opacity:0;filter:drop-shadow(0 0 6px rgba(255,255,255,.6));animation:twinkle var(--tw,3.5s) ease-in-out infinite var(--td,0s);transform:scale(var(--sc,1))}
 @keyframes twinkle{0%,100%{opacity:0}10%{opacity:.9}50%{opacity:.3}90%{opacity:1}}
-.neon-lines{position:absolute;inset:0;pointer-events:none}
-.beam{position:absolute;left:-60vw;width:80vw;height:4px;opacity:.22;filter:blur(1.5px) brightness(1.2);mix-blend-mode:screen;transform:translateX(-40vw);background:linear-gradient(90deg,transparent 0%, var(--neon) 40%, var(--neon) 60%, transparent 100%);animation:beamX var(--s,2.2s) linear infinite}
-.b1{top:22%;--s:1.8s}.b2{top:38%;--s:2.1s}.b3{top:54%;--s:2.4s}.b4{top:70%;--s:2.8s}.b5{top:86%;--s:3.2s}
-@keyframes beamX{from{transform:translateX(-40vw)}to{transform:translateX(120vw)}}
-/* ===== Content on top ===== */
-.nav,.hero,.section,.footer,.hud-nav,.modal{position:relative;z-index:5}
+/* ===== Hero ===== */
 .hero{min-height:100vh;display:grid;place-items:center;text-align:center}
 .title{font-weight:900;letter-spacing:.04em;font-size:clamp(2.8rem,9vw,6.4rem);color:#e8fdff;text-shadow:0 0 18px var(--neon),0 0 48px var(--neon),0 0 120px var(--neon);animation:titleBeat var(--beat) ease-in-out infinite}
 @keyframes titleBeat{0%{transform:scale(1)}8%{transform:scale(1.015)}18%{transform:scale(1.009)}26%,100%{transform:scale(1)}}
-.section{padding:96px 20px}
-.container{max-width:1100px;margin:0 auto}
-.card{background:rgba(0,0,0,.08);border:1px solid rgba(0,234,255,0.18);border-radius:18px;padding:24px;box-shadow:0 8px 30px rgba(0,0,0,.25)}
-.section h2{font-weight:800;letter-spacing:.02em;margin-bottom:14px;color:#eafcff;text-shadow:0 0 14px rgba(0,234,255,.6)}
-.grid{display:grid;gap:18px}
-.grid-2{grid-template-columns:repeat(2,minmax(0,1fr))}
-.badges{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}
-.badge{border:1px solid var(--stroke);padding:6px 10px;border-radius:999px;font-size:.9rem;background:rgba(0,234,255,.06)}
-.actions{display:flex;gap:12px;margin-top:16px;flex-wrap:wrap;align-items:center}
-.btn{border:1px solid var(--neon);border-radius:12px;padding:10px 14px;font-weight:700;color:#001a1f;background:linear-gradient(90deg,#00eaff,#8ff6ff);text-decoration:none;box-shadow:0 0 18px rgba(0,234,255,.35);cursor:pointer}
-.btn--ghost{background:transparent;color:#bfe7f1;border-color:var(--stroke)}
 .footer{padding:40px 20px;color:#a9d7e5;text-align:center;border-top:1px solid var(--stroke)}
-/* ===== HUD Nav ===== */
-.hud-nav{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);z-index:6;display:flex;gap:18px;padding:10px 14px;background:rgba(0,0,0,.35);
-  backdrop-filter: blur(10px) saturate(120%);-webkit-backdrop-filter: blur(10px) saturate(120%);border:1px solid rgba(0,234,255,.22);border-radius:999px;box-shadow:0 0 24px rgba(0,234,255,.18), inset 0 0 10px rgba(0,234,255,.08)}
-.hud-nav a{position:relative;color:#c9faff;text-decoration:none;font-weight:700;letter-spacing:.02em;padding:8px 12px;border-radius:10px;transition: color .2s ease, background .2s ease, text-shadow .2s ease}
-.hud-nav a:hover{color:#001a1f;background:linear-gradient(90deg,#00eaff,#8ff6ff);text-shadow:0 0 12px #00eaff}
-.hud-nav a.active{color:#eaffff;text-shadow:0 0 10px #00eaff, 0 0 24px #00eaff}
-.hud-indicator{position:absolute;left:0;bottom:6px;height:2px;border-radius:2px;width:var(--indW,40px);transform:translateX(var(--indX,0));background:linear-gradient(90deg,transparent,#00eaff,transparent);box-shadow:0 0 14px #00eaff;transition: transform .25s ease, width .25s ease}
-/* ===== Selector idioma ===== */
-#langBox{position:fixed;top:20px;right:26px;z-index:7;background:rgba(0,0,0,.4);backdrop-filter: blur(6px);border:1px solid rgba(0,234,255,.25);border-radius:12px;padding:4px 8px;box-shadow:0 0 18px rgba(0,234,255,.25)}
-#langSwitcher{background:transparent;color:#00eaff;border:none;font-weight:700;font-size:.95rem;letter-spacing:.04em;cursor:pointer}
-#langSwitcher option{background:#000;color:#00eaff}
-/* ===== Accordion (Competencias) ===== */
-.acc{display:grid;gap:12px;margin-top:12px}
-.acc-item{border:1px solid rgba(0,234,255,.14);border-radius:14px;overflow:hidden;background:rgba(0,0,0,.12)}
-.acc-h{width:100%;text-align:left;background:transparent;border:none;color:#eafcff;padding:12px 16px;font-weight:700;display:flex;justify-content:space-between;align-items:center;cursor:pointer}
-.acc-h span{opacity:.8;font-weight:600}
-.acc-c{max-height:0;overflow:hidden;transition:max-height .28s ease}
-.acc-item.open .acc-c{max-height:500px}
-.acc-list{padding:8px 16px 16px 28px;opacity:.95;line-height:1.6}
-.acc-h .chev{transition:transform .25s ease}
-.acc-item.open .chev{transform:rotate(90deg)}
-/* ===== Modal Solicitar CV ===== */
-.modal{display:none}
-.modal.is-open{display:block}
-.modal__backdrop{position:fixed;inset:0;background:rgba(0,0,0,.6);backdrop-filter:blur(4px)}
-.modal__panel{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);width:min(560px,92vw);
-  background:rgba(0,0,0,.6);border:1px solid rgba(0,234,255,.22);border-radius:18px;padding:22px;box-shadow:0 12px 40px rgba(0,0,0,.5), 0 0 24px rgba(0,234,255,.18) inset}
-.modal__title{margin-bottom:8px;text-shadow:0 0 12px rgba(0,234,255,.5)}
-.modal__text{opacity:.85;margin-bottom:14px}
-.modal__form{display:grid;gap:12px}
-.modal__label{display:grid;gap:6px;font-weight:600}
-.modal__input{background:rgba(0,0,0,.35);color:var(--txt);border:1px solid var(--stroke);border-radius:12px;padding:10px 12px;outline:none;box-shadow: inset 0 0 12px rgba(0,234,255,.05)}
-.modal__input:focus{border-color:#00eaff;box-shadow:0 0 0 3px rgba(0,234,255,.15)}
-.modal__actions{display:flex;gap:10px;justify-content:flex-end;margin-top:8px}
-/* ===== Responsive ===== */
-@media (max-width:900px){
-  .grid-2{grid-template-columns:1fr}
-  .hud-nav{gap:8px;padding:8px 10px;bottom:16px}
-  .hud-nav a{padding:8px 10px;font-weight:600}
-  .beam{width:90vw;left:-65vw}
-}
-@media (prefers-reduced-motion: reduce){.beam,.title,.star{animation:none !important}}
 </style>
 </head>
 <body>
-  <!-- Selector de idioma -->
-  <div id="langBox">
-    <select id="langSwitcher" aria-label="Idioma">
-      <option value="es" selected>ES</option>
-      <option value="en">EN</option>
-    </select>
-  </div>
-
-  <!-- Fondo -->
 <div class="neon-bg" aria-hidden="true">
   <div class="stars"></div>
-
-  <!-- ✨ Canvas para la línea animada -->
   <canvas id="starLinkCanvas" aria-hidden="true"></canvas>
-
-  <div class="neon-lines">
-    <span class="beam b1"></span>
-    <span class="beam b2"></span>
-    <span class="beam b3"></span>
-    <span class="beam b4"></span>
-    <span class="beam b5"></span>
-  </div>
 </div>
 
+<header class="hero">
+  <h1 class="title">JONATHAN BERDEJO</h1>
+</header>
 
-  <!-- HUD -->
-  <nav class="hud-nav" aria-label="Principal">
-    <a href="#home"   data-link data-t="navHome">Inicio</a>
-    <a href="#about"  data-link data-t="navAbout">Sobre mí</a>
-    <a href="#work"   data-link data-t="navWork">Experiencia</a>
-    <a href="#skills" data-link data-t="navSkills">Competencias</a>
-    <a href="#contact"data-link data-t="navContact">Contacto</a>
-    <span class="hud-indicator" aria-hidden="true"></span>
-  </nav>
-
-  <!-- Hero -->
-  <header id="home" class="hero">
-    <h1 class="title">JONATHAN BERDEJO</h1>
-  </header>
-
-  <!-- Sobre mí -->
-  <section id="about" class="section">
-    <div class="container">
-      <div class="card">
-        <h2 data-t="aboutTitle">Sobre mí</h2>
-        <p data-t="aboutText">
-          Soy apasionado en todo lo que hago. Tengo 24 años y me mueven la curiosidad y la mejora continua: analizar, estructurar y administrar datos. Desde mi adolescencia he dedicado mi tiempo libre a la escritura, la música y la tecnología, de forma autodidacta más formaciones complementarias. Del mismo modo que mis habilidades técnico-creativas son tangibles, mi experiencia y formación en logística han fortalecido mi capacidad de organización, gestión y resolución práctica.
-        </p>
-        <!-- Badges traducibles -->
-        <div class="badges" id="aboutBadges"></div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Experiencia / Servicios + Qué aporto -->
-  <section id="work" class="section">
-    <div class="container">
-      <div class="card">
-        <h2 data-t="workTitle">Experiencia & Servicios</h2>
-        <div class="grid grid-2">
-          <div>
-            <h3 data-t="recentExp">Experiencia reciente</h3>
-            <ul data-t="expList">
-              <li>Logística y calidad (DHL): recepción, control de stock y trazabilidad.</li>
-              <li>Gestión de incidencias y registro en Excel / ERP (entornos Honeywell).</li>
-              <li>Soporte administrativo: documentación, correo bilingüe, agendas.</li>
-            </ul>
-          </div>
-          <div>
-            <h3 data-t="services">Servicios</h3>
-            <ul data-t="svcList">
-              <li>Data entry y soporte administrativo remoto.</li>
-              <li>Reporting operativo y hojas de cálculo.</li>
-              <li>Coordinación de procesos y de equipos.</li>
-            </ul>
-            <h3 style="margin-top:14px" data-t="offerTitle">Qué puedo aportar</h3>
-            <ul data-t="offerList">
-              <li>Excel avanzado (tablas dinámicas, fórmulas) y reporting.</li>
-              <li>Mecanografía +100 WPM y registro preciso de datos.</li>
-              <li>Comunicación profesional en español e inglés (C1).</li>
-            </ul>
-          </div>
-        </div>
-
-        <div class="actions" style="margin-top:18px">
-          <a class="btn" href="#contact" data-t="btnTalk">Hablemos</a>
-          <button class="btn btn--ghost" id="requestCVBtn" type="button" aria-haspopup="dialog" data-t="btnRequest">Solicitar CV</button>
-          <span id="cvStatus" style="opacity:.8;"></span>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Competencias (Aptitudes) -->
-  <section id="skills" class="section">
-    <div class="container">
-      <div class="card">
-        <h2 data-t="skillsTitle">Competencias</h2>
-
-        <div class="acc" id="skillsAcc">
-          <!-- Se rellenará desde JS con categorías e items -->
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Contacto -->
-  <section id="contact" class="section">
-    <div class="container">
-      <div class="card">
-        <h2 data-t="contactTitle">Contacto</h2>
-        <p data-t="contactText">¿Colaboramos? Te respondo en el mismo día laboral.</p>
-        <div class="actions">
-          <a class="btn" href="mailto:berdejosanchez@gmail.com?subject=Contacto%20-%20Jonathan%20Berdejo" data-t="btnEmail">Enviar email</a>
-          <a class="btn btn--ghost" href="https://www.linkedin.com/in/" target="_blank" rel="noopener" data-t="btnLinkedIn">LinkedIn</a>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <footer class="footer">© <span id="year"></span> Jonathan Berdejo</footer>
-
-  <!-- Modal Solicitar CV -->
-  <div class="modal" id="cvModal" aria-hidden="true" role="dialog" aria-labelledby="cvTitle">
-    <div class="modal__backdrop" data-close></div>
-    <div class="modal__panel" role="document">
-      <h3 id="cvTitle" class="modal__title" data-t="cvTitle">Solicitar CV</h3>
-      <p class="modal__text" data-t="cvText">Déjame tus datos y te lo envío por email.</p>
-      <form id="cvForm" class="modal__form">
-        <label class="modal__label" data-t="cvName">Nombre
-          <input class="modal__input" name="name" required placeholder="Tu nombre">
-        </label>
-        <label class="modal__label" data-t="cvEmail">Email
-          <input class="modal__input" name="email" type="email" required placeholder="tucorreo@ejemplo.com">
-        </label>
-        <label class="modal__label" data-t="cvMsg">Mensaje (opcional)
-          <textarea class="modal__input" name="msg" rows="3" placeholder="Puesto objetivo o contexto"></textarea>
-        </label>
-        <div class="modal__actions">
-          <button type="submit" class="btn" data-t="cvSend">Enviar solicitud</button>
-          <button type="button" class="btn btn--ghost" data-close data-t="cvCancel">Cancelar</button>
-        </div>
-      </form>
-    </div>
-  </div>
+<footer class="footer">© <span id="year"></span> Jonathan Berdejo</footer>
 
 <script>
-/* ========== Año ========== */
 document.getElementById('year').textContent = new Date().getFullYear();
 
 /* ========== Estrellas ========== */
 (function(){
-  const wrap = document.querySelector('.stars'); if(!wrap) return;
-  const isMobile = matchMedia('(max-width: 900px)').matches; const N = isMobile ? 120 : 220;
-  const frag = document.createDocumentFragment();
-  for (let i=0;i<N;i++){ const s=document.createElement('i'); s.className='star';
-    s.style.left=(Math.random()*100).toFixed(3)+'%'; s.style.top=(Math.random()*100).toFixed(3)+'%';
+  const wrap=document.querySelector('.stars');if(!wrap)return;
+  const N=220;const frag=document.createDocumentFragment();
+  for(let i=0;i<N;i++){const s=document.createElement('i');s.className='star';
+    s.style.left=(Math.random()*100)+'%';s.style.top=(Math.random()*100)+'%';
     s.style.setProperty('--sc',(0.6+Math.random()*1.8).toFixed(2));
     s.style.setProperty('--tw',(1.8+Math.random()*4.8).toFixed(2)+'s');
-    s.style.setProperty('--td',(Math.random()*6).toFixed(2)+'s'); frag.appendChild(s); }
+    s.style.setProperty('--td',(Math.random()*6).toFixed(2)+'s');frag.appendChild(s);}
   wrap.appendChild(frag);
 })();
 
-/* ========== HUD activo + indicador ========== */
+/* ========== 2 líneas cometas (segunda estrella más cercana, fluido, curvo) ========== */
 (function(){
-  const links=[...document.querySelectorAll('.hud-nav a[data-link]')];
-  const ind=document.querySelector('.hud-indicator'); if(!links.length||!ind) return;
-  function setActiveByHash(hash){
-    links.forEach(a=>a.classList.toggle('active',a.getAttribute('href')===hash));
-    const active=links.find(a=>a.classList.contains('active'))||links[0];
-    const r=active.getBoundingClientRect(); const navR=active.parentElement.getBoundingClientRect();
-    ind.style.setProperty('--indX',(r.left-navR.left+8)+'px'); ind.style.setProperty('--indW',(r.width-16)+'px');
-  }
-  const sections=links.map(a=>document.querySelector(a.getAttribute('href'))).filter(Boolean);
-  function onScroll(){let cur='#home'; for(const sec of sections){const rect=sec.getBoundingClientRect();
-    if(rect.top<=innerHeight*0.38 && rect.bottom>=innerHeight*0.38){cur='#'+sec.id;break;}} setActiveByHash(cur);}
-  links.forEach(a=>a.addEventListener('click',()=>setActiveByHash(a.getAttribute('href'))));
-  window.addEventListener('scroll',onScroll,{passive:true}); window.addEventListener('resize',onScroll); onScroll();
-})();
-
-/* ========== Modal Solicitar CV ========== */
-(function(){
-  const btn=document.getElementById('requestCVBtn');
-  const modal=document.getElementById('cvModal');
-  const form=document.getElementById('cvForm');
-  const statusEl=document.getElementById('cvStatus');
-  const KEY='cvRequestedAt';
-
-  const prev=localStorage.getItem(KEY);
-  if(prev){ const d=new Date(prev); statusEl.textContent=`CV solicitado el ${d.toLocaleDateString()} ${d.toLocaleTimeString()}`;}
-
-  const firstInput=modal.querySelector('input[name="name"]');
-  const open = () => { modal.classList.add('is-open'); modal.setAttribute('aria-hidden','false'); setTimeout(()=>firstInput?.focus(),0); };
-  const close= () => { modal.classList.remove('is-open'); modal.setAttribute('aria-hidden','true'); btn?.focus(); };
-
-  btn?.addEventListener('click',open);
-  modal?.addEventListener('click',e=>{ if (e.target.hasAttribute('data-close')) close(); });
-  window.addEventListener('keydown',e=>{ if(e.key==='Escape' && modal.classList.contains('is-open')) close(); });
-
-  form?.addEventListener('submit',(e)=>{
-    e.preventDefault();
-    const data=new FormData(form);
-    const name=(data.get('name')||'').toString().trim();
-    const email=(data.get('email')||'').toString().trim();
-    const msg=(data.get('msg')||'').toString().trim();
-
-    const subject=encodeURIComponent(`Solicitud de CV - ${name}`);
-    const body=encodeURIComponent(
-`Hola Jonathan,
-
-Me gustaría recibir tu CV.
-
-Nombre: ${name}
-Email: ${email}
-${msg?`Mensaje: ${msg}\n`:''}
-Gracias.`);
-
-    const now=new Date(); localStorage.setItem(KEY,now.toISOString());
-    statusEl.textContent=`CV solicitado el ${now.toLocaleDateString()} ${now.toLocaleTimeString()}`;
-    window.location.href=`mailto:berdejosanchez@gmail.com?subject=${subject}&body=${body}`;
-    form.reset(); close();
-  });
-})();
-
-/* ========== Textos ES/EN ========== */
-const T = {
-  es:{
-    navHome:"Inicio", navAbout:"Sobre mí", navWork:"Experiencia", navSkills:"Competencias", navContact:"Contacto",
-    aboutTitle:"Sobre mí",
-    aboutText:"Soy apasionado en todo lo que hago. Tengo 24 años y me mueven la curiosidad y la mejora continua: analizar, estructurar y administrar datos. Desde mi adolescencia he dedicado mi tiempo libre a la escritura, la música y la tecnología, de forma completamente autodidacta. Del mismo modo que mis habilidades técnico-creativas son tangibles, mi experiencia y formación en logística han fortalecido mi capacidad de organización, gestión y resolución práctica.",
-    badges:["Excel avanzado","Google Workspace","ERP / SAP (básico)","Data entry","Atención al cliente","Coordinación logística"],
-    workTitle:"Experiencia & Servicios",
-    recentExp:"Experiencia reciente",
-    expList:[
-      "Logística y calidad (DHL): recepción, control de stock y trazabilidad.",
-      "Gestión de incidencias y registro en Excel / ERP (entornos Honeywell).",
-      "Soporte administrativo: documentación, correo bilingüe, agendas."
-    ],
-    services:"Servicios",
-    svcList:[
-      "Data entry y soporte administrativo remoto.",
-      "Reporting operativo y hojas de cálculo.",
-      "Coordinación de procesos y de equipos."
-    ],
-    offerTitle:"Qué puedo aportar",
-    offerList:[
-      "Excel avanzado (tablas dinámicas, fórmulas) y reporting.",
-      "Mecanografía +100 WPM y registro preciso de datos.",
-      "Comunicación profesional en español e inglés (C1)."
-    ],
-    skillsTitle:"Competencias",
-    skillsCats:[
-      {title:"🖥️ Ofimática y gestión digital", items:[
-        "Excel avanzado (tablas dinámicas, fórmulas, bases de datos, trazabilidad)",
-        "Google Workspace (Docs, Sheets, Drive, Calendar, Gmail profesional)",
-        "Microsoft Office (Word, PowerPoint, Outlook, Access)",
-        "Herramientas ERP / SAP (nivel básico)",
-        "Gestión documental digital y archivado estructurado",
-        "Redacción profesional y corrección de textos",
-        "Data entry con alta precisión y mecanografía de +100 WPM"
-      ]},
-      {title:"💼 Administración y soporte", items:[
-        "Organización y priorización de tareas",
-        "Elaboración de informes, facturas y documentos",
-        "Control de inventarios y seguimiento de pedidos",
-        "Gestión de agendas, calendarios y correos corporativos",
-        "Coordinación de reuniones y comunicación interna",
-        "Registro y actualización de bases de datos",
-        "Supervisión de procesos y control de calidad"
-      ]},
-      {title:"🌍 Trabajo remoto y comunicación", items:[
-        "Comunicación bilingüe español–inglés (C1 Cambridge)",
-        "Atención al cliente digital (chat, correo, videollamada)",
-        "Resolución de incidencias con claridad y empatía",
-        "Gestión del tiempo y autonomía en entornos online",
-        "Adaptación a distintos husos horarios y equipos internacionales",
-        "Herramientas colaborativas: Slack, Trello, Notion, Asana, Zoom, Meet"
-      ]},
-      {title:"⚙️ Tecnología y programación", items:[
-        "HTML, CSS y fundamentos de programación",
-        "Uso de CMS y diseño web básico (Canva, WordPress, GitHub Pages)",
-        "Conocimientos de bases de datos (MySQL, NoSQL)",
-        "Automatización de tareas simples y digitalización de procesos",
-        "Mantenimiento y actualización de sitios web"
-      ]},
-      {title:"🚚 Logística y coordinación", items:[
-        "Trazabilidad de pedidos y control de stock (DHL)",
-        "Coordinación logística y registro de incidencias",
-        "Control de calidad y reporte de errores",
-        "ERP logísticos y dispositivos Honeywell",
-        "Entorno de almacén y soporte administrativo"
-      ]}
-    ],
-    contactTitle:"Contacto",
-    contactText:"¿Colaboramos? Te respondo en el mismo día laboral.",
-    btnTalk:"Hablemos", btnRequest:"Solicitar CV", btnEmail:"Enviar email", btnLinkedIn:"LinkedIn",
-    cvTitle:"Solicitar CV", cvText:"Déjame tus datos y te lo envío por email.",
-    cvName:"Nombre", cvEmail:"Email", cvMsg:"Mensaje (opcional)",
-    cvSend:"Enviar solicitud", cvCancel:"Cancelar"
-  },
-  en:{
-    navHome:"Home", navAbout:"About", navWork:"Experience", navSkills:"Skills", navContact:"Contact",
-    aboutTitle:"About me",
-    aboutText:"I’m passionate about everything I do. I’m 24 years old, driven by curiosity and continuous improvement — I like to analyze, structure, and manage data. Since my teenage years, I’ve devoted my free time to writing, music, and technology, learning on my own. Just as my technical and creative skills are tangible, my background and experience in logistics have strengthened my sense of organization, management, and practical problem-solving.",
-    badges:["Advanced Excel","Google Workspace","ERP / SAP (basic)","Data entry","Customer support","Logistics coordination"],
-    workTitle:"Experience & Services",
-    recentExp:"Recent experience",
-    expList:[
-      "Logistics & quality (DHL): receiving, stock control and traceability.",
-      "Issue management and logging in Excel / ERP (Honeywell environments).",
-      "Admin support: documentation, bilingual email, schedules."
-    ],
-    services:"Services",
-    svcList:[
-      "Data entry & remote admin support.",
-      "Operational reporting and spreadsheets.",
-      "Process and team coordination."
-    ],
-    offerTitle:"What I bring",
-    offerList:[
-      "Advanced Excel (pivot tables, formulas) and reporting.",
-      "100+ WPM typing with high-accuracy data entry.",
-      "Professional communication in Spanish and English (C1)."
-    ],
-    skillsTitle:"Skills",
-    skillsCats:[
-      {title:"🖥️ Office & digital management", items:[
-        "Advanced Excel (pivot tables, formulas, data models, traceability)",
-        "Google Workspace (Docs, Sheets, Drive, Calendar, professional Gmail)",
-        "Microsoft Office (Word, PowerPoint, Outlook, Access)",
-        "ERP / SAP tools (basic level)",
-        "Digital document management and structured filing",
-        "Professional writing and copy-editing",
-        "High-accuracy data entry and 100+ WPM typing"
-      ]},
-      {title:"💼 Administration & support", items:[
-        "Task organization and prioritization",
-        "Reports, invoices and document drafting",
-        "Inventory control and order tracking",
-        "Calendar, schedules and corporate email management",
-        "Meeting coordination and internal comms",
-        "Database recording and updates",
-        "Process supervision and quality control"
-      ]},
-      {title:"🌍 Remote work & communication", items:[
-        "Bilingual Spanish–English communication (C1 Cambridge)",
-        "Digital customer support (chat, email, video)",
-        "Incident resolution with clarity and empathy",
-        "Time management and autonomy in online environments",
-        "Adaptation to time zones and international teams",
-        "Collab tools: Slack, Trello, Notion, Asana, Zoom, Meet"
-      ]},
-      {title:"⚙️ Technology & programming", items:[
-        "HTML, CSS and programming fundamentals",
-        "CMS use and basic web design (Canva, WordPress, GitHub Pages)",
-        "Database knowledge (MySQL, NoSQL)",
-        "Simple task automation and process digitization",
-        "Maintenance and updates of personal/professional sites"
-      ]},
-      {title:"🚚 Logistics & coordination", items:[
-        "Order traceability and stock control (DHL)",
-        "Logistics coordination and incident logging",
-        "Quality control and error reporting",
-        "Logistics ERPs and Honeywell handhelds",
-        "Warehouse environment and admin support"
-      ]}
-    ],
-    contactTitle:"Contact",
-    contactText:"Let's collaborate! I usually reply the same business day.",
-    btnTalk:"Let's talk", btnRequest:"Request CV", btnEmail:"Send email", btnLinkedIn:"LinkedIn",
-    cvTitle:"Request CV", cvText:"Leave your details and I'll send it by email.",
-    cvName:"Name", cvEmail:"Email", cvMsg:"Message (optional)",
-    cvSend:"Send request", cvCancel:"Cancel"
-  }
-};
-
-/* ========== Render helpers ========== */
-function renderBadges(arr){
-  const c = document.getElementById('aboutBadges');
-  c.innerHTML = arr.map(txt=>`<span class="badge">${txt}</span>`).join('');
-}
-function renderAccordion(cats){
-  const acc = document.getElementById('skillsAcc');
-  acc.innerHTML = cats.map((cat,i)=>`
-    <div class="acc-item${i<2?' open':''}">
-      <button class="acc-h" type="button">
-        <span>${cat.title}</span>
-        <span class="chev">›</span>
-      </button>
-      <div class="acc-c">
-        <ul class="acc-list">
-          ${cat.items.map(li=>`<li>${li}</li>`).join('')}
-        </ul>
-      </div>
-    </div>
-  `).join('');
-  // toggle
-  acc.querySelectorAll('.acc-h').forEach(btn=>{
-    btn.addEventListener('click',()=>{
-      btn.parentElement.classList.toggle('open');
-    });
-  });
-}
-function applyLang(lang){
-  const t=T[lang]||T.es;
-
-  // Menú
-  document.querySelector('[data-t="navHome"]').textContent=t.navHome;
-  document.querySelector('[data-t="navAbout"]').textContent=t.navAbout;
-  document.querySelector('[data-t="navWork"]').textContent=t.navWork;
-  document.querySelector('[data-t="navSkills"]').textContent=t.navSkills;
-  document.querySelector('[data-t="navContact"]').textContent=t.navContact;
-
-  // Sobre mí
-  document.querySelector('[data-t="aboutTitle"]').textContent=t.aboutTitle;
-  document.querySelector('[data-t="aboutText"]').textContent=t.aboutText;
-  renderBadges(t.badges);
-
-  // Experiencia/Servicios + Aporto
-  document.querySelector('[data-t="workTitle"]').textContent=t.workTitle;
-  document.querySelector('[data-t="recentExp"]').textContent=t.recentExp;
-  document.querySelector('[data-t="services"]').textContent=t.services;
-  document.querySelector('[data-t="offerTitle"]').textContent=t.offerTitle;
-
-  const expUL = document.querySelector('[data-t="expList"]');
-  const svcUL = document.querySelector('[data-t="svcList"]');
-  const offUL = document.querySelector('[data-t="offerList"]');
-  expUL.innerHTML = t.expList.map(li=>`<li>${li}</li>`).join('');
-  svcUL.innerHTML = t.svcList.map(li=>`<li>${li}</li>`).join('');
-  offUL.innerHTML = t.offerList.map(li=>`<li>${li}</li>`).join('');
-
-  // Competencias (accordion)
-  document.querySelector('[data-t="skillsTitle"]').textContent=t.skillsTitle;
-  renderAccordion(t.skillsCats);
-
-  // Contacto
-  document.querySelector('[data-t="contactTitle"]').textContent=t.contactTitle;
-  document.querySelector('[data-t="contactText"]').textContent=t.contactText;
-
-  // Botones
-  document.querySelector('[data-t="btnTalk"]').textContent=t.btnTalk;
-  document.querySelector('[data-t="btnRequest"]').textContent=t.btnRequest;
-  document.querySelector('[data-t="btnEmail"]').textContent=t.btnEmail;
-  document.querySelector('[data-t="btnLinkedIn"]').textContent=t.btnLinkedIn;
-
-  // Modal
-  document.querySelector('[data-t="cvTitle"]').textContent=t.cvTitle;
-  document.querySelector('[data-t="cvText"]').textContent=t.cvText;
-  document.querySelector('[data-t="cvName"]').childNodes[0].nodeValue=t.cvName+" ";
-  document.querySelector('[data-t="cvEmail"]').childNodes[0].nodeValue=t.cvEmail+" ";
-  document.querySelector('[data-t="cvMsg"]').childNodes[0].nodeValue=t.cvMsg+" ";
-  document.querySelector('[data-t="cvSend"]').textContent=t.cvSend;
-  document.querySelector('[data-t="cvCancel"]').textContent=t.cvCancel;
-
-  // Placeholders
-  document.querySelector('input[name="name"]').placeholder = (lang==='en'?'Your name':'Tu nombre');
-  document.querySelector('input[name="email"]').placeholder = (lang==='en'?'you@example.com':'tucorreo@ejemplo.com');
-  document.querySelector('textarea[name="msg"]').placeholder = (lang==='en'?'Target role or context':'Puesto objetivo o contexto');
-}
-applyLang('es');
-
-/* ========== Cambio de idioma ========== */
-document.getElementById("langSwitcher").addEventListener("change",(e)=>applyLang(e.target.value));
-  /* ========== Línea enlazando estrellas (medio-rápido) ========== */
-(function(){
-  const canvas = document.getElementById('starLinkCanvas');
-  const starsWrap = document.querySelector('.stars');
-  if(!canvas || !starsWrap) return;
-
-  const ctx = canvas.getContext('2d');
-  let W=0,H=0, DPR = Math.max(1, Math.min(2, window.devicePixelRatio||1));
-
-  // Color neón desde CSS
-  const neon = getComputedStyle(document.documentElement).getPropertyValue('--neon').trim() || '#00eaff';
+  const canvas=document.getElementById('starLinkCanvas');
+  const starsWrap=document.querySelector('.stars');
+  if(!canvas||!starsWrap)return;
+  const ctx=canvas.getContext('2d');
+  let W=0,H=0,DPR=Math.max(1,Math.min(2,window.devicePixelRatio||1));
+  const neonLine=getComputedStyle(document.documentElement).getPropertyValue('--neonline').trim()||'#ff1744';
 
   function resize(){
-    const r = document.body.getBoundingClientRect();
-    W = Math.round(r.width);
-    H = Math.round(r.height);
-    canvas.width = Math.round(W * DPR);
-    canvas.height = Math.round(H * DPR);
-    canvas.style.width = W+'px';
-    canvas.style.height = H+'px';
-    ctx.setTransform(DPR,0,0,DPR,0,0);
-    ctx.lineWidth = 1;
-    ctx.lineCap = 'round';
+    const Wcss=Math.max(document.documentElement.scrollWidth,document.documentElement.clientWidth,window.innerWidth);
+    const Hcss=Math.max(document.documentElement.scrollHeight,document.documentElement.clientHeight,window.innerHeight);
+    W=Math.round(Wcss);H=Math.round(Hcss);
+    canvas.width=Math.round(W*DPR);canvas.height=Math.round(H*DPR);
+    canvas.style.width=W+'px';canvas.style.height=H+'px';
+    ctx.setTransform(DPR,0,0,DPR,0,0);ctx.lineCap='round';
   }
-  resize();
-  window.addEventListener('resize', resize);
-
-  // Recoger posiciones de estrellas (en px, a partir de left/top en %)
-  function getStarPoints(){
-    const nodes = starsWrap.querySelectorAll('.star');
-    const pts = [];
-    nodes.forEach(n=>{
-      const left = parseFloat(n.style.left||'0'); // %
-      const top  = parseFloat(n.style.top ||'0'); // %
-      if(!isNaN(left) && !isNaN(top)){
-        pts.push({ x: (left/100)*W, y: (top/100)*H });
-      }
-    });
-    return pts;
-  }
-
-  // Easing suave
-  const ease = t => t<.5 ? 2*t*t : 1 - Math.pow(-2*t+2,2)/2;
-
-  // Ajustes de velocidad y pausas
-  const SPEED_PX_PER_S = 650;   // medio-rápido
-  const PAUSE_MS = 180;         // pequeña pausa entre saltos
-
-  let points = getStarPoints();
-  let from = null, to = null;
-  let t0 = 0, dist = 0, dur = 1;
-
-  function pickPair(){
-    if(points.length < 2) { points = getStarPoints(); }
-    const a = Math.floor(Math.random()*points.length);
-    let b = Math.floor(Math.random()*points.length);
-    if (b===a && points.length>1) b = (a+1)%points.length;
-    from = points[a];
-    to = points[b];
-    const dx = to.x - from.x, dy = to.y - from.y;
-    dist = Math.hypot(dx,dy);
-    dur = Math.max(0.4, dist / SPEED_PX_PER_S); // tiempo en s
-    t0 = performance.now();
-  }
-
-  function clear(){
-    ctx.clearRect(0,0,W,H);
-  }
-
-  function drawLine(p,q,prog){
-    // Fondo tenue de rastro opcional: comenta si no lo quieres
-    // ctx.fillStyle = 'rgba(0,0,0,0.10)'; ctx.fillRect(0,0,W,H);
-
-    ctx.save();
-    ctx.shadowBlur = 14;
-    ctx.shadowColor = neon;
-    ctx.strokeStyle = neon;
-    ctx.globalAlpha = 0.9;
-
-    // Interpolación
-    const x = p.x + (q.x - p.x) * prog;
-    const y = p.y + (q.y - p.y) * prog;
-
-    // Línea principal
-    ctx.beginPath();
-    ctx.moveTo(p.x, p.y);
-    ctx.lineTo(x, y);
-    ctx.stroke();
-
-    // “Punta” brillante
-    ctx.beginPath();
-    ctx.arc(x, y, 2.2, 0, Math.PI*2);
-    ctx.fillStyle = neon;
-    ctx.fill();
-
-    // Resplandor extra fino
-    ctx.shadowBlur = 28;
-    ctx.globalAlpha = 0.35;
-    ctx.beginPath();
-    ctx.moveTo(p.x, p.y);
-    ctx.lineTo(x, y);
-    ctx.stroke();
-
-    ctx.restore();
-  }
-
-  let reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  window.matchMedia('(prefers-reduced-motion: reduce)').addEventListener('change', (e)=>{
-    reduced = e.matches;
-  });
-
-  async function loop(now){
-    if (reduced) { clear(); return; }
-
-    if(!from || !to) { pickPair(); }
-
-    const elapsed = (now - t0)/1000;           // s
-    const prog = Math.min(1, ease(elapsed/dur));
-
-    clear();
-    drawLine(from, to, prog);
-
-    if (prog >= 1){
-      // pequeña pausa y nuevo destino
-      setTimeout(()=>{
-        points = getStarPoints(); // refresca por si cambió el layout
-        pickPair();
-        requestAnimationFrame(loop);
-      }, PAUSE_MS);
-      return;
-    }
-    requestAnimationFrame(loop);
-  }
-
-  pickPair();
-  requestAnimationFrame(loop);
-})();/* ========== Línea enlazando estrellas (medio-rápido) ========== */
-(function(){
-  const canvas = document.getElementById('starLinkCanvas');
-  const starsWrap = document.querySelector('.stars');
-  if(!canvas || !starsWrap) return;
-
-  const ctx = canvas.getContext('2d');
-  let W=0,H=0, DPR = Math.max(1, Math.min(2, window.devicePixelRatio||1));
-
-  // Color neón desde CSS
-  const neon = getComputedStyle(document.documentElement).getPropertyValue('--neon').trim() || '#00eaff';
-
-  function resize(){
-    const r = document.body.getBoundingClientRect();
-    W = Math.round(r.width);
-    H = Math.round(r.height);
-    canvas.width = Math.round(W * DPR);
-    canvas.height = Math.round(H * DPR);
-    canvas.style.width = W+'px';
-    canvas.style.height = H+'px';
-    ctx.setTransform(DPR,0,0,DPR,0,0);
-    ctx.lineWidth = 1;
-    ctx.lineCap = 'round';
-  }
-  resize();
-  window.addEventListener('resize', resize);
-
-  // Recoger posiciones de estrellas (en px, a partir de left/top en %)
-  function getStarPoints(){
-    const nodes = starsWrap.querySelectorAll('.star');
-    const pts = [];
-    nodes.forEach(n=>{
-      const left = parseFloat(n.style.left||'0'); // %
-      const top  = parseFloat(n.style.top ||'0'); // %
-      if(!isNaN(left) && !isNaN(top)){
-        pts.push({ x: (left/100)*W, y: (top/100)*H });
-      }
-    });
-    return pts;
-  }
-
-  // Easing suave
-  const ease = t => t<.5 ? 2*t*t : 1 - Math.pow(-2*t+2,2)/2;
-
-  // Ajustes de velocidad y pausas
-  const SPEED_PX_PER_S = 650;   // medio-rápido
-  const PAUSE_MS = 180;         // pequeña pausa entre saltos
-
-  let points = getStarPoints();
-  let from = null, to = null;
-  let t0 = 0, dist = 0, dur = 1;
-
-  function pickPair(){
-    if(points.length < 2) { points = getStarPoints(); }
-    const a = Math.floor(Math.random()*points.length);
-    let b = Math.floor(Math.random()*points.length);
-    if (b===a && points.length>1) b = (a+1)%points.length;
-    from = points[a];
-    to = points[b];
-    const dx = to.x - from.x, dy = to.y - from.y;
-    dist = Math.hypot(dx,dy);
-    dur = Math.max(0.4, dist / SPEED_PX_PER_S); // tiempo en s
-    t0 = performance.now();
-  }
-
-  function clear(){
-    ctx.clearRect(0,0,W,H);
-  }
-
-  function drawLine(p,q,prog){
-    // Fondo tenue de rastro opcional: comenta si no lo quieres
-    // ctx.fillStyle = 'rgba(0,0,0,0.10)'; ctx.fillRect(0,0,W,H);
-
-    ctx.save();
-    ctx.shadowBlur = 14;
-    ctx.shadowColor = neon;
-    ctx.strokeStyle = neon;
-    ctx.globalAlpha = 0.9;
-
-    // Interpolación
-    const x = p.x + (q.x - p.x) * prog;
-    const y = p.y + (q.y - p.y) * prog;
-
-    // Línea principal
-    ctx.beginPath();
-    ctx.moveTo(p.x, p.y);
-    ctx.lineTo(x, y);
-    ctx.stroke();
-
-    // “Punta” brillante
-    ctx.beginPath();
-    ctx.arc(x, y, 2.2, 0, Math.PI*2);
-    ctx.fillStyle = neon;
-    ctx.fill();
-
-    // Resplandor extra fino
-    ctx.shadowBlur = 28;
-    ctx.globalAlpha = 0.35;
-    ctx.beginPath();
-    ctx.moveTo(p.x, p.y);
-    ctx.lineTo(x, y);
-    ctx.stroke();
-
-    ctx.restore();
-  }
-
-  let reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  window.matchMedia('(prefers-reduced-motion: reduce)').addEventListener('change', (e)=>{
-    reduced = e.matches;
-  });
-
-  async function loop(now){
-    if (reduced) { clear(); return; }
-
-    if(!from || !to) { pickPair(); }
-
-    const elapsed = (now - t0)/1000;           // s
-    const prog = Math.min(1, ease(elapsed/dur));
-
-    clear();
-    drawLine(from, to, prog);
-
-    if (prog >= 1){
-      // pequeña pausa y nuevo destino
-      setTimeout(()=>{
-        points = getStarPoints(); // refresca por si cambió el layout
-        pickPair();
-        requestAnimationFrame(loop);
-      }, PAUSE_MS);
-      return;
-    }
-    requestAnimationFrame(loop);
-  }
-
-  pickPair();
-  requestAnimationFrame(loop);
-})();
-/* ========== 2 líneas que saltan a la estrella más cercana, en bucle ========== */
-(function(){
-  const canvas = document.getElementById('starLinkCanvas');
-  const starsWrap = document.querySelector('.stars');
-  if(!canvas || !starsWrap) return;
-
-  const ctx = canvas.getContext('2d');
-  let W=0,H=0, DPR = Math.max(1, Math.min(2, window.devicePixelRatio||1));
-
-  const neonLine = getComputedStyle(document.documentElement).getPropertyValue('--neonline').trim() || '#ff1744';
-
-  function resize(){
-    W = Math.round(window.innerWidth);
-    H = Math.round(window.innerHeight);
-    canvas.width = Math.round(W * DPR);
-    canvas.height = Math.round(H * DPR);
-    canvas.style.width = W+'px';
-    canvas.style.height = H+'px';
-    ctx.setTransform(DPR,0,0,DPR,0,0);
-    ctx.lineWidth = 1.2;     // fino, visible, < 2px de las estrellas
-    ctx.lineCap = 'round';
-  }
-  resize();
-  window.addEventListener('resize', resize);
-
-  // Recoge posiciones actuales de las estrellas (según left/top en %)
-  function getStarPoints(){
-    const nodes = starsWrap.querySelectorAll('.star');
-    const pts = [];
-    nodes.forEach(n=>{
-      const left = parseFloat(n.style.left||'0'); // %
-      const top  = parseFloat(n.style.top ||'0'); // %
-      if(!isNaN(left) && !isNaN(top)){
-        pts.push({ x: (left/100)*W, y: (top/100)*H });
-      }
-    });
-    return pts.length ? pts : [{x:W*0.3,y:H*0.3},{x:W*0.7,y:H*0.7}];
-  }
-
-  let points = getStarPoints();
-
-  // Encuentra la estrella más cercana a 'p', evitando volver al índice 'avoidIdx'
-  function nearestIndex(p, avoidIdx){
-    let best = -1, bestD2 = Infinity;
-    for (let i=0;i<points.length;i++){
-      if (i===avoidIdx) continue;
-      const dx = points[i].x - p.x;
-      const dy = points[i].y - p.y;
-      const d2 = dx*dx + dy*dy;
-      if (d2 < bestD2) { bestD2 = d2; best = i; }
-    }
-    return best;
-  }
-
-  // Parámetros
-  const RAYS = 2;
-  const SPEED = 680;        // px/s (medio-rápido)
-  const MIN_DIST = 20;      // evita micro saltos
-  const EASE = t => t<.5 ? 2*t*t : 1 - Math.pow(-2*t+2,2)/2;
-
-  function makeRay(){
-    points = getStarPoints();
-    const startIdx = Math.floor(Math.random()*points.length);
-    const fromIdx = startIdx;
-    let toIdx = nearestIndex(points[fromIdx], -1);
-    if (toIdx<0) toIdx = (fromIdx+1) % points.length;
-
-    const from = points[fromIdx];
-    const to   = points[toIdx];
-    const dist = Math.max(MIN_DIST, Math.hypot(to.x-from.x, to.y-from.y));
-    const dur  = dist / SPEED;
-
-    return { fromIdx, toIdx, from, to, t0: performance.now(), dur };
-  }
-
-  let rays = Array.from({length:RAYS}, makeRay);
-
-  let reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  window.matchMedia('(prefers-reduced-motion: reduce)').addEventListener('change', e=> reduced = e.matches);
-
-  function drawSegment(p, q, prog){
-    // Interpolación con easing
-    const x = p.x + (q.x - p.x) * EASE(prog);
-    const y = p.y + (q.y - p.y) * EASE(prog);
-
-    // Línea principal
-    ctx.save();
-    ctx.strokeStyle = neonLine;
-    ctx.shadowColor = neonLine;
-    ctx.shadowBlur = 16;
-    ctx.globalAlpha = 0.95;
-    ctx.beginPath();
-    ctx.moveTo(p.x, p.y);
-    ctx.lineTo(x, y);
-    ctx.stroke();
-
-    // Brillo sutil
-    ctx.shadowBlur = 26;
-    ctx.globalAlpha = 0.35;
-    ctx.beginPath();
-    ctx.moveTo(p.x, p.y);
-    ctx.lineTo(x, y);
-    ctx.stroke();
-
-    // Punta pequeña (más chica que estrella de 2px)
-    ctx.globalAlpha = 0.95;
-    ctx.shadowBlur = 10;
-    ctx.fillStyle = neonLine;
-    ctx.beginPath();
-    ctx.arc(x, y, 1.3, 0, Math.PI*2);
-    ctx.fill();
-    ctx.restore();
-  }
-
-  function nextHop(ray){
-    // Nuevo salto: desde 'to' actual, busca la estrella más cercana que no sea la anterior
-    ray.fromIdx = ray.toIdx;
-    ray.from = points[ray.fromIdx];
-
-    let candidate = nearestIndex(ray.from, ray.fromIdx); // evita volver a la misma
-    if (candidate<0) candidate = (ray.fromIdx+1)%points.length;
-
-    ray.toIdx = candidate;
-    ray.to = points[ray.toIdx];
-
-    const dist = Math.max(MIN_DIST, Math.hypot(ray.to.x-ray.from.x, ray.to.y-ray.from.y));
-    ray.dur = dist / SPEED;
-    ray.t0 = performance.now();
-  }
-
-  function tick(now){
-    if (reduced) { ctx.clearRect(0,0,W,H); return; }
-
-    // Refresca posiciones por si cambia layout (responsive)
-    points = getStarPoints();
-
-    ctx.clearRect(0,0,W,H);
-
-    for (const ray of rays){
-      // Si el layout cambió, re-engancha a las coords actuales
-      ray.from = points[ray.fromIdx] || ray.from;
-      ray.to   = points[ray.toIdx]   || ray.to;
-
-      const elapsed = (now - ray.t0)/1000;
-      const prog = Math.min(1, elapsed / ray.dur);
-
-      drawSegment(ray.from, ray.to, prog);
-
-      if (prog >= 1){
-        nextHop(ray); // salta a la estrella más cercana y sigue el bucle
-      }
-    }
-
-    requestAnimationFrame(tick);
-  }
-  requestAnimationFrame(tick);
-})();
-/* ========== 2 líneas: nearest sin repetir, anti-ping-pong, bucle continuo ========== */
-(function(){
-  const canvas = document.getElementById('starLinkCanvas');
-  const starsWrap = document.querySelector('.stars');
-  if(!canvas || !starsWrap) return;
-
-  const ctx = canvas.getContext('2d');
-  let W=0,H=0, DPR = Math.max(1, Math.min(2, window.devicePixelRatio||1));
-
-  const neonLine = getComputedStyle(document.documentElement).getPropertyValue('--neonline').trim() || '#ff1744';
-
-  function resize(){
-    W = Math.round(window.innerWidth);
-    H = Math.round(window.innerHeight);
-    canvas.width = Math.round(W * DPR);
-    canvas.height = Math.round(H * DPR);
-    canvas.style.width = W+'px';
-    canvas.style.height = H+'px';
-    ctx.setTransform(DPR,0,0,DPR,0,0);
-    ctx.lineWidth = 1.2;
-    ctx.lineCap = 'round';
-  }
-  resize();
-  window.addEventListener('resize', resize);
+  resize();window.addEventListener('resize',resize);
 
   function getStarPoints(){
-    const nodes = starsWrap.querySelectorAll('.star');
-    const pts = [];
+    const nodes=starsWrap.querySelectorAll('.star');const pts=[];
     nodes.forEach(n=>{
-      const left = parseFloat(n.style.left||'0'); // %
-      const top  = parseFloat(n.style.top ||'0'); // %
-      if(!isNaN(left) && !isNaN(top)){
-        pts.push({ x: (left/100)*W, y: (top/100)*H });
-      }
+      const left=parseFloat(n.style.left||'0');
+      const top=parseFloat(n.style.top||'0');
+      if(!isNaN(left)&&!isNaN(top)){pts.push({x:(left/100)*W,y:(top/100)*H});}
     });
-    return pts.length ? pts : [{x:W*0.3,y:H*0.3},{x:W*0.7,y:H*0.7}];
+    return pts.length?pts:[{x:W*0.3,y:H*0.3},{x:W*0.7,y:H*0.7}];
   }
+  let points=getStarPoints();
 
-  let points = getStarPoints();
+  const RAYS=2,SPEED=900,DUR_MIN=0.36,DUR_MAX=1.5,MIN_DIST=40,TABU_LEN=3;
+  const ANGLE_MIN=Math.PI/6,ANGLE_MAX=(5*Math.PI)/6;
+  const BASE_WIDTH=1.2,TRAIL_LEN=36,TRAIL_FADE=0.9;
+  const CURVE_MIN=14,CURVE_MAX=30;
+  const EASE=t=>t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;
+  function norm(vx,vy){const m=Math.hypot(vx,vy)||1;return[vx/m,vy/m];}
+  function randRange(a,b){return a+Math.random()*(b-a);}
+  function sign(){return Math.random()<0.5?-1:1;}
 
-  // ---------- Parámetros de movimiento ----------
-  const RAYS = 2;
-  const SPEED = 520;        // px/s (más controlado)
-  const MIN_DIST = 40;      // no saltar micro-distancias
-  const DUR_MIN = 0.55;     // s
-  const DUR_MAX = 1.8;      // s
-  const TABU_LEN = 3;       // no volver a estas últimas estrellas
-  const ANGLE_MIN = Math.PI/6;   // 30°: evita reversa brusca
-  const ANGLE_MAX = (5*Math.PI)/6; // 150°: evita giro círculo cerrado absurdo
-  const EASE = t => t<.5 ? 2*t*t : 1 - Math.pow(-2*t+2,2)/2;
-
-  function norm(vx,vy){ const m=Math.hypot(vx,vy)||1; return [vx/m, vy/m]; }
-
-  // Elige la estrella más cercana que no esté en TABU y que respete ángulo
-  function pickNext(fromIdx, prevDir, tabu){
-    // ordena por distancia
-    const from = points[fromIdx];
-    const order = points.map((p,i)=>({i, d2:(p.x-from.x)**2 + (p.y-from.y)**2}))
-                        .filter(o=>o.i!==fromIdx)
-                        .sort((a,b)=>a.d2-b.d2);
-
-    let best = -1;
-    for (const cand of order){
-      if (tabu.has(cand.i)) continue;
-
-      const dx = points[cand.i].x - from.x;
-      const dy = points[cand.i].y - from.y;
-      const dist = Math.hypot(dx,dy);
-      if (dist < MIN_DIST) continue;
-
-      // Ángulo con la dirección previa (si existe)
-      if (prevDir){
-        const [ux,uy] = prevDir;
-        const [vx,vy] = norm(dx,dy);
-        const dot = Math.max(-1, Math.min(1, ux*vx + uy*vy));
-        const ang = Math.acos(dot);
-        if (ang < ANGLE_MIN || ang > ANGLE_MAX){
-          // demasiado “reversa” o demasiado “cerrado”: prueba siguiente
-          continue;
-        }
+  // Segunda estrella más cercana que cumpla condiciones
+  function pickSecondNearest(fromIdx,prevDir,tabu){
+    const from=points[fromIdx];
+    const sorted=points.map((p,i)=>({i,d2:(p.x-from.x)**2+(p.y-from.y)**2}))
+      .filter(o=>o.i!==fromIdx).sort((a,b)=>a.d2-b.d2);
+    let valid=[];
+    for(const cand of sorted){
+      if(tabu.has(cand.i))continue;
+      const dx=points[cand.i].x-from.x,dy=points[cand.i].y-from.y;
+      const dist=Math.hypot(dx,dy);if(dist<MIN_DIST)continue;
+      if(prevDir){
+        const [ux,uy]=prevDir,[vx,vy]=norm(dx,dy);
+        const ang=Math.acos(Math.max(-1,Math.min(1,ux*vx+uy*vy)));
+        if(ang<ANGLE_MIN||ang>ANGLE_MAX)continue;
       }
-      best = cand.i;
-      break;
+      valid.push(cand.i);
+      if(valid.length>=2)break;
     }
-
-    // Si no encontró candidato “ideal”, toma el más cercano que no esté en TABU
-    if (best === -1){
-      for (const cand of order){
-        if (!tabu.has(cand.i)){
-          best = cand.i; break;
-        }
-      }
-    }
-
-    // Si aún no hay, fuerza alguno aunque esté en TABU (para no romper bucle)
-    if (best === -1){
-      best = order.length ? order[0].i : fromIdx;
-    }
-    return best;
+    if(valid.length>=2)return valid[1];
+    if(valid.length===1)return valid[0];
+    return sorted.length?sorted[0].i:fromIdx;
   }
 
   function makeRay(){
-    points = getStarPoints();
-    const startIdx = Math.floor(Math.random()*points.length);
-    return {
-      fromIdx: startIdx,
-      toIdx: null,
-      t0: performance.now(),
-      dur: 1,
-      prevDir: null,     // vector unitario de la dirección anterior
-      tabu: new Set()    // últimas visitadas
+    points=getStarPoints();
+    const startIdx=Math.floor(Math.random()*points.length);
+    return{
+      fromIdx:startIdx,toIdx:null,t0:performance.now(),dur:1,
+      prevDir:null,tabu:new Set(),trail:[],curveAmp:randRange(CURVE_MIN,CURVE_MAX)*sign()
     };
   }
 
   function startHop(ray){
-    // mantener TABU con tamaño TABU_LEN
-    if (!ray.tabu.has(ray.fromIdx)){
+    if(!ray.tabu.has(ray.fromIdx)){
       ray.tabu.add(ray.fromIdx);
-      if (ray.tabu.size > TABU_LEN){
-        // elimina el más antiguo: simple forma (reconstruimos set)
-        const arr=[...ray.tabu]; arr.shift(); ray.tabu=new Set(arr);
+      if(ray.tabu.size>TABU_LEN){
+        const arr=[...ray.tabu];arr.shift();ray.tabu=new Set(arr);
       }
     }
-
-    const nextIdx = pickNext(ray.fromIdx, ray.prevDir, ray.tabu);
-    ray.toIdx = nextIdx;
-
-    const a = points[ray.fromIdx], b = points[ray.toIdx];
-    const dx = b.x - a.x, dy = b.y - a.y;
-    const dist = Math.max(MIN_DIST, Math.hypot(dx,dy));
-    const rawDur = dist / SPEED;
-    ray.dur = Math.max(DUR_MIN, Math.min(DUR_MAX, rawDur));
-    ray.t0 = performance.now();
+    const nextIdx=pickSecondNearest(ray.fromIdx,ray.prevDir,ray.tabu);
+    ray.toIdx=nextIdx;
+    const a=points[ray.fromIdx],b=points[ray.toIdx];
+    const dist=Math.max(MIN_DIST,Math.hypot(b.x-a.x,b.y-a.y));
+    const rawDur=dist/SPEED;
+    ray.dur=Math.max(DUR_MIN,Math.min(DUR_MAX,rawDur));
+    ray.t0=performance.now();
+    ray.curveAmp=randRange(CURVE_MIN,CURVE_MAX)*sign();
   }
 
   function advance(ray){
-    // al llegar, preparar siguiente salto
-    ray.prevDir = (function(){
-      const a = points[ray.fromIdx], b = points[ray.toIdx];
-      return norm(b.x-a.x, b.y-a.y);
-    })();
-    ray.fromIdx = ray.toIdx;
+    const a=points[ray.fromIdx],b=points[ray.toIdx];
+    ray.prevDir=norm(b.x-a.x,b.y-a.y);
+    ray.fromIdx=ray.toIdx;
     startHop(ray);
   }
 
-  function drawSegment(fromIdx, toIdx, prog){
-    const p = points[fromIdx], q = points[toIdx];
-    const x = p.x + (q.x - p.x) * EASE(prog);
-    const y = p.y + (q.y - p.y) * EASE(prog);
-
-    ctx.save();
-    ctx.strokeStyle = neonLine;
-    ctx.shadowColor = neonLine;
-    ctx.shadowBlur = 16;
-    ctx.globalAlpha = 0.95;
-    ctx.beginPath();
-    ctx.moveTo(p.x, p.y);
-    ctx.lineTo(x, y);
-    ctx.stroke();
-
-    ctx.shadowBlur = 26;
-    ctx.globalAlpha = 0.35;
-    ctx.beginPath();
-    ctx.moveTo(p.x, p.y);
-    ctx.lineTo(x, y);
-    ctx.stroke();
-
-    ctx.globalAlpha = 0.95;
-    ctx.shadowBlur = 10;
-    ctx.fillStyle = neonLine;
-    ctx.beginPath();
-    ctx.arc(x, y, 1.3, 0, Math.PI*2);
-    ctx.fill();
-    ctx.restore();
+  function getPos(ray,prog){
+    const p=points[ray.fromIdx],q=points[ray.toIdx];
+    const t=EASE(prog);
+    const x=p.x+(q.x-p.x)*t,y=p.y+(q.y-p.y)*t;
+    const [dx,dy]=[q.x-p.x,q.y-p.y];
+    const [ux,uy]=norm(dx,dy);
+    const nx=-uy,ny=ux;
+    const offset=Math.sin(t*Math.PI)*ray.curveAmp;
+    return{x:x+nx*offset,y:y+ny*offset};
   }
 
-  let rays = Array.from({length:RAYS}, makeRay);
-  // inicializa el primer salto de cada ray
-  rays.forEach(r => startHop(r));
-
-  let reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  window.matchMedia('(prefers-reduced-motion: reduce)').addEventListener('change', e=> reduced = e.matches);
-
-  function tick(now){
-    if (reduced) { ctx.clearRect(0,0,W,H); return; }
-
-    points = getStarPoints();
-    ctx.clearRect(0,0,W,H);
-
-    for (const ray of rays){
-      // reata ligado a nuevas coords por responsive
-      const elapsed = (now - ray.t0)/1000;
-      const prog = Math.min(1, elapsed / ray.dur);
-
-      if (ray.toIdx == null){
-        startHop(ray);
-      }
-
-      drawSegment(ray.fromIdx, ray.toIdx, prog);
-
-      if (prog >= 1){
-        advance(ray);
-      }
-    }
-
-    requestAnimationFrame(tick);
-  }
-  requestAnimationFrame(tick);
-})();
-
-/* ========== 2 líneas: nearest sin repetir + cola de cometa y curva suave ========== */
-(function(){
-  const canvas = document.getElementById('starLinkCanvas');
-  const starsWrap = document.querySelector('.stars');
-  if(!canvas || !starsWrap) return;
-
-  const ctx = canvas.getContext('2d');
-  let W=0,H=0, DPR = Math.max(1, Math.min(2, window.devicePixelRatio||1));
-
-  const neonLine = getComputedStyle(document.documentElement).getPropertyValue('--neonline').trim() || '#ff1744';
-
-  function resize(){
-    W = Math.round(window.innerWidth);
-    H = Math.round(window.innerHeight);
-    canvas.width = Math.round(W * DPR);
-    canvas.height = Math.round(H * DPR);
-    canvas.style.width = W+'px';
-    canvas.style.height = H+'px';
-    ctx.setTransform(DPR,0,0,DPR,0,0);
-    ctx.lineCap = 'round';
-  }
-  resize();
-  window.addEventListener('resize', resize);
-
-  function getStarPoints(){
-    const nodes = starsWrap.querySelectorAll('.star');
-    const pts = [];
-    nodes.forEach(n=>{
-      const left = parseFloat(n.style.left||'0');
-      const top  = parseFloat(n.style.top ||'0');
-      if(!isNaN(left) && !isNaN(top)){
-        pts.push({ x: (left/100)*W, y: (top/100)*H });
-      }
-    });
-    return pts.length ? pts : [{x:W*0.3,y:H*0.3},{x:W*0.7,y:H*0.7}];
-  }
-  let points = getStarPoints();
-
-  // ===== Parámetros (ajusta aquí para más/menos rapidez y cola) =====
-  const RAYS = 2;
-  const SPEED = 780;          // px/s (más rápido que antes)
-  const DUR_MIN = 0.42, DUR_MAX = 1.5;
-  const MIN_DIST = 40;
-  const TABU_LEN = 3;
-  const ANGLE_MIN = Math.PI/6, ANGLE_MAX = (5*Math.PI)/6;
-  const BASE_WIDTH = 1.2;
-  const TRAIL_LEN = 28;       // nº de puntos guardados en la cola
-  const TRAIL_FADE = 0.8;     // opacidad total de la cola
-  const CURVE_MIN = 10, CURVE_MAX = 22; // amplitud de curva (px)
-  const EASE = t => t<.5 ? 4*t*t*t : 1 - Math.pow(-2*t+2,3)/2; // cúbico suave
-
-  function norm(vx,vy){ const m=Math.hypot(vx,vy)||1; return [vx/m, vy/m]; }
-
-  function pickNext(fromIdx, prevDir, tabu){
-    const from = points[fromIdx];
-    const order = points.map((p,i)=>({i, d2:(p.x-from.x)**2 + (p.y-from.y)**2}))
-                        .filter(o=>o.i!==fromIdx)
-                        .sort((a,b)=>a.d2-b.d2);
-    // preferimos cercana válida (no tabu, buen ángulo)
-    for(const cand of order){
-      if (tabu.has(cand.i)) continue;
-      const dx = points[cand.i].x - from.x, dy = points[cand.i].y - from.y;
-      const dist = Math.hypot(dx,dy); if (dist < MIN_DIST) continue;
-      if (prevDir){
-        const [ux,uy] = prevDir, [vx,vy] = norm(dx,dy);
-        const ang = Math.acos(Math.max(-1,Math.min(1, ux*vx + uy*vy)));
-        if (ang < ANGLE_MIN || ang > ANGLE_MAX) continue;
-      }
-      return cand.i;
-    }
-    // si no hay ideal, segunda oportunidad: la más cercana no tabu
-    for(const cand of order){ if(!tabu.has(cand.i)) return cand.i; }
-    // último recurso
-    return order.length ? order[0].i : fromIdx;
-  }
-
-  function randRange(a,b){ return a + Math.random()*(b-a); }
-  function sign(){ return Math.random()<0.5 ? -1 : 1; }
-
-  function makeRay(){
-    points = getStarPoints();
-    const startIdx = Math.floor(Math.random()*points.length);
-    return {
-      fromIdx: startIdx,
-      toIdx: null,
-      t0: performance.now(),
-      dur: 1,
-      prevDir: null,
-      tabu: new Set(),
-      trail: [],              // historial de posiciones (cola)
-      curveAmp: randRange(CURVE_MIN, CURVE_MAX) * sign(), // amplitud curva
-    };
-  }
-
-  function startHop(ray){
-    if (!ray.tabu.has(ray.fromIdx)){
-      ray.tabu.add(ray.fromIdx);
-      if (ray.tabu.size > TABU_LEN){
-        const arr=[...ray.tabu]; arr.shift(); ray.tabu=new Set(arr);
-      }
-    }
-    const nextIdx = pickNext(ray.fromIdx, ray.prevDir, ray.tabu);
-    ray.toIdx = nextIdx;
-
-    const a = points[ray.fromIdx], b = points[ray.toIdx];
-    const dx = b.x - a.x, dy = b.y - a.y;
-    const dist = Math.max(MIN_DIST, Math.hypot(dx,dy));
-    const rawDur = dist / SPEED;
-    ray.dur = Math.max(DUR_MIN, Math.min(DUR_MAX, rawDur));
-    ray.t0 = performance.now();
-
-    // nueva curvatura para el siguiente trayecto
-    ray.curveAmp = randRange(CURVE_MIN, CURVE_MAX) * sign();
-  }
-
-  function advance(ray){
-    const a = points[ray.fromIdx], b = points[ray.toIdx];
-    ray.prevDir = norm(b.x-a.x, b.y-a.y);
-    ray.fromIdx = ray.toIdx;
-    startHop(ray);
-  }
-
-  // posición con curva suave (normal al vector de avance)
-  function getPos(fromIdx, toIdx, prog){
-    const p = points[fromIdx], q = points[toIdx];
-    const t = EASE(prog);
-    const x = p.x + (q.x - p.x)*t;
-    const y = p.y + (q.y - p.y)*t;
-
-    const [dx,dy] = [q.x - p.x, q.y - p.y];
-    const [ux,uy] = norm(dx,dy);
-    const nx = -uy, ny = ux;
-    // seno para “cometa” que se ensancha a mitad y vuelve
-    const offset = Math.sin(t*Math.PI) * currentRay.curveAmp;
-    return { x: x + nx*offset, y: y + ny*offset };
-  }
-
-  function drawComet(ray, head){
-    // Cola (trail): segmentos con alpha y grosor decreciente
-    const L = ray.trail.length;
+  function drawComet(ray,head){
+    const L=ray.trail.length;
     for(let i=1;i<L;i++){
-      const a = ray.trail[i-1], b = ray.trail[i];
-      const k = i/L; // 0..1
+      const a=ray.trail[i-1],b=ray.trail[i],k=i/L;
       ctx.save();
-      ctx.strokeStyle = neonLine;
-      ctx.shadowColor = neonLine;
-      ctx.globalAlpha = (k*TRAIL_FADE)*0.9;
-      ctx.shadowBlur = 16*k;
-      ctx.lineWidth = BASE_WIDTH * (k*0.9);
-      ctx.beginPath();
-      ctx.moveTo(a.x, a.y);
-      ctx.lineTo(b.x, b.y);
-      ctx.stroke();
-      ctx.restore();
+      ctx.strokeStyle=neonLine;ctx.shadowColor=neonLine;
+      ctx.globalAlpha=(k*TRAIL_FADE)*0.9;
+      ctx.shadowBlur=16*k;
+      ctx.lineWidth=BASE_WIDTH*(k*0.9);
+      ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.stroke();ctx.restore();
     }
-
-    // Cabeza (más brillante)
+    const last=ray.trail[L-2]||head;
     ctx.save();
-    ctx.strokeStyle = neonLine;
-    ctx.shadowColor = neonLine;
-    ctx.globalAlpha = 1;
-    ctx.shadowBlur = 20;
-    ctx.lineWidth = BASE_WIDTH;
-    // pequeño segmento final para “brillo punta”
-    const last = ray.trail[L-2] || head;
-    ctx.beginPath();
-    ctx.moveTo(last.x, last.y);
-    ctx.lineTo(head.x, head.y);
-    ctx.stroke();
-
-    // núcleo
-    ctx.fillStyle = neonLine;
-    ctx.shadowBlur = 12;
-    ctx.beginPath();
-    ctx.arc(head.x, head.y, 1.3, 0, Math.PI*2);
-    ctx.fill();
-    ctx.restore();
+    ctx.strokeStyle=neonLine;ctx.shadowColor=neonLine;ctx.globalAlpha=1;ctx.shadowBlur=20;
+    ctx.lineWidth=BASE_WIDTH;ctx.beginPath();ctx.moveTo(last.x,last.y);ctx.lineTo(head.x,head.y);ctx.stroke();
+    ctx.fillStyle=neonLine;ctx.shadowBlur=12;ctx.beginPath();ctx.arc(head.x,head.y,1.3,0,Math.PI*2);ctx.fill();ctx.restore();
   }
 
-  let rays = Array.from({length:RAYS}, makeRay);
-  rays.forEach(r => startHop(r));
+  let rays=Array.from({length:RAYS},makeRay);
+  rays.forEach(r=>startHop(r));
 
-  let reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  window.matchMedia('(prefers-reduced-motion: reduce)').addEventListener('change', e=> reduced = e.matches);
-
-  // Usamos un “currentRay” temporal para getPos (evitar pasar muchos args)
-  let currentRay = null;
+  let reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  window.matchMedia('(prefers-reduced-motion: reduce)').addEventListener('change',e=>reduced=e.matches);
 
   function tick(now){
-    if (reduced) { ctx.clearRect(0,0,W,H); return; }
-    points = getStarPoints();
+    if(reduced){ctx.clearRect(0,0,W,H);return;}
+    points=getStarPoints();
     ctx.clearRect(0,0,W,H);
-
-    for (const ray of rays){
-      currentRay = ray;
-      const elapsed = (now - ray.t0)/1000;
-      const prog = Math.min(1, elapsed / ray.dur);
-
-      const head = getPos(ray.fromIdx, ray.toIdx, prog);
-
-      // actualizar trail
+    for(const ray of rays){
+      const elapsed=(now-ray.t0)/1000;
+      const prog=Math.min(1,elapsed/ray.dur);
+      const head=getPos(ray,prog);
       ray.trail.push(head);
-      if (ray.trail.length > TRAIL_LEN) ray.trail.shift();
-
-      drawComet(ray, head);
-
-      if (prog >= 1){
-        // al llegar, “arranca” el siguiente salto desde la última cabeza
-        ray.trail = [head]; // cola corta al empezar nuevo trayecto
-        advance(ray);
-      }
+      if(ray.trail.length>TRAIL_LEN)ray.trail.shift();
+      drawComet(ray,head);
+      if(prog>=1){ray.trail=[head];advance(ray);}
     }
-
     requestAnimationFrame(tick);
   }
   requestAnimationFrame(tick);
 })();
+</script>
+</body>
+</html>
