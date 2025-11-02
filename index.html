@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Jonathan Berdejo</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700;900&display=swap" rel="stylesheet"/>
+<meta name="color-scheme" content="dark">
 <style>
 /* ===== Reset & Vars ===== */
 *{box-sizing:border-box;margin:0;padding:0}
@@ -13,30 +14,28 @@ html{scroll-behavior:smooth}
 :root{
   --bpm:72; --beat: calc(60s/var(--bpm));
   --neon:#00eaff; --bg:#000; --txt:#eaf6ff; --stroke: rgba(0,234,255,.18);
-  --neonline:#ff1744; /* Rojo neón para las líneas/cometas */
+  --neonline:#ff1744;
 }
-/* ===== Base ===== */
 body{font-family:'Poppins',system-ui,Segoe UI,Roboto,Arial,sans-serif;background:var(--bg);color:var(--txt);-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;overflow-x:hidden}
-/* ===== Universe (ligero) ===== */
+
+/* ===== Fondo ===== */
 .neon-bg{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none;background:
   radial-gradient(1200px 600px at 50% 60%, rgba(0,234,255,.06), transparent 70%)}
 .stars{position:absolute;inset:0;pointer-events:none}
 .star{position:absolute;width:2px;height:2px;border-radius:50%;background:#fff;opacity:0;filter:drop-shadow(0 0 6px rgba(255,255,255,.6));animation:twinkle var(--tw,3.5s) ease-in-out infinite var(--td,0s);transform:scale(var(--sc,1))}
 @keyframes twinkle{0%,100%{opacity:0}10%{opacity:.9}50%{opacity:.3}90%{opacity:1}}
-/* líneas horizontales suaves detrás */
 .neon-lines{position:absolute;inset:0;pointer-events:none}
 .beam{position:absolute;left:-60vw;width:80vw;height:4px;opacity:.18;filter:blur(1.5px) brightness(1.2);mix-blend-mode:screen;transform:translateX(-40vw);background:linear-gradient(90deg,transparent 0%, var(--neon) 40%, var(--neon) 60%, transparent 100%);animation:beamX var(--s,2.2s) linear infinite}
 .b1{top:22%;--s:1.8s}.b2{top:38%;--s:2.1s}.b3{top:54%;--s:2.4s}.b4{top:70%;--s:2.8s}.b5{top:86%;--s:3.2s}
 @keyframes beamX{from{transform:translateX(-40vw)}to{transform:translateX(120vw)}}
-/* Canvas de cometas sobre las estrellas, detrás del contenido */
-#starLinkCanvas{
-  position:absolute; inset:0; width:100%; height:100%; display:block;
-}
-/* ===== Content on top ===== */
+#starLinkCanvas{position:absolute; inset:0; width:100%; height:100%; display:block}
+
+/* ===== Contenido ===== */
 .nav,.hero,.section,.footer,.hud-nav,.modal{position:relative;z-index:5}
 .hero{min-height:100vh;display:grid;place-items:center;text-align:center}
 .title{font-weight:900;letter-spacing:.04em;font-size:clamp(2.8rem,9vw,6.4rem);color:#e8fdff;text-shadow:0 0 18px var(--neon),0 0 48px var(--neon),0 0 120px var(--neon);animation:titleBeat var(--beat) ease-in-out infinite}
 @keyframes titleBeat{0%{transform:scale(1)}8%{transform:scale(1.015)}18%{transform:scale(1.009)}26%,100%{transform:scale(1)}}
+
 .section{padding:96px 20px}
 .container{max-width:1100px;margin:0 auto}
 .card{background:rgba(0,0,0,.08);border:1px solid rgba(0,234,255,0.18);border-radius:18px;padding:24px;box-shadow:0 8px 30px rgba(0,0,0,.25)}
@@ -49,18 +48,26 @@ body{font-family:'Poppins',system-ui,Segoe UI,Roboto,Arial,sans-serif;background
 .btn{border:1px solid var(--neon);border-radius:12px;padding:10px 14px;font-weight:700;color:#001a1f;background:linear-gradient(90deg,#00eaff,#8ff6ff);text-decoration:none;box-shadow:0 0 18px rgba(0,234,255,.35);cursor:pointer}
 .btn--ghost{background:transparent;color:#bfe7f1;border-color:var(--stroke)}
 .footer{padding:40px 20px;color:#a9d7e5;text-align:center;border-top:1px solid var(--stroke)}
-/* ===== HUD Nav ===== */
+
+/* ===== HUD ===== */
 .hud-nav{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);z-index:6;display:flex;gap:18px;padding:10px 14px;background:rgba(0,0,0,.35);
   backdrop-filter: blur(10px) saturate(120%);-webkit-backdrop-filter: blur(10px) saturate(120%);border:1px solid rgba(0,234,255,.22);border-radius:999px;box-shadow:0 0 24px rgba(0,234,255,.18), inset 0 0 10px rgba(0,234,255,.08)}
 .hud-nav a{position:relative;color:#c9faff;text-decoration:none;font-weight:700;letter-spacing:.02em;padding:8px 12px;border-radius:10px;transition: color .2s ease, background .2s ease, text-shadow .2s ease}
 .hud-nav a:hover{color:#001a1f;background:linear-gradient(90deg,#00eaff,#8ff6ff);text-shadow:0 0 12px #00eaff}
 .hud-nav a.active{color:#eaffff;text-shadow:0 0 10px #00eaff, 0 0 24px #00eaff}
 .hud-indicator{position:absolute;left:0;bottom:6px;height:2px;border-radius:2px;width:var(--indW,40px);transform:translateX(var(--indX,0));background:linear-gradient(90deg,transparent,#00eaff,transparent);box-shadow:0 0 14px #00eaff;transition: transform .25s ease, width .25s ease}
-/* ===== Selector idioma ===== */
-#langBox{position:fixed;top:20px;right:26px;z-index:7;background:rgba(0,0,0,.4);backdrop-filter: blur(6px);border:1px solid rgba(0,234,255,.25);border-radius:12px;padding:4px 8px;box-shadow:0 0 18px rgba(0,234,255,.25)}
+
+/* ===== Barra superior: Idioma + Animación ===== */
+#topBar{
+  position:fixed;top:20px;right:26px;z-index:7;display:flex;gap:8px;align-items:center;
+  background:rgba(0,0,0,.4);backdrop-filter: blur(6px);
+  border:1px solid rgba(0,234,255,.25);border-radius:12px;padding:4px 8px;box-shadow:0 0 18px rgba(0,234,255,.25)
+}
 #langSwitcher{background:transparent;color:#00eaff;border:none;font-weight:700;font-size:.95rem;letter-spacing:.04em;cursor:pointer}
 #langSwitcher option{background:#000;color:#00eaff}
-/* ===== Accordion (Competencias) ===== */
+#animToggle{font-weight:700;color:#00eaff;background:transparent;border:1px solid rgba(0,234,255,.25);border-radius:10px;padding:6px 10px;cursor:pointer}
+
+/* ===== Accordion ===== */
 .acc{display:grid;gap:12px;margin-top:12px}
 .acc-item{border:1px solid rgba(0,234,255,.14);border-radius:14px;overflow:hidden;background:rgba(0,0,0,.12)}
 .acc-h{width:100%;text-align:left;background:transparent;border:none;color:#eafcff;padding:12px 16px;font-weight:700;display:flex;justify-content:space-between;align-items:center;cursor:pointer}
@@ -70,7 +77,8 @@ body{font-family:'Poppins',system-ui,Segoe UI,Roboto,Arial,sans-serif;background
 .acc-list{padding:8px 16px 16px 28px;opacity:.95;line-height:1.6}
 .acc-h .chev{transition:transform .25s ease}
 .acc-item.open .chev{transform:rotate(90deg)}
-/* ===== Modal Solicitar CV ===== */
+
+/* ===== Modal ===== */
 .modal{display:none}
 .modal.is-open{display:block}
 .modal__backdrop{position:fixed;inset:0;background:rgba(0,0,0,.6);backdrop-filter:blur(4px)}
@@ -83,6 +91,19 @@ body{font-family:'Poppins',system-ui,Segoe UI,Roboto,Arial,sans-serif;background
 .modal__input{background:rgba(0,0,0,.35);color:var(--txt);border:1px solid var(--stroke);border-radius:12px;padding:10px 12px;outline:none;box-shadow: inset 0 0 12px rgba(0,234,255,.05)}
 .modal__input:focus{border-color:#00eaff;box-shadow:0 0 0 3px rgba(0,234,255,.15)}
 .modal__actions{display:flex;gap:10px;justify-content:flex-end;margin-top:8px}
+
+/* ===== Motion OFF ===== */
+body[data-motion="off"] .star,
+body[data-motion="off"] .beam,
+body[data-motion="off"] .title{
+  animation: none !important;
+}
+body[data-motion="off"] #starLinkCanvas{display:none} /* apaga el canvas */
+@media (prefers-reduced-motion: reduce){
+  .star,.beam,.title{animation: none !important}
+  #starLinkCanvas{display:none}
+}
+
 /* ===== Responsive ===== */
 @media (max-width:900px){
   .grid-2{grid-template-columns:1fr}
@@ -90,26 +111,17 @@ body{font-family:'Poppins',system-ui,Segoe UI,Roboto,Arial,sans-serif;background
   .hud-nav a{padding:8px 10px;font-weight:600}
   .beam{width:90vw;left:-65vw}
 }
-@media (prefers-reduced-motion: reduce){.beam,.title,.star{animation:none !important}}
 </style>
 </head>
 <body>
-  <!-- Selector de idioma -->
-<div id="langBox">
-  <select id="langSwitcher" aria-label="Idioma">
-    <option value="es" selected>ES</option>
-    <option value="en">EN</option>
-  </select>
-
-  <!-- Botón para activar/desactivar animación -->
-  <button id="animToggle" type="button" aria-pressed="false"
-          title="Activar o desactivar animación"
-          style="margin-left:8px;font-weight:700;color:#00eaff;background:transparent;
-                 border:1px solid rgba(0,234,255,.25);border-radius:10px;padding:6px 10px;">
-    🪄
-  </button>
-</div>
-
+  <!-- Top bar: Idioma + Animación -->
+  <div id="topBar" role="toolbar" aria-label="Preferencias">
+    <select id="langSwitcher" aria-label="Idioma">
+      <option value="es" selected>ES</option>
+      <option value="en">EN</option>
+    </select>
+    <button id="animToggle" type="button" aria-pressed="false" title="Activar o desactivar animación">Animación: ON</button>
+  </div>
 
   <!-- Fondo -->
   <div class="neon-bg" aria-hidden="true">
@@ -117,19 +129,6 @@ body{font-family:'Poppins',system-ui,Segoe UI,Roboto,Arial,sans-serif;background
     <div class="neon-lines">
       <span class="beam b1"></span><span class="beam b2"></span><span class="beam b3"></span><span class="beam b4"></span><span class="beam b5"></span>
     </div>
-    <!-- Selector de idioma + botón animación (ahora clicable) -->
-  <div id="langBox">
-    <select id="langSwitcher" aria-label="Idioma">
-      <option value="es" selected>ES</option>
-      <option value="en">EN</option>
-    </select>
-    <button id="animToggle" type="button" aria-pressed="false"
-      style="margin-left:8px;font-weight:700;color:#00eaff;background:transparent;
-             border:1px solid rgba(0,234,255,.25);border-radius:10px;padding:6px 10px;">
-      Animación: ON
-    </button>
-  </div>
-    <!-- Canvas para líneas/cometas -->
     <canvas id="starLinkCanvas" aria-hidden="true"></canvas>
   </div>
 
@@ -200,7 +199,7 @@ body{font-family:'Poppins',system-ui,Segoe UI,Roboto,Arial,sans-serif;background
     </div>
   </section>
 
-  <!-- Competencias (Aptitudes) -->
+  <!-- Competencias -->
   <section id="skills" class="section">
     <div class="container">
       <div class="card">
@@ -229,6 +228,10 @@ body{font-family:'Poppins',system-ui,Segoe UI,Roboto,Arial,sans-serif;background
 <script>
 /* ========== Año ========== */
 document.getElementById('year').textContent = new Date().getFullYear();
+
+/* ========== Estados globales ========== */
+const MOTION_KEY = 'motionPref'; // 'on' | 'off'
+let motionOff = false;           // runtime flag (canvas)
 
 /* ========== Estrellas ========== */
 (function(){
@@ -267,17 +270,47 @@ document.getElementById('year').textContent = new Date().getFullYear();
 /* ========== Modal Solicitar CV ========== */
 (function(){
   const btn=document.getElementById('requestCVBtn');
-  const modal=document.getElementById('cvModal');
-  const form=document.getElementById('cvForm');
   const statusEl=document.getElementById('cvStatus');
   const KEY='cvRequestedAt';
+
+  // inyecta modal si no existe
+  if(!document.getElementById('cvModal')){
+    const tpl = document.createElement('div');
+    tpl.innerHTML = `
+    <div class="modal" id="cvModal" aria-hidden="true" role="dialog" aria-labelledby="cvTitle">
+      <div class="modal__backdrop" data-close></div>
+      <div class="modal__panel" role="document">
+        <h3 id="cvTitle" class="modal__title" data-t="cvTitle">Solicitar CV</h3>
+        <p class="modal__text" data-t="cvText">Déjame tus datos y te lo envío por email.</p>
+        <form id="cvForm" class="modal__form">
+          <label class="modal__label" data-t="cvName">Nombre
+            <input class="modal__input" name="name" required placeholder="Tu nombre">
+          </label>
+          <label class="modal__label" data-t="cvEmail">Email
+            <input class="modal__input" name="email" type="email" required placeholder="tucorreo@ejemplo.com">
+          </label>
+          <label class="modal__label" data-t="cvMsg">Mensaje (opcional)
+            <textarea class="modal__input" name="msg" rows="3" placeholder="Puesto objetivo o contexto"></textarea>
+          </label>
+          <div class="modal__actions">
+            <button type="submit" class="btn" data-t="cvSend">Enviar solicitud</button>
+            <button type="button" class="btn btn--ghost" data-close data-t="cvCancel">Cancelar</button>
+          </div>
+        </form>
+      </div>
+    </div>`;
+    document.body.appendChild(tpl.firstElementChild);
+  }
+
+  const modal=document.getElementById('cvModal');
+  const form=document.getElementById('cvForm');
+  const firstInput=modal?.querySelector('input[name="name"]');
 
   const prev=localStorage.getItem(KEY);
   if(prev){ const d=new Date(prev); statusEl.textContent=`CV solicitado el ${d.toLocaleDateString()} ${d.toLocaleTimeString()}`;}
 
-  const firstInput=modal?.querySelector('input[name="name"]');
-  const open = () => { if(!modal) return; modal.classList.add('is-open'); modal.setAttribute('aria-hidden','false'); setTimeout(()=>firstInput?.focus(),0); };
-  const close= () => { if(!modal) return; modal.classList.remove('is-open'); modal.setAttribute('aria-hidden','true'); btn?.focus(); };
+  const open = () => { modal.classList.add('is-open'); modal.setAttribute('aria-hidden','false'); setTimeout(()=>firstInput?.focus(),0); };
+  const close= () => { modal.classList.remove('is-open'); modal.setAttribute('aria-hidden','true'); btn?.focus(); };
 
   btn?.addEventListener('click',open);
   modal?.addEventListener('click',e=>{ if (e.target.hasAttribute?.('data-close')) close(); });
@@ -310,30 +343,16 @@ Gracias.`);
 
 /* ========== Textos ES/EN ========== */
 const T = {
-  es:{
-    navHome:"Inicio", navAbout:"Sobre mí", navWork:"Experiencia", navSkills:"Competencias", navContact:"Contacto",
+  es:{ navHome:"Inicio", navAbout:"Sobre mí", navWork:"Experiencia", navSkills:"Competencias", navContact:"Contacto",
     aboutTitle:"Sobre mí",
     aboutText:"Soy apasionado en todo lo que hago. Tengo 24 años y me mueven la curiosidad y la mejora continua: analizar, estructurar y administrar datos. Desde mi adolescencia he dedicado mi tiempo libre a la escritura, la música y la tecnología, de forma completamente autodidacta. Del mismo modo que mis habilidades técnico-creativas son tangibles, mi experiencia y formación en logística han fortalecido mi capacidad de organización, gestión y resolución práctica.",
     badges:["Excel avanzado","Google Workspace","ERP / SAP (básico)","Data entry","Atención al cliente","Coordinación logística"],
-    workTitle:"Experiencia & Servicios",
-    recentExp:"Experiencia reciente",
-    expList:[
-      "Logística y calidad (DHL): recepción, control de stock y trazabilidad.",
-      "Gestión de incidencias y registro en Excel / ERP (entornos Honeywell).",
-      "Soporte administrativo: documentación, correo bilingüe, agendas."
-    ],
+    workTitle:"Experiencia & Servicios", recentExp:"Experiencia reciente",
+    expList:["Logística y calidad (DHL): recepción, control de stock y trazabilidad.","Gestión de incidencias y registro en Excel / ERP (entornos Honeywell).","Soporte administrativo: documentación, correo bilingüe, agendas."],
     services:"Servicios",
-    svcList:[
-      "Data entry y soporte administrativo remoto.",
-      "Reporting operativo y hojas de cálculo.",
-      "Coordinación de procesos y de equipos."
-    ],
+    svcList:["Data entry y soporte administrativo remoto.","Reporting operativo y hojas de cálculo.","Coordinación de procesos y de equipos."],
     offerTitle:"Qué puedo aportar",
-    offerList:[
-      "Excel avanzado (tablas dinámicas, fórmulas) y reporting.",
-      "Mecanografía +100 WPM y registro preciso de datos.",
-      "Comunicación profesional en español e inglés (C1)."
-    ],
+    offerList:["Excel avanzado (tablas dinámicas, fórmulas) y reporting.","Mecanografía +100 WPM y registro preciso de datos.","Comunicación profesional en español e inglés (C1)."],
     skillsTitle:"Competencias",
     skillsCats:[
       {title:"🖥️ Ofimática y gestión digital", items:[
@@ -377,37 +396,21 @@ const T = {
         "Entorno de almacén y soporte administrativo"
       ]}
     ],
-    contactTitle:"Contacto",
-    contactText:"¿Colaboramos? Te respondo en el mismo día laboral.",
+    contactTitle:"Contacto", contactText:"¿Colaboramos? Te respondo en el mismo día laboral.",
     btnTalk:"Hablemos", btnRequest:"Solicitar CV", btnEmail:"Enviar email", btnLinkedIn:"LinkedIn",
     cvTitle:"Solicitar CV", cvText:"Déjame tus datos y te lo envío por email.",
-    cvName:"Nombre", cvEmail:"Email", cvMsg:"Mensaje (opcional)",
-    cvSend:"Enviar solicitud", cvCancel:"Cancelar"
+    cvName:"Nombre", cvEmail:"Email", cvMsg:"Mensaje (opcional)", cvSend:"Enviar solicitud", cvCancel:"Cancelar"
   },
-  en:{
-    navHome:"Home", navAbout:"About", navWork:"Experience", navSkills:"Skills", navContact:"Contact",
+  en:{ navHome:"Home", navAbout:"About", navWork:"Experience", navSkills:"Skills", navContact:"Contact",
     aboutTitle:"About me",
     aboutText:"I’m passionate about everything I do. I’m 24 years old, driven by curiosity and continuous improvement — I like to analyze, structure, and manage data. Since my teenage years, I’ve devoted my free time to writing, music, and technology, learning on my own. Just as my technical and creative skills are tangible, my background and experience in logistics have strengthened my sense of organization, management, and practical problem-solving.",
     badges:["Advanced Excel","Google Workspace","ERP / SAP (basic)","Data entry","Customer support","Logistics coordination"],
-    workTitle:"Experience & Services",
-    recentExp:"Recent experience",
-    expList:[
-      "Logistics & quality (DHL): receiving, stock control and traceability.",
-      "Issue management and logging in Excel / ERP (Honeywell environments).",
-      "Admin support: documentation, bilingual email, schedules."
-    ],
+    workTitle:"Experience & Services", recentExp:"Recent experience",
+    expList:["Logistics & quality (DHL): receiving, stock control and traceability.","Issue management and logging in Excel / ERP (Honeywell environments).","Admin support: documentation, bilingual email, schedules."],
     services:"Services",
-    svcList:[
-      "Data entry & remote admin support.",
-      "Operational reporting and spreadsheets.",
-      "Process and team coordination."
-    ],
+    svcList:["Data entry & remote admin support.","Operational reporting and spreadsheets.","Process and team coordination."],
     offerTitle:"What I bring",
-    offerList:[
-      "Advanced Excel (pivot tables, formulas) and reporting.",
-      "100+ WPM typing with high-accuracy data entry.",
-      "Professional communication in Spanish and English (C1)."
-    ],
+    offerList:["Advanced Excel (pivot tables, formulas) and reporting.","100+ WPM typing with high-accuracy data entry.","Professional communication in Spanish and English (C1)."],
     skillsTitle:"Skills",
     skillsCats:[
       {title:"🖥️ Office & digital management", items:[
@@ -451,12 +454,10 @@ const T = {
         "Warehouse environment and admin support"
       ]}
     ],
-    contactTitle:"Contact",
-    contactText:"Let's collaborate! I usually reply the same business day.",
+    contactTitle:"Contact", contactText:"Let's collaborate! I usually reply the same business day.",
     btnTalk:"Let's talk", btnRequest:"Request CV", btnEmail:"Send email", btnLinkedIn:"LinkedIn",
     cvTitle:"Request CV", cvText:"Leave your details and I'll send it by email.",
-    cvName:"Name", cvEmail:"Email", cvMsg:"Message (optional)",
-    cvSend:"Send request", cvCancel:"Cancel"
+    cvName:"Name", cvEmail:"Email", cvMsg:"Message (optional)", cvSend:"Send request", cvCancel:"Cancel"
   }
 };
 
@@ -519,7 +520,7 @@ function applyLang(lang){
   document.querySelector('[data-t="btnEmail"]').textContent=t.btnEmail;
   document.querySelector('[data-t="btnLinkedIn"]').textContent=t.btnLinkedIn;
 
-  // Modal (si está presente en el DOM)
+  // Modal (si está presente)
   const m=document.getElementById('cvModal');
   if(m){
     document.querySelector('[data-t="cvTitle"]').textContent=t.cvTitle;
@@ -534,42 +535,42 @@ function applyLang(lang){
     document.querySelector('textarea[name="msg"]').placeholder = (lang==='en'?'Target role or context':'Puesto objetivo o contexto');
   }
 }
-applyLang('es');
 
-/* ========== Cambio de idioma ========== */
+/* ========== Idioma inicial ========== */
+applyLang('es');
 document.getElementById("langSwitcher").addEventListener("change",(e)=>applyLang(e.target.value));
 
-/* ========== Modal (estructura en DOM para que funcione) ========== */
-(function ensureModal(){
-  if(document.getElementById('cvModal')) return;
-  const tpl = document.createElement('div');
-  tpl.innerHTML = `
-  <div class="modal" id="cvModal" aria-hidden="true" role="dialog" aria-labelledby="cvTitle">
-    <div class="modal__backdrop" data-close></div>
-    <div class="modal__panel" role="document">
-      <h3 id="cvTitle" class="modal__title" data-t="cvTitle">Solicitar CV</h3>
-      <p class="modal__text" data-t="cvText">Déjame tus datos y te lo envío por email.</p>
-      <form id="cvForm" class="modal__form">
-        <label class="modal__label" data-t="cvName">Nombre
-          <input class="modal__input" name="name" required placeholder="Tu nombre">
-        </label>
-        <label class="modal__label" data-t="cvEmail">Email
-          <input class="modal__input" name="email" type="email" required placeholder="tucorreo@ejemplo.com">
-        </label>
-        <label class="modal__label" data-t="cvMsg">Mensaje (opcional)
-          <textarea class="modal__input" name="msg" rows="3" placeholder="Puesto objetivo o contexto"></textarea>
-        </label>
-        <div class="modal__actions">
-          <button type="submit" class="btn" data-t="cvSend">Enviar solicitud</button>
-          <button type="button" class="btn btn--ghost" data-close data-t="cvCancel">Cancelar</button>
-        </div>
-      </form>
-    </div>
-  </div>`;
-  document.body.appendChild(tpl.firstElementChild);
+/* ========== Preferencia de animación (ON/OFF) ========== */
+(function(){
+  const btn = document.getElementById('animToggle');
+  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let saved = localStorage.getItem(MOTION_KEY); // 'on' | 'off' | null
+
+  // Regla: si el usuario pidió reduce, arrancamos OFF salvo que haya preferencia explícita en localStorage.
+  let startOff = prefersReduced && saved !== 'on';
+  if(saved === 'off') startOff = true;
+
+  function apply(off){
+    motionOff = !!off; // afecta al canvas
+    document.body.dataset.motion = off ? 'off' : 'on';
+    btn.setAttribute('aria-pressed', off ? 'true' : 'false');
+    btn.textContent = `Animación: ${off ? 'OFF' : 'ON'}`;
+    localStorage.setItem(MOTION_KEY, off ? 'off' : 'on');
+  }
+
+  apply(startOff);
+
+  // Si el sistema cambia reduce-motion en caliente
+  window.matchMedia('(prefers-reduced-motion: reduce)').addEventListener('change', e=>{
+    const sysOff = e.matches;
+    const userPref = localStorage.getItem(MOTION_KEY); // respeta elección explícita
+    if(userPref === null){ apply(sysOff); }
+  });
+
+  btn.addEventListener('click', ()=> apply(!motionOff));
 })();
 
-/* ========== 2 líneas (cometas) ========== */
+/* ========== Canvas: 2 cometas ========== */
 (function(){
   const canvas = document.getElementById('starLinkCanvas');
   const starsWrap = document.querySelector('.stars');
@@ -579,20 +580,10 @@ document.getElementById("langSwitcher").addEventListener("change",(e)=>applyLang
   let W=0, H=0, DPR = Math.max(1, Math.min(2, window.devicePixelRatio||1));
   const neonLine = getComputedStyle(document.documentElement).getPropertyValue('--neonline').trim() || '#ff1744';
 
-  // Canvas del tamaño del documento (no solo viewport)
   function resize(){
-    const Wcss = Math.max(
-      document.documentElement.scrollWidth,
-      document.documentElement.clientWidth,
-      window.innerWidth
-    );
-    const Hcss = Math.max(
-      document.documentElement.scrollHeight,
-      document.documentElement.clientHeight,
-      window.innerHeight
-    );
-    W = Math.round(Wcss);
-    H = Math.round(Hcss);
+    const Wcss = Math.max(document.documentElement.scrollWidth, document.documentElement.clientWidth, window.innerWidth);
+    const Hcss = Math.max(document.documentElement.scrollHeight, document.documentElement.clientHeight, window.innerHeight);
+    W = Math.round(Wcss); H = Math.round(Hcss);
     canvas.width = Math.round(W * DPR);
     canvas.height = Math.round(H * DPR);
     canvas.style.width = W+'px';
@@ -603,7 +594,6 @@ document.getElementById("langSwitcher").addEventListener("change",(e)=>applyLang
   resize();
   window.addEventListener('resize', resize);
 
-  // Lee posiciones de .star
   function getStarPoints(){
     const nodes = starsWrap.querySelectorAll('.star');
     const pts = [];
@@ -619,20 +609,12 @@ document.getElementById("langSwitcher").addEventListener("change",(e)=>applyLang
   let points = getStarPoints();
 
   // ===== Parámetros =====
-  const RAYS = 2;                 // nº de cometas
-  const SPEED = 650;              // px/s
-  const DUR_MIN = 0.36, DUR_MAX = 1.5;
-  const MIN_DIST = 40;
-  const TABU_LEN = 3;
-  const ANGLE_MIN = Math.PI/6;         // 30º
-  const ANGLE_MAX = (5*Math.PI)/6;     // 150º
-  const BASE_WIDTH = 1.2;
-  const TRAIL_LEN = 36;
-  const TRAIL_FADE = 0.9;
-  const CURVE_MIN = 14, CURVE_MAX = 30;
-  const K_NEAREST = 15;                // K-ésima estrella válida
-  const OFFSCREEN_TIMEOUT = 1200;      // ms fuera de viewport
-  const VIEW_MARGIN = 200;
+  const RAYS = 2, SPEED = 650;
+  const DUR_MIN = 0.36, DUR_MAX = 1.5, MIN_DIST = 40, TABU_LEN = 3;
+  const ANGLE_MIN = Math.PI/6, ANGLE_MAX = (5*Math.PI)/6;
+  const BASE_WIDTH = 1.2, TRAIL_LEN = 36, TRAIL_FADE = 0.9;
+  const CURVE_MIN = 14, CURVE_MAX = 30, K_NEAREST = 15;
+  const OFFSCREEN_TIMEOUT = 1200, VIEW_MARGIN = 200;
   const EASE = t => t<.5 ? 4*t*t*t : 1 - Math.pow(-2*t+2,3)/2;
 
   const norm = (vx,vy)=>{ const m=Math.hypot(vx,vy)||1; return [vx/m, vy/m]; };
@@ -644,28 +626,17 @@ document.getElementById("langSwitcher").addEventListener("change",(e)=>applyLang
     return { left:-VIEW_MARGIN, right:innerWidth+VIEW_MARGIN, top:top-VIEW_MARGIN, bottom:bottom+VIEW_MARGIN };
   };
   const isVisiblePoint = (p,vp)=> p.x>=vp.left && p.x<=vp.right && p.y>=vp.top && p.y<=vp.bottom;
-  const visibleIndices = (vp)=>{
-    const idx=[]; for(let i=0;i<points.length;i++){ if(isVisiblePoint(points[i], vp)) idx.push(i); }
-    return idx;
-  };
+  const visibleIndices = (vp)=>{ const idx=[]; for(let i=0;i<points.length;i++){ if(isVisiblePoint(points[i], vp)) idx.push(i); } return idx; };
 
-  // ÚNICA versión de pickKthNearest (evita duplicados)
   function pickKthNearest(fromIdx, prevDir, tabu, candidateIdx){
     const from = points[fromIdx];
-    const baseIdx = candidateIdx && candidateIdx.length
-      ? candidateIdx.filter(i => i !== fromIdx)
-      : [...Array(points.length).keys()].filter(i => i !== fromIdx);
-
-    const sorted = baseIdx
-      .map(i => ({ i, d2: (points[i].x-from.x)**2 + (points[i].y-from.y)**2 }))
-      .sort((a,b)=>a.d2-b.d2);
-
+    const baseIdx = candidateIdx && candidateIdx.length ? candidateIdx.filter(i => i !== fromIdx) : [...Array(points.length).keys()].filter(i => i !== fromIdx);
+    const sorted = baseIdx.map(i => ({ i, d2: (points[i].x-from.x)**2 + (points[i].y-from.y)**2 })).sort((a,b)=>a.d2-b.d2);
     const valid = [];
     for (const cand of sorted){
       if (tabu.has(cand.i)) continue;
       const dx = points[cand.i].x - from.x, dy = points[cand.i].y - from.y;
       const dist = Math.hypot(dx,dy); if (dist < MIN_DIST) continue;
-
       if (prevDir){
         const m = Math.hypot(dx,dy) || 1, vx = dx/m, vy = dy/m;
         const dot = Math.max(-1, Math.min(1, prevDir[0]*vx + prevDir[1]*vy));
@@ -674,7 +645,6 @@ document.getElementById("langSwitcher").addEventListener("change",(e)=>applyLang
       }
       valid.push(cand.i);
     }
-
     if (valid.length >= K_NEAREST) return valid[K_NEAREST - 1];
     if (valid.length > 0) return valid[valid.length - 1];
     return sorted.length ? sorted[0].i : fromIdx;
@@ -683,17 +653,7 @@ document.getElementById("langSwitcher").addEventListener("change",(e)=>applyLang
   function makeRay(){
     points = getStarPoints();
     const startIdx = Math.floor(Math.random()*points.length);
-    return {
-      fromIdx: startIdx,
-      toIdx: null,
-      t0: performance.now(),
-      dur: 1,
-      prevDir: null,
-      tabu: new Set(),
-      trail: [],
-      curveAmp: rr(CURVE_MIN, CURVE_MAX) * sgn(),
-      offStart: 0
-    };
+    return { fromIdx: startIdx, toIdx: null, t0: performance.now(), dur: 1, prevDir: null, tabu: new Set(), trail: [], curveAmp: rr(CURVE_MIN, CURVE_MAX) * sgn(), offStart: 0 };
   }
 
   function startHop(ray){
@@ -703,11 +663,9 @@ document.getElementById("langSwitcher").addEventListener("change",(e)=>applyLang
         const arr=[...ray.tabu]; arr.shift(); ray.tabu=new Set(arr);
       }
     }
-
     const vp = viewport();
     let cand = visibleIndices(vp);
-    if (cand.length < 30) cand = null; // si hay pocas visibles, usa todas
-
+    if (cand.length < 30) cand = null;
     const nextIdx = pickKthNearest(ray.fromIdx, ray.prevDir, ray.tabu, cand);
     ray.toIdx = nextIdx;
 
@@ -739,7 +697,6 @@ document.getElementById("langSwitcher").addEventListener("change",(e)=>applyLang
   }
 
   function drawComet(ray, head){
-    // cola
     const L = ray.trail.length;
     for(let i=1;i<L;i++){
       const a = ray.trail[i-1], b = ray.trail[i];
@@ -756,7 +713,6 @@ document.getElementById("langSwitcher").addEventListener("change",(e)=>applyLang
       ctx.stroke();
       ctx.restore();
     }
-    // cabeza
     const last = ray.trail[L-2] || head;
     ctx.save();
     ctx.strokeStyle = neonLine;
@@ -779,22 +735,24 @@ document.getElementById("langSwitcher").addEventListener("change",(e)=>applyLang
   let rays = Array.from({length:RAYS}, makeRay);
   rays.forEach(r => startHop(r));
 
-  let reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  window.matchMedia('(prefers-reduced-motion: reduce)').addEventListener('change', e=> reduced = e.matches);
+  function loop(now){
+    // Si motionOff o body[data-motion="off"], no dibujamos (y mantenemos el frame vivo por si reactivas)
+    if (motionOff || document.body.dataset.motion === 'off'){
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+      requestAnimationFrame(loop);
+      return;
+    }
 
-  function tick(now){
-    if (reduced) { ctx.clearRect(0,0,W,H); return; }
-    points = getStarPoints();       // por si cambia layout
-    ctx.clearRect(0,0,W,H);
+    points = getStarPoints();
+    ctx.clearRect(0,0,canvas.width,canvas.height);
 
     const vpNow = viewport();
 
     for (const ray of rays){
       const elapsed = (now - ray.t0)/1000;
       const prog = Math.min(1, elapsed / ray.dur);
-      const head = getPos(ray, prog);   // única declaración
+      const head = getPos(ray, prog);
 
-      // anti-fuga: reenganche si sale demasiado del viewport
       if (!isVisiblePoint(head, vpNow)) {
         if (!ray.offStart) ray.offStart = now;
       } else {
@@ -827,10 +785,13 @@ document.getElementById("langSwitcher").addEventListener("change",(e)=>applyLang
         advance(ray);
       }
     }
-    requestAnimationFrame(tick);
+    requestAnimationFrame(loop);
   }
-  requestAnimationFrame(tick);
+  requestAnimationFrame(loop);
 })();
+
+/* ========== Cambio de idioma ========== */
+document.getElementById("langSwitcher").addEventListener("change",(e)=>applyLang(e.target.value));
 </script>
 </body>
 </html>
