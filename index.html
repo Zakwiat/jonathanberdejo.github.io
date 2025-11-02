@@ -23,11 +23,15 @@ body{font-family:'Poppins',system-ui,Segoe UI,Roboto,Arial,sans-serif;background
 .stars{position:absolute;inset:0;pointer-events:none}
 .star{position:absolute;width:2px;height:2px;border-radius:50%;background:#fff;opacity:0;filter:drop-shadow(0 0 6px rgba(255,255,255,.6));animation:twinkle var(--tw,3.5s) ease-in-out infinite var(--td,0s);transform:scale(var(--sc,1))}
 @keyframes twinkle{0%,100%{opacity:0}10%{opacity:.9}50%{opacity:.3}90%{opacity:1}}
-/* (opcional) líneas horizontales suaves detrás */
+/* líneas horizontales suaves detrás */
 .neon-lines{position:absolute;inset:0;pointer-events:none}
 .beam{position:absolute;left:-60vw;width:80vw;height:4px;opacity:.18;filter:blur(1.5px) brightness(1.2);mix-blend-mode:screen;transform:translateX(-40vw);background:linear-gradient(90deg,transparent 0%, var(--neon) 40%, var(--neon) 60%, transparent 100%);animation:beamX var(--s,2.2s) linear infinite}
 .b1{top:22%;--s:1.8s}.b2{top:38%;--s:2.1s}.b3{top:54%;--s:2.4s}.b4{top:70%;--s:2.8s}.b5{top:86%;--s:3.2s}
 @keyframes beamX{from{transform:translateX(-40vw)}to{transform:translateX(120vw)}}
+/* Canvas de cometas sobre las estrellas, detrás del contenido */
+#starLinkCanvas{
+  position:absolute; inset:0; width:100%; height:100%; display:block;
+}
 /* ===== Content on top ===== */
 .nav,.hero,.section,.footer,.hud-nav,.modal{position:relative;z-index:5}
 .hero{min-height:100vh;display:grid;place-items:center;text-align:center}
@@ -210,11 +214,15 @@ document.getElementById('year').textContent = new Date().getFullYear();
   const wrap = document.querySelector('.stars'); if(!wrap) return;
   const isMobile = matchMedia('(max-width: 900px)').matches; const N = isMobile ? 120 : 220;
   const frag = document.createDocumentFragment();
-  for (let i=0;i<N;i++){ const s=document.createElement('i'); s.className='star';
-    s.style.left=(Math.random()*100).toFixed(3)+'%'; s.style.top=(Math.random()*100).toFixed(3)+'%';
+  for (let i=0;i<N;i++){
+    const s=document.createElement('i'); s.className='star';
+    s.style.left=(Math.random()*100).toFixed(3)+'%';
+    s.style.top=(Math.random()*100).toFixed(3)+'%';
     s.style.setProperty('--sc',(0.6+Math.random()*1.8).toFixed(2));
     s.style.setProperty('--tw',(1.8+Math.random()*4.8).toFixed(2)+'s');
-    s.style.setProperty('--td',(Math.random()*6).toFixed(2)+'s'); frag.appendChild(s); }
+    s.style.setProperty('--td',(Math.random()*6).toFixed(2)+'s');
+    frag.appendChild(s);
+  }
   wrap.appendChild(frag);
 })();
 
@@ -540,7 +548,7 @@ document.getElementById("langSwitcher").addEventListener("change",(e)=>applyLang
   document.body.appendChild(tpl.firstElementChild);
 })();
 
-/* ========== 2 líneas: “segunda estrella más cercana” + cola de cometa y curva suave ========== */
+/* ========== 2 líneas (cometas) ========== */
 (function(){
   const canvas = document.getElementById('starLinkCanvas');
   const starsWrap = document.querySelector('.stars');
@@ -550,7 +558,7 @@ document.getElementById("langSwitcher").addEventListener("change",(e)=>applyLang
   let W=0, H=0, DPR = Math.max(1, Math.min(2, window.devicePixelRatio||1));
   const neonLine = getComputedStyle(document.documentElement).getPropertyValue('--neonline').trim() || '#ff1744';
 
-  // Canvas del tamaño del documento (no solo del viewport)
+  // Canvas del tamaño del documento (no solo viewport)
   function resize(){
     const Wcss = Math.max(
       document.documentElement.scrollWidth,
@@ -574,7 +582,7 @@ document.getElementById("langSwitcher").addEventListener("change",(e)=>applyLang
   resize();
   window.addEventListener('resize', resize);
 
-  // Lee posiciones de las estrellas (.star) que ya generamos en % (left/top)
+  // Lee posiciones de .star
   function getStarPoints(){
     const nodes = starsWrap.querySelectorAll('.star');
     const pts = [];
@@ -591,108 +599,65 @@ document.getElementById("langSwitcher").addEventListener("change",(e)=>applyLang
 
   // ===== Parámetros =====
   const RAYS = 2;                 // nº de cometas
-  const SPEED = 650;              // px/s (rápido/fluido)
+  const SPEED = 650;              // px/s
   const DUR_MIN = 0.36, DUR_MAX = 1.5;
-  const MIN_DIST = 40;            // evita micro saltos
-  const TABU_LEN = 3;             // memoria para no repetir
-  const ANGLE_MIN = Math.PI/6;    // 30º mínimo
-  const ANGLE_MAX = (5*Math.PI)/6;// 150º máximo
-  const BASE_WIDTH = 1.2;         // grosor fino
-  const TRAIL_LEN = 36;           // cola del cometa (puntos)
-  const TRAIL_FADE = 0.9;         // cuánto se desvanece la cola
-  const CURVE_MIN = 14, CURVE_MAX = 30; // curvatura lateral
-  const EASE = t => t<.5 ? 4*t*t*t : 1 - Math.pow(-2*t+2,3)/2; // easing cúbico
+  const MIN_DIST = 40;
+  const TABU_LEN = 3;
+  const ANGLE_MIN = Math.PI/6;         // 30º
+  const ANGLE_MAX = (5*Math.PI)/6;     // 150º
+  const BASE_WIDTH = 1.2;
+  const TRAIL_LEN = 36;
+  const TRAIL_FADE = 0.9;
+  const CURVE_MIN = 14, CURVE_MAX = 30;
+  const K_NEAREST = 15;                // K-ésima estrella válida
+  const OFFSCREEN_TIMEOUT = 1200;      // ms fuera de viewport
+  const VIEW_MARGIN = 200;
+  const EASE = t => t<.5 ? 4*t*t*t : 1 - Math.pow(-2*t+2,3)/2;
 
-  function norm(vx,vy){ const m=Math.hypot(vx,vy)||1; return [vx/m, vy/m]; }
-  function randRange(a,b){ return a + Math.random()*(b-a); }
-  function sign(){ return Math.random()<0.5 ? -1 : 1; }
+  const norm = (vx,vy)=>{ const m=Math.hypot(vx,vy)||1; return [vx/m, vy/m]; };
+  const rr   = (a,b)=> a + Math.random()*(b-a);
+  const sgn  = ()=> Math.random()<0.5 ? -1 : 1;
 
-  // Elige la **segunda estrella más cercana** válida (no tabu, respeta ángulo)
-  // --- Parámetro: K-ésima más cercana ---
-const K_NEAREST = 15; // <- tu valor actual
-
-function pickKthNearest(fromIdx, prevDir, tabu, candidateIdx){
-  const from = points[fromIdx];
-  const baseIdx = candidateIdx && candidateIdx.length
-    ? candidateIdx.filter(i => i !== fromIdx)
-    : [...Array(points.length).keys()].filter(i => i !== fromIdx);
-
-  const sorted = baseIdx
-    .map(i => ({ i, d2: (points[i].x-from.x)**2 + (points[i].y-from.y)**2 }))
-    .sort((a,b)=>a.d2-b.d2);
-
-  const valid = [];
-  for (const cand of sorted){
-    if (tabu.has(cand.i)) continue;
-    const dx = points[cand.i].x - from.x, dy = points[cand.i].y - from.y;
-    const dist = Math.hypot(dx,dy); if (dist < MIN_DIST) continue;
-
-    if (prevDir){
-      const m = Math.hypot(dx,dy) || 1, vx = dx/m, vy = dy/m;
-      const dot = Math.max(-1, Math.min(1, prevDir[0]*vx + prevDir[1]*vy));
-      const ang = Math.acos(dot);
-      if (ang < ANGLE_MIN || ang > ANGLE_MAX) continue;
-    }
-    valid.push(cand.i);
-  }
-
-  if (valid.length >= K_NEAREST) return valid[K_NEAREST - 1];
-  if (valid.length > 0) return valid[valid.length - 1];
-  return sorted.length ? sorted[0].i : fromIdx;
-}
-
-
-// Devuelve la K-ésima estrella más cercana válida (o la mejor posible si hay menos)
-function pickKthNearest(fromIdx, prevDir, tabu){
-  const from = points[fromIdx];
-  const sorted = points
-    .map((p,i)=>({i, d2:(p.x-from.x)**2 + (p.y-from.y)**2}))
-    .filter(o=>o.i!==fromIdx)
-    .sort((a,b)=>a.d2-b.d2);
-
-  const valid = [];
-  for (const cand of sorted){
-    if (tabu.has(cand.i)) continue;
-    const dx = points[cand.i].x - from.x, dy = points[cand.i].y - from.y;
-    const dist = Math.hypot(dx,dy); if (dist < MIN_DIST) continue;
-
-    if (prevDir){
-      const [ux,uy] = prevDir;
-      const m = Math.hypot(dx,dy) || 1;
-      const vx = dx/m, vy = dy/m;
-      const dot = Math.max(-1, Math.min(1, ux*vx + uy*vy));
-      const ang = Math.acos(dot);
-      if (ang < ANGLE_MIN || ang > ANGLE_MAX) continue;
-    }
-    valid.push(cand.i);
-  }
-
-  if (valid.length >= K_NEAREST) return valid[K_NEAREST - 1];
-  if (valid.length > 0) return valid[valid.length - 1];
-  return sorted.length ? sorted[0].i : fromIdx;
-}
-
-// --- Visibilidad en pantalla ---
-const VIEW_MARGIN = 200;        // margen extra alrededor del viewport
-const VISIBLE_MIN = 30;         // si hay menos visibles, usamos todas
-const OFFSCREEN_TIMEOUT = 1200; // ms fuera de pantalla antes de re-enganchar
-
-function viewport(){
-  const top = window.scrollY, bottom = top + innerHeight;
-  return {
-    left: -VIEW_MARGIN,
-    right: innerWidth + VIEW_MARGIN,
-    top: top - VIEW_MARGIN,
-    bottom: bottom + VIEW_MARGIN
+  const viewport = ()=> {
+    const top = window.scrollY, bottom = top + innerHeight;
+    return { left:-VIEW_MARGIN, right:innerWidth+VIEW_MARGIN, top:top-VIEW_MARGIN, bottom:bottom+VIEW_MARGIN };
   };
-}
-function isVisiblePoint(p, vp){
-  return p.x >= vp.left && p.x <= vp.right && p.y >= vp.top && p.y <= vp.bottom;
-}
-function visibleIndices(vp){
-  const idx=[]; for(let i=0;i<points.length;i++){ if(isVisiblePoint(points[i], vp)) idx.push(i); }
-  return idx;
-}
+  const isVisiblePoint = (p,vp)=> p.x>=vp.left && p.x<=vp.right && p.y>=vp.top && p.y<=vp.bottom;
+  const visibleIndices = (vp)=>{
+    const idx=[]; for(let i=0;i<points.length;i++){ if(isVisiblePoint(points[i], vp)) idx.push(i); }
+    return idx;
+  };
+
+  // ÚNICA versión de pickKthNearest (evita duplicados)
+  function pickKthNearest(fromIdx, prevDir, tabu, candidateIdx){
+    const from = points[fromIdx];
+    const baseIdx = candidateIdx && candidateIdx.length
+      ? candidateIdx.filter(i => i !== fromIdx)
+      : [...Array(points.length).keys()].filter(i => i !== fromIdx);
+
+    const sorted = baseIdx
+      .map(i => ({ i, d2: (points[i].x-from.x)**2 + (points[i].y-from.y)**2 }))
+      .sort((a,b)=>a.d2-b.d2);
+
+    const valid = [];
+    for (const cand of sorted){
+      if (tabu.has(cand.i)) continue;
+      const dx = points[cand.i].x - from.x, dy = points[cand.i].y - from.y;
+      const dist = Math.hypot(dx,dy); if (dist < MIN_DIST) continue;
+
+      if (prevDir){
+        const m = Math.hypot(dx,dy) || 1, vx = dx/m, vy = dy/m;
+        const dot = Math.max(-1, Math.min(1, prevDir[0]*vx + prevDir[1]*vy));
+        const ang = Math.acos(dot);
+        if (ang < ANGLE_MIN || ang > ANGLE_MAX) continue;
+      }
+      valid.push(cand.i);
+    }
+
+    if (valid.length >= K_NEAREST) return valid[K_NEAREST - 1];
+    if (valid.length > 0) return valid[valid.length - 1];
+    return sorted.length ? sorted[0].i : fromIdx;
+  }
 
   function makeRay(){
     points = getStarPoints();
@@ -705,7 +670,8 @@ function visibleIndices(vp){
       prevDir: null,
       tabu: new Set(),
       trail: [],
-      curveAmp: randRange(CURVE_MIN, CURVE_MAX) * sign(),
+      curveAmp: rr(CURVE_MIN, CURVE_MAX) * sgn(),
+      offStart: 0
     };
   }
 
@@ -716,12 +682,12 @@ function visibleIndices(vp){
         const arr=[...ray.tabu]; arr.shift(); ray.tabu=new Set(arr);
       }
     }
-   const vp = viewport();
-let cand = visibleIndices(vp);
-if (cand.length < VISIBLE_MIN) cand = null; // fallback a todas
-const nextIdx = pickKthNearest(ray.fromIdx, ray.prevDir, ray.tabu, cand);
 
+    const vp = viewport();
+    let cand = visibleIndices(vp);
+    if (cand.length < 30) cand = null; // si hay pocas visibles, usa todas
 
+    const nextIdx = pickKthNearest(ray.fromIdx, ray.prevDir, ray.tabu, cand);
     ray.toIdx = nextIdx;
 
     const a = points[ray.fromIdx], b = points[ray.toIdx];
@@ -729,8 +695,7 @@ const nextIdx = pickKthNearest(ray.fromIdx, ray.prevDir, ray.tabu, cand);
     const rawDur = dist / SPEED;
     ray.dur = Math.max(DUR_MIN, Math.min(DUR_MAX, rawDur));
     ray.t0 = performance.now();
-
-    ray.curveAmp = randRange(CURVE_MIN, CURVE_MAX) * sign();
+    ray.curveAmp = rr(CURVE_MIN, CURVE_MAX) * sgn();
   }
 
   function advance(ray){
@@ -740,13 +705,12 @@ const nextIdx = pickKthNearest(ray.fromIdx, ray.prevDir, ray.tabu, cand);
     startHop(ray);
   }
 
-  // posición con curvatura (normal al trayecto)
   function getPos(ray, prog){
     const p = points[ray.fromIdx], q = points[ray.toIdx];
     const t = EASE(prog);
     const x = p.x + (q.x - p.x)*t;
     const y = p.y + (q.y - p.y)*t;
-    const [dx,dy] = [q.x - p.x, q.y - p.y];
+    const dx = q.x - p.x, dy = q.y - p.y;
     const [ux,uy] = norm(dx,dy);
     const nx = -uy, ny = ux;
     const offset = Math.sin(t*Math.PI) * ray.curveAmp;
@@ -802,40 +766,36 @@ const nextIdx = pickKthNearest(ray.fromIdx, ray.prevDir, ray.tabu, cand);
     points = getStarPoints();       // por si cambia layout
     ctx.clearRect(0,0,W,H);
 
+    const vpNow = viewport();
+
     for (const ray of rays){
       const elapsed = (now - ray.t0)/1000;
       const prog = Math.min(1, elapsed / ray.dur);
-      const head = getPos(ray, prog);
-      const head = getPos(ray, prog);
+      const head = getPos(ray, prog);   // única declaración
 
-// --- NUEVO BLOQUE ANTI-FUGA ---
-const vpNow = viewport();
-if (!isVisiblePoint(head, vpNow)) {
-  if (!ray.offStart) ray.offStart = now;
-} else {
-  ray.offStart = 0;
-}
+      // anti-fuga: reenganche si sale demasiado del viewport
+      if (!isVisiblePoint(head, vpNow)) {
+        if (!ray.offStart) ray.offStart = now;
+      } else {
+        ray.offStart = 0;
+      }
+      if (ray.offStart && (now - ray.offStart) > OFFSCREEN_TIMEOUT) {
+        const vis = visibleIndices(vpNow);
+        if (vis.length) {
+          let best = vis[0], bestD = Infinity;
+          for (const i of vis){
+            const d = (points[i].x - head.x)**2 + (points[i].y - head.y)**2;
+            if (d < bestD) { bestD = d; best = i; }
+          }
+          ray.fromIdx = best;
+          ray.prevDir = null;
+          ray.trail = [];
+          ray.offStart = 0;
+          startHop(ray);
+          continue;
+        }
+      }
 
-// Si lleva demasiado fuera, reengancha a la estrella visible más cercana
-if (ray.offStart && (now - ray.offStart) > OFFSCREEN_TIMEOUT) {
-  const vis = visibleIndices(vpNow);
-  if (vis.length) {
-    let best = vis[0], bestD = Infinity;
-    for (const i of vis){
-      const d = (points[i].x - head.x)**2 + (points[i].y - head.y)**2;
-      if (d < bestD) { bestD = d; best = i; }
-    }
-    ray.fromIdx = best;
-    ray.prevDir = null;
-    ray.trail = [];
-    ray.offStart = 0;
-    startHop(ray);
-    continue; // pasa al siguiente cometa este frame
-  }
-}
-
-
-      // actualiza cola
       ray.trail.push(head);
       if (ray.trail.length > TRAIL_LEN) ray.trail.shift();
 
