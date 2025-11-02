@@ -37,11 +37,10 @@ body{
 .neon-bg{
   position:fixed;
   inset:0;
-  z-index:0;                         /* fondo debajo del contenido                  */
+  z-index:0;
   overflow:hidden;
-  pointer-events:none;
-  background:
-    radial-gradient(1200px 600px at 50% 60%, rgba(0,234,255,.06), transparent 70%);
+  /* ⚠️ QUITA pointer-events:none; */
+  background: radial-gradient(1200px 600px at 50% 60%, rgba(0,234,255,.06), transparent 70%);
 }
 
 /* Viñeta estática (sin animación global) */
