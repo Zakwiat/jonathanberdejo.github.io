@@ -912,24 +912,23 @@ document.getElementById("langSwitcher").addEventListener("change",(e)=>applyLang
   });
 
   // swipe
-  let sx=0, dx=0, dragging=false;
-  root.addEventListener('pointerdown',e=>{ dragging=true; sx=e.clientX; root.setPointerCapture(e.pointerId); });
-  root.addEventListener('pointermove',e=>{
-    if(!dragging) return;
-    dx = e.clientX - sx;
-    track.style.transition='none';
-    track.style.transform=`translateX(calc(${-idx*100}% + ${dx}px))`;
-  });
-  const end=()=>{
-    if(!dragging) return;
-    dragging=false;
-    track.style.transition='';
-    if(Math.abs(dx)>60) go(idx + (dx<0?1:-1)); else update();
-    dx=0;
-  };
-  root.addEventListener('pointerup', end);
-  root.addEventListener('pointercancel', end);
-  root.addEventListener('pointerleave', end);
+prev.addEventListener('click', (e)=>{ e.stopPropagation(); go(idx-1); });
+next.addEventListener('click', (e)=>{ e.stopPropagation(); go(idx+1); });
+
+
+root.addEventListener('pointerdown', e=>{
+  if (e.target.closest('.carousel__btn')) return; // salir
+  dragging = true;
+  sx = e.clientX;
+  root.setPointerCapture(e.pointerId);
+});
+
+root.addEventListener('pointermove', e=>{
+  if(!dragging) return;
+  dx = e.clientX - sx;
+  track.style.transition = 'none';
+  track.style.transform = `translateX(calc(${-idx*100}% + ${dx}px))`;
+});
 
   update();
 })();
