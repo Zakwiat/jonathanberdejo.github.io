@@ -387,7 +387,152 @@ Gracias.`);
 })();
 
 /* ========== Textos ES/EN ========== */
-const T = { /* … (tu objeto T completo tal cual) … */ };
+const T = {
+  es: {
+    navHome:"Inicio", navAbout:"Sobre mí", navWork:"Experiencia", navSkills:"Competencias", navContact:"Contacto",
+    aboutTitle:"Sobre mí",
+    aboutText:"Soy apasionado en todo lo que hago. Tengo 24 años y me mueven la curiosidad y la mejora continua: analizar, estructurar y administrar datos. Desde mi adolescencia he dedicado mi tiempo libre a la escritura, la música y la tecnología, de forma completamente autodidacta. Del mismo modo que mis habilidades técnico-creativas son tangibles, mi experiencia y formación en logística han fortalecido mi capacidad de organización, gestión y resolución práctica.",
+    badges:["Excel avanzado","Google Workspace","ERP / SAP (básico)","Data entry","Atención al cliente","Coordinación logística"],
+    workTitle:"Experiencia & Servicios", recentExp:"Experiencia reciente",
+    expList:[
+      "Logística y calidad (DHL): recepción, control de stock y trazabilidad.",
+      "Gestión de incidencias y registro en Excel/ERP.",
+      "Apoyo administrativo: documentación, correo bilingüe y coordinación de tareas y equipos."
+    ],
+    services:"Servicios",
+    svcList:[
+      "Data entry y asistencia administrativa remota.",
+      "Reporting operativo y hojas de cálculo.",
+      "Coordinación de procesos y liderazgo operativo."
+    ],
+    offerTitle:"Qué puedo aportar",
+    offerList:[
+      "Precisión y mecanografía +110 WPM para captura de datos fiable.",
+      "Optimización de flujos y reporting claro orientado a KPIs/SLAs.",
+      "Comunicación profesional en español e inglés (C1)."
+    ],
+    skillsTitle:"Competencias",
+    skillsCats:[
+      {title:"🖥️ Ofimática y gestión digital", items:[
+        "Excel avanzado (tablas dinámicas, fórmulas, bases de datos, trazabilidad)",
+        "Google Workspace (Docs, Sheets, Drive, Calendar, Gmail profesional)",
+        "Microsoft Office (Word, PowerPoint, Outlook, Access)",
+        "Herramientas ERP / SAP (nivel básico)",
+        "Gestión documental digital y archivado estructurado",
+        "Redacción profesional y corrección de textos",
+        "Data entry con alta precisión y mecanografía de +100 WPM"
+      ]},
+      {title:"💼 Administración y soporte", items:[
+        "Organización y priorización de tareas",
+        "Elaboración de informes, facturas y documentos",
+        "Control de inventarios y seguimiento de pedidos",
+        "Gestión de agendas, calendarios y correos corporativos",
+        "Coordinación de reuniones y comunicación interna",
+        "Registro y actualización de bases de datos",
+        "Supervisión de procesos y control de calidad"
+      ]},
+      {title:"🌍 Trabajo remoto y comunicación", items:[
+        "Comunicación bilingüe español–inglés (C1 Cambridge)",
+        "Atención al cliente digital (chat, correo, videollamada)",
+        "Resolución de incidencias con claridad y empatía",
+        "Gestión del tiempo y autonomía en entornos online",
+        "Adaptación a distintos husos horarios y equipos internacionales",
+        "Herramientas colaborativas: Slack, Trello, Notion, Asana, Zoom, Meet"
+      ]},
+      {title:"⚙️ Tecnología y programación", items:[
+        "HTML, CSS y fundamentos de programación",
+        "Uso de CMS y diseño web básico (Canva, WordPress, GitHub Pages)",
+        "Conocimientos de bases de datos (MySQL, NoSQL)",
+        "Automatización de tareas simples y digitalización de procesos",
+        "Mantenimiento y actualización de sitios web"
+      ]},
+      {title:"🚚 Logística y coordinación", items:[
+        "Trazabilidad de pedidos y control de stock (DHL)",
+        "Coordinación logística y registro de incidencias",
+        "Control de calidad y reporte de errores",
+        "ERPs logísticos y terminales de mano",
+        "Entorno de almacén y soporte administrativo"
+      ]}
+    ],
+    contactTitle:"Contacto", contactText:"¿Colaboramos? Te respondo en el mismo día laboral.",
+    btnTalk:"Hablemos", btnRequest:"Solicitar CV", btnEmail:"Enviar email", btnLinkedIn:"LinkedIn",
+    cvTitle:"Solicitar CV", cvText:"Déjame tus datos y te lo envío por email.",
+    cvName:"Nombre", cvEmail:"Email", cvMsg:"Mensaje (opcional)", cvSend:"Enviar solicitud", cvCancel:"Cancelar"
+  },
+
+  en: {
+    navHome:"Home", navAbout:"About", navWork:"Experience", navSkills:"Skills", navContact:"Contact",
+    aboutTitle:"About me",
+    aboutText:"I’m passionate about everything I do. I’m 24 years old, driven by curiosity and continuous improvement — I like to analyze, structure, and manage data. Since my teenage years, I’ve devoted my free time to writing, music, and technology, learning on my own. Just as my technical and creative skills are tangible, my background and experience in logistics have strengthened my sense of organization, management, and practical problem-solving.",
+    badges:["Advanced Excel","Google Workspace","ERP / SAP (basic)","Data entry","Customer support","Logistics coordination"],
+    workTitle:"Experience & Services", recentExp:"Recent experience",
+    expList:[
+      "Logistics & quality (DHL): receiving, stock control and traceability.",
+      "Issue management and data logging in Excel/ERP.",
+      "Admin support: documentation, bilingual email, and task/team coordination."
+    ],
+    services:"Services",
+    svcList:[
+      "Data entry & remote admin support.",
+      "Operational reporting and spreadsheets.",
+      "Process coordination and hands-on team leadership."
+    ],
+    offerTitle:"What I bring",
+    offerList:[
+      "High-accuracy typing (110+ WPM) for reliable data capture.",
+      "Workflow optimization and KPI/SLAs-oriented reporting.",
+      "Professional communication in Spanish and English (C1)."
+    ],
+    skillsTitle:"Skills",
+    skillsCats:[
+      {title:"🖥️ Office & digital management", items:[
+        "Advanced Excel (pivot tables, formulas, data models, traceability)",
+        "Google Workspace (Docs, Sheets, Drive, Calendar, professional Gmail)",
+        "Microsoft Office (Word, PowerPoint, Outlook, Access)",
+        "ERP / SAP tools (basic level)",
+        "Digital document management and structured filing",
+        "Professional writing and copy-editing",
+        "High-accuracy data entry and 100+ WPM typing"
+      ]},
+      {title:"💼 Administration & support", items:[
+        "Task organization and prioritization",
+        "Reports, invoices and document drafting",
+        "Inventory control and order tracking",
+        "Calendar, schedules and corporate email management",
+        "Meeting coordination and internal communication",
+        "Database recording and updates",
+        "Process supervision and quality control"
+      ]},
+      {title:"🌍 Remote work & communication", items:[
+        "Bilingual Spanish–English communication (C1 Cambridge)",
+        "Digital customer support (chat, email, video)",
+        "Incident resolution with clarity and empathy",
+        "Time management and autonomy in online environments",
+        "Adaptation to time zones and international teams",
+        "Collaboration tools: Slack, Trello, Notion, Asana, Zoom, Meet"
+      ]},
+      {title:"⚙️ Technology & programming", items:[
+        "HTML, CSS and programming fundamentals",
+        "CMS use and basic web design (Canva, WordPress, GitHub Pages)",
+        "Database knowledge (MySQL, NoSQL)",
+        "Simple task automation and process digitization",
+        "Maintenance and updates of personal/professional sites"
+      ]},
+      {title:"🚚 Logistics & coordination", items:[
+        "Order traceability and stock control (DHL)",
+        "Logistics coordination and incident logging",
+        "Quality control and error reporting",
+        "Logistics ERPs and handheld terminals",
+        "Warehouse environment and admin support"
+      ]}
+    ],
+    contactTitle:"Contact", contactText:"Let's collaborate! I usually reply the same business day.",
+    btnTalk:"Let's talk", btnRequest:"Request CV", btnEmail:"Send email", btnLinkedIn:"LinkedIn",
+    cvTitle:"Request CV", cvText:"Leave your details and I'll send it by email.",
+    cvName:"Name", cvEmail:"Email", cvMsg:"Message (optional)", cvSend:"Send request", cvCancel:"Cancel"
+  }
+};
+
 
 /* ========== Render helpers + applyLang ========== */
 function renderBadges(arr){
