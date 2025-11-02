@@ -172,47 +172,39 @@ body[data-motion="off"] #starLinkCanvas{display:none}
   </header>
 
   <!-- Sobre mí -->
-<section id="about" class="section">
-  <div class="container">
-    <div class="card">
-      <div class="about-grid">
-        <!-- Texto -->
-        <div>
-          <h2 data-t="aboutTitle">Sobre mí</h2>
-          <p data-t="aboutText">
-            Soy apasionado en todo lo que hago. Tengo 24 años y me mueven la curiosidad y la mejora continua:
-            analizar, estructurar y administrar datos. Desde mi adolescencia he dedicado mi tiempo libre a la
-            escritura, la música y la tecnología, de forma autodidacta más formaciones complementarias. Del
-            mismo modo que mis habilidades técnico-creativas son tangibles, mi experiencia y formación en
-            logística han fortalecido mi capacidad de organización, gestión y resolución práctica.
-          </p>
-          <div class="badges" id="aboutBadges"></div>
-        </div>
-
-        <!-- Carrusel lateral -->
-        <figure class="carousel" aria-label="Galería de fotos - Sobre mí">
-          <button class="carousel__btn carousel__btn--prev" aria-label="Anterior">‹</button>
-
-          <div class="carousel__track" id="aboutTrack">
-            <div class="carousel__slide">
-              <img src="assets/images/jonpiano1.png" alt="" loading="lazy" />
-            </div>
-            <div class="carousel__slide">
-              <img src="assets/images/jonpiano2.png" alt="" loading="lazy" />
-            </div>
-            <div class="carousel__slide">
-              <img src="assets/images/jonpiano3.png" alt="" loading="lazy" />
-            </div>
+  <section id="about" class="section">
+    <div class="container">
+      <div class="card">
+        <div class="about-grid">
+          <div>
+            <h2 data-t="aboutTitle">Sobre mí</h2>
+            <p data-t="aboutText">
+              Soy apasionado en todo lo que hago. Tengo 24 años y me mueven la curiosidad y la mejora continua: analizar, estructurar y administrar datos. Desde mi adolescencia he dedicado mi tiempo libre a la escritura, la música y la tecnología, de forma autodidacta más formaciones complementarias. Del mismo modo que mis habilidades técnico-creativas son tangibles, mi experiencia y formación en logística han fortalecido mi capacidad de organización, gestión y resolución práctica.
+            </p>
+            <div class="badges" id="aboutBadges"></div>
           </div>
 
-          <button class="carousel__btn carousel__btn--next" aria-label="Siguiente">›</button>
-          <div class="carousel__dots" id="aboutDots" role="tablist" aria-label="Paginación del carrusel"></div>
-        </figure>
+          <!-- Carrusel lateral -->
+          <figure class="carousel" aria-label="Galería de fotos - Sobre mí">
+            <button class="carousel__btn carousel__btn--prev" aria-label="Anterior">‹</button>
+            <div class="carousel__track" id="aboutTrack">
+              <div class="carousel__slide">
+                <img src="assets/images/jon-music-1.jpg" alt="Jonathan tocando el teclado en directo (1)" loading="lazy" />
+              </div>
+              <div class="carousel__slide">
+                <img src="assets/images/jon-music-2.jpg" alt="Jonathan en escenario, ensayo con teclado (2)" loading="lazy" />
+              </div>
+              <div class="carousel__slide">
+                <img src="assets/images/jon-music-3.jpg" alt="Retrato en camerino/ensayo con fondo azul (3)" loading="lazy" />
+              </div>
+            </div>
+            <button class="carousel__btn carousel__btn--next" aria-label="Siguiente">›</button>
+            <div class="carousel__dots" id="aboutDots" role="tablist" aria-label="Paginación del carrusel"></div>
+          </figure>
+        </div>
       </div>
     </div>
-  </div>
-</section>
-
+  </section>
 
   <!-- Experiencia / Servicios + Qué aporto -->
   <section id="work" class="section">
@@ -255,63 +247,13 @@ body[data-motion="off"] #starLinkCanvas{display:none}
 
   <!-- Competencias -->
   <section id="skills" class="section">
-  <div class="container">
-    <div class="card">
-      <h2>Competencias</h2>
-      <div class="acc" id="skillsAcc">
-        <div class="acc-item open">
-          <button class="acc-h" type="button">
-            <span>🖥️ Ofimática y gestión digital</span><span class="chev">›</span>
-          </button>
-          <div class="acc-c">
-            <ul class="acc-list">
-              <li>Excel avanzado (tablas dinámicas, fórmulas, bases de datos, trazabilidad)</li>
-              <li>Google Workspace (Docs, Sheets, Drive, Calendar, Gmail profesional)</li>
-              <li>Microsoft Office (Word, PowerPoint, Outlook, Access)</li>
-              <li>ERP / SAP (básico)</li>
-              <li>Gestión documental y archivado estructurado</li>
-              <li>Redacción profesional y corrección de textos</li>
-              <li>Data entry de alta precisión (+110 WPM)</li>
-            </ul>
-          </div>
-        </div>
-
-        <div class="acc-item">
-          <button class="acc-h" type="button">
-            <span>💼 Administración y soporte</span><span class="chev">›</span>
-          </button>
-          <div class="acc-c">
-            <ul class="acc-list">
-              <li>Organización y priorización de tareas</li>
-              <li>Informes, facturas y documentos</li>
-              <li>Control de inventarios y seguimiento de pedidos</li>
-              <li>Gestión de agendas y correo corporativo</li>
-              <li>Coordinación de reuniones y comunicación interna</li>
-              <li>Actualización de bases de datos</li>
-              <li>Supervisión de procesos y control de calidad</li>
-            </ul>
-          </div>
-        </div>
-
-        <div class="acc-item">
-          <button class="acc-h" type="button">
-            <span>🚚 Logística y coordinación</span><span class="chev">›</span>
-          </button>
-          <div class="acc-c">
-            <ul class="acc-list">
-              <li>Trazabilidad de pedidos y control de stock (DHL)</li>
-              <li>Coordinación logística e incidencias</li>
-              <li>Control de calidad y reporte de errores</li>
-              <li>ERPs logísticos y dispositivos Honeywell</li>
-              <li>Entorno de almacén y soporte administrativo</li>
-            </ul>
-          </div>
-        </div>
-
+    <div class="container">
+      <div class="card">
+        <h2 data-t="skillsTitle">Competencias</h2>
+        <div class="acc" id="skillsAcc"></div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
   <!-- Contacto -->
   <section id="contact" class="section">
@@ -989,8 +931,6 @@ document.getElementById("langSwitcher").addEventListener("change",(e)=>applyLang
 
   update();
 })();
-  <script src="assets/main.js" defer></script>
-
 </script>
 
 <button id="backTop" class="backtop" aria-label="Volver arriba" title="Volver arriba">↑</button>
