@@ -31,7 +31,7 @@ body{font-family:'Poppins',system-ui,Segoe UI,Roboto,Arial,sans-serif;background
 #starLinkCanvas{position:absolute; inset:0; width:100%; height:100%; display:block}
 
 /* ===== Contenido ===== */
-.nav,.hero,.section,.footer,.hud-nav,.modal{position:relative;z-index:5}
+.nav,.hero,.section,.footer,.hud-nav{position:relative;z-index:5}
 .hero{min-height:100vh;display:grid;place-items:center;text-align:center}
 .title{font-weight:900;letter-spacing:.04em;font-size:clamp(2.8rem,9vw,6.4rem);color:#e8fdff;text-shadow:0 0 18px var(--neon),0 0 48px var(--neon),0 0 120px var(--neon);animation:titleBeat var(--beat) ease-in-out infinite}
 @keyframes titleBeat{0%{transform:scale(1)}8%{transform:scale(1.015)}18%{transform:scale(1.009)}26%,100%{transform:scale(1)}}
@@ -78,20 +78,6 @@ body{font-family:'Poppins',system-ui,Segoe UI,Roboto,Arial,sans-serif;background
 .acc-h .chev{transition:transform .25s ease}
 .acc-item.open .chev{transform:rotate(90deg)}
 
-/* ===== Modal ===== */
-.modal{display:none}
-.modal.is-open{display:block}
-.modal__backdrop{position:fixed;inset:0;background:rgba(0,0,0,.6);backdrop-filter:blur(4px)}
-.modal__panel{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);width:min(560px,92vw);
-  background:rgba(0,0,0,.6);border:1px solid rgba(0,234,255,.22);border-radius:18px;padding:22px;box-shadow:0 12px 40px rgba(0,0,0,.5), 0 0 24px rgba(0,234,255,.18) inset}
-.modal__title{margin-bottom:8px;text-shadow:0 0 12px rgba(0,234,255,.5)}
-.modal__text{opacity:.85;margin-bottom:14px}
-.modal__form{display:grid;gap:12px}
-.modal__label{display:grid;gap:6px;font-weight:600}
-.modal__input{background:rgba(0,0,0,.35);color:var(--txt);border:1px solid var(--stroke);border-radius:12px;padding:10px 12px;outline:none;box-shadow: inset 0 0 12px rgba(0,234,255,.05)}
-.modal__input:focus{border-color:#00eaff;box-shadow:0 0 0 3px rgba(0,234,255,.15)}
-.modal__actions{display:flex;gap:10px;justify-content:flex-end;margin-top:8px}
-
 /* ===== Motion OFF ===== */
 body[data-motion="off"] .star,
 body[data-motion="off"] .beam,
@@ -110,7 +96,7 @@ body[data-motion="off"] #starLinkCanvas{display:none}
 .carousel__track{display:flex;transition:transform .35s ease;will-change:transform}
 .carousel__slide{flex:0 0 100%;position:relative;aspect-ratio:4/3;background:#05080a}
 .carousel__slide img{width:100%;height:100%;object-fit:cover;display:block;filter:contrast(1.08) brightness(.95)}
-/* Ocultar controles */
+/* Ocultar controles (existen en HTML por accesibilidad) */
 .carousel__btn,.carousel__dots{display:none!important}
 
 /* Back to Top */
@@ -233,11 +219,11 @@ body[data-motion="off"] #starLinkCanvas{display:none}
           </div>
         </div>
 
-       <div class="actions" style="margin-top:18px">
-  <a class="btn" href="#contact" data-t="btnTalk">Hablemos</a>
-  <a class="btn btn--ghost" href="assets/docs/Jonathan_Berdejo_CV.pdf" target="_blank" rel="noopener">Ver CV</a>
-</div>
-
+        <!-- Botones -->
+        <div class="actions" style="margin-top:18px">
+          <a class="btn" href="#contact" data-t="btnTalk">Hablemos</a>
+          <a class="btn btn--ghost" href="assets/docs/CVJBS.pdf" target="_blank" rel="noopener">Ver CV</a>
+        </div>
       </div>
     </div>
   </section>
@@ -313,83 +299,9 @@ let motionOff = false;
   window.addEventListener('scroll',onScroll,{passive:true}); window.addEventListener('resize',onScroll); onScroll();
 })();
 
-/* ========== Modal Solicitar CV ========== */
-(function(){
-  const btn=document.getElementById('requestCVBtn');
-  const statusEl=document.getElementById('cvStatus');
-  const KEY='cvRequestedAt';
-
-  if(!document.getElementById('cvModal')){
-    const tpl = document.createElement('div');
-    tpl.innerHTML = `
-    <div class="modal" id="cvModal" aria-hidden="true" role="dialog" aria-labelledby="cvTitle">
-      <div class="modal__backdrop" data-close></div>
-      <div class="modal__panel" role="document">
-        <h3 id="cvTitle" class="modal__title" data-t="cvTitle">Solicitar CV</h3>
-        <p class="modal__text" data-t="cvText">Déjame tus datos y te lo envío por email.</p>
-        <form id="cvForm" class="modal__form">
-          <label class="modal__label" data-t="cvName">Nombre
-            <input class="modal__input" name="name" required placeholder="Tu nombre">
-          </label>
-          <label class="modal__label" data-t="cvEmail">Email
-            <input class="modal__input" name="email" type="email" required placeholder="tucorreo@ejemplo.com">
-          </label>
-          <label class="modal__label" data-t="cvMsg">Mensaje (opcional)
-            <textarea class="modal__input" name="msg" rows="3" placeholder="Puesto objetivo o contexto"></textarea>
-          </label>
-          <div class="modal__actions">
-            <button type="submit" class="btn" data-t="cvSend">Enviar solicitud</button>
-            <button type="button" class="btn btn--ghost" data-close data-t="cvCancel">Cancelar</button>
-          </div>
-        </form>
-      </div>
-    </div>`;
-    document.body.appendChild(tpl.firstElementChild);
-  }
-
-  const modal=document.getElementById('cvModal');
-  const form=document.getElementById('cvForm');
-  const firstInput=modal?.querySelector('input[name="name"]');
-
-  const prev=localStorage.getItem(KEY);
-  if(prev){ const d=new Date(prev); statusEl.textContent=`CV solicitado el ${d.toLocaleDateString()} ${d.toLocaleTimeString()}`;}
-
-  const open = () => { modal.classList.add('is-open'); modal.setAttribute('aria-hidden','false'); setTimeout(()=>firstInput?.focus(),0); };
-  const close= () => { modal.classList.remove('is-open'); modal.setAttribute('aria-hidden','true'); btn?.focus(); };
-
-  btn?.addEventListener('click',open);
-  modal?.addEventListener('click',e=>{ if (e.target.hasAttribute?.('data-close')) close(); });
-  window.addEventListener('keydown',e=>{ if(e.key==='Escape' && modal?.classList.contains('is-open')) close(); });
-
-  form?.addEventListener('submit',(e)=>{
-    e.preventDefault();
-    const data=new FormData(form);
-    const name=(data.get('name')||'').toString().trim();
-    const email=(data.get('email')||'').toString().trim();
-    const msg=(data.get('msg')||'').toString().trim();
-
-    const subject=encodeURIComponent(`Solicitud de CV - ${name}`);
-    const body=encodeURIComponent(
-`Hola Jonathan,
-
-Me gustaría recibir tu CV.
-
-Nombre: ${name}
-Email: ${email}
-${msg?`Mensaje: ${msg}\n`:''}
-Gracias.`);
-
-    const now=new Date(); localStorage.setItem(KEY,now.toISOString());
-    statusEl.textContent=`CV solicitado el ${now.toLocaleDateString()} ${now.toLocaleTimeString()}`;
-    window.location.href=`mailto:berdejosanchez@gmail.com?subject=${subject}&body=${body}`;
-    form.reset(); close();
-  });
-})();
-
 /* ========== Textos ES/EN ========== */
 const T = {
-  es: {
-    navHome:"Inicio", navAbout:"Sobre mí", navWork:"Experiencia", navSkills:"Competencias", navContact:"Contacto",
+  es:{ navHome:"Inicio", navAbout:"Sobre mí", navWork:"Experiencia", navSkills:"Competencias", navContact:"Contacto",
     aboutTitle:"Sobre mí",
     aboutText:"Soy apasionado en todo lo que hago. Tengo 24 años y me mueven la curiosidad y la mejora continua: analizar, estructurar y administrar datos. Desde mi adolescencia he dedicado mi tiempo libre a la escritura, la música y la tecnología, de forma completamente autodidacta. Del mismo modo que mis habilidades técnico-creativas son tangibles, mi experiencia y formación en logística han fortalecido mi capacidad de organización, gestión y resolución práctica.",
     badges:["Excel avanzado","Google Workspace","ERP / SAP (básico)","Data entry","Atención al cliente","Coordinación logística"],
@@ -455,13 +367,9 @@ const T = {
       ]}
     ],
     contactTitle:"Contacto", contactText:"¿Colaboramos? Te respondo en el mismo día laboral.",
-    btnTalk:"Hablemos", btnRequest:"Solicitar CV", btnEmail:"Enviar email", btnLinkedIn:"LinkedIn",
-    cvTitle:"Solicitar CV", cvText:"Déjame tus datos y te lo envío por email.",
-    cvName:"Nombre", cvEmail:"Email", cvMsg:"Mensaje (opcional)", cvSend:"Enviar solicitud", cvCancel:"Cancelar"
+    btnTalk:"Hablemos", btnEmail:"Enviar email", btnLinkedIn:"LinkedIn"
   },
-
-  en: {
-    navHome:"Home", navAbout:"About", navWork:"Experience", navSkills:"Skills", navContact:"Contact",
+  en:{ navHome:"Home", navAbout:"About", navWork:"Experience", navSkills:"Skills", navContact:"Contact",
     aboutTitle:"About me",
     aboutText:"I’m passionate about everything I do. I’m 24 years old, driven by curiosity and continuous improvement — I like to analyze, structure, and manage data. Since my teenage years, I’ve devoted my free time to writing, music, and technology, learning on my own. Just as my technical and creative skills are tangible, my background and experience in logistics have strengthened my sense of organization, management, and practical problem-solving.",
     badges:["Advanced Excel","Google Workspace","ERP / SAP (basic)","Data entry","Customer support","Logistics coordination"],
@@ -499,7 +407,7 @@ const T = {
         "Reports, invoices and document drafting",
         "Inventory control and order tracking",
         "Calendar, schedules and corporate email management",
-        "Meeting coordination and internal communication",
+        "Meeting coordination and internal comms",
         "Database recording and updates",
         "Process supervision and quality control"
       ]},
@@ -509,7 +417,7 @@ const T = {
         "Incident resolution with clarity and empathy",
         "Time management and autonomy in online environments",
         "Adaptation to time zones and international teams",
-        "Collaboration tools: Slack, Trello, Notion, Asana, Zoom, Meet"
+        "Collab tools: Slack, Trello, Notion, Asana, Zoom, Meet"
       ]},
       {title:"⚙️ Technology & programming", items:[
         "HTML, CSS and programming fundamentals",
@@ -527,14 +435,11 @@ const T = {
       ]}
     ],
     contactTitle:"Contact", contactText:"Let's collaborate! I usually reply the same business day.",
-    btnTalk:"Let's talk", btnRequest:"Request CV", btnEmail:"Send email", btnLinkedIn:"LinkedIn",
-    cvTitle:"Request CV", cvText:"Leave your details and I'll send it by email.",
-    cvName:"Name", cvEmail:"Email", cvMsg:"Message (optional)", cvSend:"Send request", cvCancel:"Cancel"
+    btnTalk:"Let's talk", btnEmail:"Send email", btnLinkedIn:"LinkedIn"
   }
 };
 
-
-/* ========== Render helpers + applyLang ========== */
+/* Helpers */
 function renderBadges(arr){
   const c = document.getElementById('aboutBadges');
   c.innerHTML = arr.map(txt=>`<span class="badge">${txt}</span>`).join('');
@@ -554,7 +459,6 @@ function renderAccordion(cats){
       </div>
     </div>
   `).join('');
-
   acc.querySelectorAll('.acc-h').forEach(btn=>{
     btn.addEventListener('click',()=>{
       const item = btn.parentElement;
@@ -599,7 +503,6 @@ function applyLang(lang){
   document.querySelector('[data-t="contactTitle"]').textContent=t.contactTitle;
   document.querySelector('[data-t="contactText"]').textContent=t.contactText;
   document.querySelector('[data-t="btnTalk"]').textContent=t.btnTalk;
-  document.querySelector('[data-t="btnRequest"]').textContent=t.btnRequest;
   document.querySelector('[data-t="btnEmail"]').textContent=t.btnEmail;
   document.querySelector('[data-t="btnLinkedIn"]').textContent=t.btnLinkedIn;
 }
@@ -633,14 +536,15 @@ document.getElementById("langSwitcher").addEventListener("change",(e)=>applyLang
 })();
 
 /* ========== Canvas: 2 cometas ========== */
-// (tu bloque de canvas queda igual que lo tenías)
 (function(){
   const canvas = document.getElementById('starLinkCanvas');
   const starsWrap = document.querySelector('.stars');
   if(!canvas || !starsWrap) return;
+
   const ctx = canvas.getContext('2d');
   let W=0, H=0, DPR = Math.max(1, Math.min(2, window.devicePixelRatio||1));
   const neonLine = getComputedStyle(document.documentElement).getPropertyValue('--neonline').trim() || '#ff1744';
+
   function resize(){
     const Wcss = Math.max(document.documentElement.scrollWidth, document.documentElement.clientWidth, window.innerWidth);
     const Hcss = Math.max(document.documentElement.scrollHeight, document.documentElement.clientHeight, window.innerHeight);
@@ -764,7 +668,7 @@ document.getElementById("langSwitcher").addEventListener("change",(e)=>applyLang
       ctx.shadowColor = neonLine;
       ctx.globalAlpha = (k*TRAIL_FADE)*0.9;
       ctx.shadowBlur = 16*k;
-      ctx.lineWidth = BASE_WIDTH * (k*0.9);
+      ctx.lineWidth =  BASE_WIDTH * (k*0.9);
       ctx.beginPath();
       ctx.moveTo(a.x, a.y);
       ctx.lineTo(b.x, b.y);
@@ -813,7 +717,7 @@ document.getElementById("langSwitcher").addEventListener("change",(e)=>applyLang
       } else {
         ray.offStart = 0;
       }
-      if (ray.offStart && (now - ray.offStart) > OFFSCREEN_TIMEOUT) {
+      if (ray.offStart && (now - ray.offStart) > 1200) {
         const vis = visibleIndices(vpNow);
         if (vis.length) {
           let best = vis[0], bestD = Infinity;
@@ -831,7 +735,7 @@ document.getElementById("langSwitcher").addEventListener("change",(e)=>applyLang
       }
 
       ray.trail.push(head);
-      if (ray.trail.length > TRAIL_LEN) ray.trail.shift();
+      if (ray.trail.length > 36) ray.trail.shift();
 
       drawComet(ray, head);
 
