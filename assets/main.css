@@ -642,6 +642,50 @@ body[data-motion="off"] .backtop{ transition:none; } /* sin animaciones cuando d
 .carousel__slide img{ width:100%; height:100%; object-fit:cover; display:block; filter:contrast(1.08) brightness(.95) }
 .carousel__btn, .carousel__dots{ display:none !important; }
 
+/* ===== Upsize: Competencias (solo sección #skills) ===== */
+#skills .acc-h{ font-size:1.14rem; padding:14px 18px }
+#skills .acc-h span{ font-size:1.08rem }
+#skills .acc-list{ font-size:1.08rem; line-height:1.7 }
+#skills .acc-list li{ margin:6px 0 }
+
+/* ===== Upsize: Competencias (más grande y legible) ===== */
+#skills .acc-h{ 
+  font-size:1.4rem; 
+  padding:16px 20px;
+}
+#skills .acc-h span{ 
+  font-size:1.25rem; 
+}
+#skills .acc-list{ 
+  font-size:1.2rem; 
+  line-height:1.8; 
+}
+#skills .acc-list li{ 
+  margin:8px 0; 
+}
+
+/* ===== Upsize: Competencias (más grande y legible) ===== */
+#skills .acc-h{ 
+  font-size:1.4rem; 
+  padding:16px 20px;
+}
+#skills .acc-h span{ 
+  font-size:1.25rem; 
+}
+#skills .acc-list{ 
+  font-size:1.2rem; 
+  line-height:1.8; 
+}
+#skills .acc-list li{ 
+  margin:8px 0; 
+}
+
+/* En pantallas grandes aún más cómodo */
+@media (min-width:900px){
+  #skills .acc-h{ font-size:1.5rem }
+  #skills .acc-list{ font-size:1.3rem }
+}
+
 
 
 
