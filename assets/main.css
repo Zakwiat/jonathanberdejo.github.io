@@ -686,6 +686,34 @@ body[data-motion="off"] .backtop{ transition:none; } /* sin animaciones cuando d
   #skills .acc-list{ font-size:1.3rem }
 }
 
+/* ===== Upsize total: títulos + texto + viñetas ===== */
+#skills .acc-h{ 
+  font-size:1.45rem; 
+  padding:16px 20px;
+}
+#skills .acc-h span{ 
+  font-size:1.3rem; 
+}
+#skills .acc-list{ 
+  font-size:1.22rem; 
+  line-height:1.85; 
+}
+#skills .acc-list li{ 
+  margin:10px 0; 
+  font-size:1.22rem;         /* ← tamaño del texto de las viñetas */
+  padding-left:4px;
+}
+#skills .acc-list li::marker{
+  font-size:1.4rem;          /* ← tamaño del punto de la viñeta */
+}
+
+/* En pantallas grandes aún más cómodo */
+@media (min-width:900px){
+  #skills .acc-h{ font-size:1.55rem }
+  #skills .acc-list,
+  #skills .acc-list li{ font-size:1.28rem }
+  #skills .acc-list li::marker{ font-size:1.5rem }
+}
 
 
 
