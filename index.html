@@ -117,11 +117,12 @@ body[data-motion="off"] #starLinkCanvas{display:none}
 </head>
 <body>
   <!-- Top bar -->
-  <div id="topBar" role="toolbar" aria-label="Preferencias">
-   <select id="langSwitcher" aria-label="Idioma">
-  <option value="es" selected>ES</option>
-  <option value="en">EN</option>
+ <select id="langSwitcher" aria-label="Idioma">
+  <option value="en" selected>EN</option>
+  <option value="es">ES</option>
+  <option value="fr">FR</option>
 </select>
+
 
     <button id="animToggle" type="button" aria-pressed="false"
         title="Activar o desactivar animación"
@@ -507,8 +508,17 @@ function applyLang(lang){
   document.querySelector('[data-t="btnEmail"]').textContent=t.btnEmail;
   document.querySelector('[data-t="btnLinkedIn"]').textContent=t.btnLinkedIn;
 }
-applyLang('es');
-document.getElementById("langSwitcher").addEventListener("change",(e)=>applyLang(e.target.value));
+// idioma inicial por defecto = inglés
+applyLang('en');
+document.documentElement.lang = 'en';
+document.getElementById('langSwitcher').value = 'en';
+
+// cambio de idioma manual
+document.getElementById("langSwitcher").addEventListener("change",(e)=>{
+  applyLang(e.target.value);
+  document.documentElement.lang = e.target.value;
+});
+
 
 /* ========== Preferencia de animación (ON/OFF) ========== */
 (function(){
