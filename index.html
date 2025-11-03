@@ -301,7 +301,7 @@ let motionOff = false;
   window.addEventListener('scroll',onScroll,{passive:true}); window.addEventListener('resize',onScroll); onScroll();
 })();
 
-/* ========== Textos ES/EN ========== */
+/* ========== Textos ES/EN/FR ========== */
 const T = {
   es:{ navHome:"Inicio", navAbout:"Sobre mí", navWork:"Experiencia", navSkills:"Competencias", navContact:"Contacto",
     aboutTitle:"Sobre mí",
@@ -438,6 +438,74 @@ const T = {
     ],
     contactTitle:"Contact", contactText:"Let's collaborate! I usually reply the same business day.",
     btnTalk:"Let's talk", btnEmail:"Send email", btnLinkedIn:"LinkedIn"
+  },
+  fr:{ navHome:"Accueil", navAbout:"À propos", navWork:"Expérience", navSkills:"Compétences", navContact:"Contact",
+    aboutTitle:"À propos de moi",
+    aboutText:"Je suis passionné par tout ce que je fais. J’ai 24 ans et je suis guidé par la curiosité et l’amélioration continue : analyser, structurer et gérer des données. Depuis l’adolescence, j’ai consacré mon temps libre à l’écriture, à la musique et à la technologie, en autodidacte. De même que mes compétences technico-créatives sont concrètes, mon parcours en logistique a renforcé mon sens de l’organisation, de la gestion et de la résolution pratique des problèmes.",
+    badges:["Excel avancé","Google Workspace","ERP / SAP (basique)","Saisie de données","Service client","Coordination logistique"],
+    workTitle:"Expérience & Services", recentExp:"Expérience récente",
+    expList:[
+      "Logistique et qualité (DHL) : réception, contrôle des stocks et traçabilité.",
+      "Gestion d’incidents et enregistrement des données dans Excel/ERP.",
+      "Support administratif : documentation, e-mails bilingues et coordination des tâches/équipes."
+    ],
+    services:"Services",
+    svcList:[
+      "Saisie de données et assistance administrative à distance.",
+      "Reporting opérationnel et feuilles de calcul.",
+      "Coordination des processus et leadership opérationnel."
+    ],
+    offerTitle:"Ce que j’apporte",
+    offerList:[
+      "Saisie précise (110+ MPM) pour une capture fiable des données.",
+      "Optimisation des flux et reporting orienté KPI/SLA.",
+      "Communication professionnelle en espagnol et anglais (C1)."
+    ],
+    skillsTitle:"Compétences",
+    skillsCats:[
+      {title:"🖥️ Bureautique et gestion numérique", items:[
+        "Excel avancé (tableaux croisés dynamiques, formules, modèles de données, traçabilité)",
+        "Google Workspace (Docs, Sheets, Drive, Calendar, Gmail professionnel)",
+        "Microsoft Office (Word, PowerPoint, Outlook, Access)",
+        "Outils ERP / SAP (niveau basique)",
+        "Gestion documentaire numérique et archivage structuré",
+        "Rédaction professionnelle et relecture",
+        "Saisie de données précise et dactylographie 100+ MPM"
+      ]},
+      {title:"💼 Administration et support", items:[
+        "Organisation et priorisation des tâches",
+        "Rédaction de rapports, factures et documents",
+        "Contrôle des inventaires et suivi des commandes",
+        "Gestion d’agendas, calendriers et e-mails d’entreprise",
+        "Coordination de réunions et communication interne",
+        "Enregistrement et mise à jour de bases de données",
+        "Supervision des processus et contrôle qualité"
+      ]},
+      {title:"🌍 Télétravail et communication", items:[
+        "Communication bilingue espagnol–anglais (C1 Cambridge)",
+        "Service client digital (chat, e-mail, visioconférence)",
+        "Résolution d’incidents avec clarté et empathie",
+        "Gestion du temps et autonomie en environnement en ligne",
+        "Adaptation aux fuseaux horaires et équipes internationales",
+        "Outils collaboratifs : Slack, Trello, Notion, Asana, Zoom, Meet"
+      ]},
+      {title:"⚙️ Technologie et programmation", items:[
+        "HTML, CSS et bases de la programmation",
+        "Utilisation de CMS et web design basique (Canva, WordPress, GitHub Pages)",
+        "Connaissances en bases de données (MySQL, NoSQL)",
+        "Automatisation simple des tâches et numérisation des processus",
+        "Maintenance et mises à jour de sites personnels/pro"
+      ]},
+      {title:"🚚 Logistique et coordination", items:[
+        "Traçabilité des commandes et contrôle des stocks (DHL)",
+        "Coordination logistique et enregistrement des incidents",
+        "Contrôle qualité et rapports d’erreurs",
+        "ERP logistiques et terminaux portables",
+        "Environnement d’entrepôt et support administratif"
+      ]}
+    ],
+    contactTitle:"Contact", contactText:"On collabore ? Je réponds le jour ouvrable même.",
+    btnTalk:"Discutons", btnEmail:"Envoyer un e-mail", btnLinkedIn:"LinkedIn"
   }
 };
 
@@ -813,7 +881,7 @@ document.getElementById("langSwitcher").addEventListener("change",(e)=>{
   });
   window.addEventListener('resize', update);
 })();
-  /* ========== Canvas: 2 cometas ========== */
+/* ========== Canvas: 2 cometas (duplicado intencional, sin cambios) ========== */
 (function(){
   const canvas = document.getElementById('starLinkCanvas');
   const starsWrap = document.querySelector('.stars');
@@ -1031,7 +1099,6 @@ document.getElementById("langSwitcher").addEventListener("change",(e)=>{
   }
   requestAnimationFrame(loop);
 })();
-
 </script>
 </body>
 </html>
