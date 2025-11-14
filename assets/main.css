@@ -1,28 +1,24 @@
 /* =========================================================
-   RESET
+  
 ========================================================= */
 *{ box-sizing:border-box; margin:0; padding:0 }
 html,body{ height:100% }
 html{ scroll-behavior:smooth }
 
-/* =========================================================
-   VARIABLES
-========================================================= */
+
 :root{
-  --bpm:72;                           /* ritmo del latido del título                */
-  --beat: calc(60s/var(--bpm));       /* duración del latido                        */
-  --neon:#00eaff;                     /* color principal cian                       */
-  --bg:#000;                          /* fondo                                      */
-  --txt:#eaf6ff;                      /* texto                                      */
-  --stroke: rgba(0,234,255,.18);      /* borde sutil                                */
-  --card-bg: rgba(0,0,0,0.08);        /* base de glass                              */
-     --neonline:#ff1744; /* Rojo neón para las líneas */
+  --bpm:72;                          
+  --beat: calc(60s/var(--bpm));      
+  --neon:#00eaff;                  
+  --bg:#000;                         
+  --txt:#eaf6ff;                     
+  --stroke: rgba(0,234,255,.18);      
+  --card-bg: rgba(0,0,0,0.08);                                
+     --neonline:#ff1744; 
 
 }
 
-/* =========================================================
-   BASE
-========================================================= */
+
 body{
   font-family:'Poppins',system-ui,Segoe UI,Roboto,Arial,sans-serif;
   background:var(--bg);
@@ -40,52 +36,44 @@ body{
 }
 
 
-/* =========================================================
-   UNIVERSO (fondo fijo que no se pierde al hacer scroll)
-========================================================= */
+
 .neon-bg{
   position:fixed;
   inset:0;
   z-index:0;
   overflow:hidden;
-  /* ⚠️ QUITA pointer-events:none; */
+
   background: radial-gradient(1200px 600px at 50% 60%, rgba(0,234,255,.06), transparent 70%);
 }
 
-/* Viñeta estática (sin animación global) */
+
 .neon-bg::before{
   content:"";
   position:absolute;
   inset:-12%;
-  z-index:-1;                        /* detrás de capas internas                    */
+  z-index:-1;                                 
   background:
     radial-gradient(1200px 600px at 15% 15%, rgba(0,234,255,.06), transparent 70%),
     radial-gradient(1000px 500px at 85% 85%, rgba(0,234,255,.04), transparent 70%),
     radial-gradient(circle at 50% 55%, rgba(0,0,0,0) 0, rgba(0,0,0,.75) 70%);
 }
 
-/* Capas internas del universo (orden) */
+
 .stars, .nebula-red { position:absolute; inset:0; z-index:0; pointer-events:none; }
 .comets             { position:absolute; inset:0; z-index:1; pointer-events:none; }
 
-/* =========================================================
-   HAZES TECNOLÓGICOS — Canvas (reemplaza líneas rectas)
-   - No bloquea clics
-   - No tapa el texto (lo recorta con máscara en JS)
-========================================================= */
 
-/* El bloque antiguo de .neon-lines se oculta por completo */
 .neon-lines{ display:none !important; }
 
 .tech-rays{
   position:absolute;
   inset:0;
-  z-index:2;                        /* por encima de estrellas/cometas             */
-  pointer-events:none;              /* nunca bloquea interacciones                 */
+  z-index:2;                       
+  pointer-events:none;            
   background:transparent;
 }
 
-/* Franja superior limpia para controles (selector idioma) */
+
 .top-safety{
   position:fixed;
   left:0; right:0; top:0;
@@ -95,12 +83,10 @@ body{
   background:linear-gradient(180deg, rgba(0,0,0,.92), rgba(0,0,0,0));
 }
 
-/* Atenúa los rays al leer */
+
 body.scrolled .tech-rays{ opacity:.25; transition:opacity .5s }
 
-/* =========================================================
-   ESTRELLAS (parpadeo + movimiento orbital sutil)
-========================================================= */
+
 .stars{ animation: starShift 180s linear infinite alternate; }
 
 .star{
@@ -127,9 +113,7 @@ body.scrolled .tech-rays{ opacity:.25; transition:opacity .5s }
   100% { transform: translate(1.5%, 1%) rotate(-.5deg) }
 }
 
-/* =========================================================
-   NEBULOSA ROJA (sutil)
-========================================================= */
+
 .nebula-red{
   background:
     radial-gradient(700px 480px at 18% 72%, rgba(255,30,90,.22), transparent 60%),
@@ -145,7 +129,7 @@ body.scrolled .tech-rays{ opacity:.25; transition:opacity .5s }
   to  { transform:translateY(-3%) translateX(1.5%) }
 }
 
-/* Extensión a la derecha */
+
 .neon-bg::after{
   content:"";
   position:absolute;
@@ -157,9 +141,7 @@ body.scrolled .tech-rays{ opacity:.25; transition:opacity .5s }
   mix-blend-mode:screen;
 }
 
-/* =========================================================
-   COMETAS (con cola y brillo)
-========================================================= */
+
 .comet{
   position:absolute;
   left: calc(var(--startX, 50) * 1vw);
@@ -213,19 +195,17 @@ body.scrolled .tech-rays{ opacity:.25; transition:opacity .5s }
   50%    { filter:brightness(1.25) }
 }
 
-/* Menos distracción al leer */
+
 body.scrolled .stars{ opacity:.12 !important; transition:opacity .4s }
 body.scrolled .nebula-red{ opacity:.35; transition:opacity .4s }
 body.scrolled .comets{ opacity:.45; transition:opacity .4s }
 
-/* =========================================================
-   CONTENIDO (por encima del universo)
-========================================================= */
+
 .nav, .hero, .section, .footer, .hud-nav{
   position:relative; z-index:3;
 }
 
-/* HERO centrado vertical/ horizontalmente */
+
 .hero{
   min-height:100vh;
   display:grid;
@@ -234,7 +214,7 @@ body.scrolled .comets{ opacity:.45; transition:opacity .4s }
   padding-top:0;
 }
 
-/* Título con latido */
+
 .title{
   font-weight:900;
   letter-spacing:.04em;
@@ -254,11 +234,11 @@ body.scrolled .comets{ opacity:.45; transition:opacity .4s }
   26%,100%{ transform:scale(1) }
 }
 
-/* Secciones y contenedor */
+
 .section{ padding:96px 20px }
 .container{ max-width:1100px; margin:0 auto }
 
-/* Tarjeta glass transparente (sin blur de fondo) */
+
 .card{
   background: rgba(0,0,0,0.08);
   border: 1px solid rgba(0,234,255,0.18);
@@ -270,7 +250,7 @@ body.scrolled .comets{ opacity:.45; transition:opacity .4s }
 }
 .card:hover{ background: rgba(0,0,0,0.12); }
 
-/* Títulos de sección */
+
 .section h2{
   font-weight:800;
   letter-spacing:.02em;
@@ -279,11 +259,11 @@ body.scrolled .comets{ opacity:.45; transition:opacity .4s }
   text-shadow:0 0 14px rgba(0,234,255,.6);
 }
 
-/* Grid */
+
 .grid{ display:grid; gap:18px }
 .grid-2{ grid-template-columns: repeat(2, minmax(0,1fr)) }
 
-/* Badges y acciones */
+
 .badges{ display:flex; flex-wrap:wrap; gap:10px; margin-top:8px }
 .badges span{
   border:1px solid var(--stroke);
@@ -293,7 +273,7 @@ body.scrolled .comets{ opacity:.45; transition:opacity .4s }
   background:rgba(0,234,255,.06);
 }
 
-/* Botones */
+
 .actions{ display:flex; gap:12px; margin-top:16px; flex-wrap:wrap }
 
 .btn{
@@ -316,7 +296,7 @@ body.scrolled .comets{ opacity:.45; transition:opacity .4s }
   min-width:160px; text-align:center;
 }
 
-/* Footer */
+
 .footer{
   padding:40px 20px;
   color:#a9d7e5;
@@ -324,9 +304,7 @@ body.scrolled .comets{ opacity:.45; transition:opacity .4s }
   border-top:1px solid var(--stroke);
 }
 
-/* =========================================================
-   HUD / NAV inferior con spotlight + indicador
-========================================================= */
+
 .hud-nav{
   position:fixed; bottom:22px; left:50%; transform:translateX(-50%);
   z-index:5; display:flex; gap:18px; padding:10px 14px;
@@ -412,9 +390,7 @@ body.scrolled .comets{ opacity:.45; transition:opacity .4s }
   display:flex; gap:10px; justify-content:flex-end; margin-top:8px;
 }
 
-/* =========================================================
-   SELECTOR DE IDIOMA (flotante superior)
-========================================================= */
+
 #langBox{
   position:fixed;
   top:20px;
@@ -440,9 +416,7 @@ body.scrolled .comets{ opacity:.45; transition:opacity .4s }
 #langSwitcher option{ background:#000; color:#00eaff; }
 #langSwitcher:hover{ text-shadow:0 0 6px #00eaff; }
 
-/* =========================================================
-   RESPONSIVE / ACCESIBILIDAD
-========================================================= */
+
 @media (max-width:900px){
   .grid-2{ grid-template-columns:1fr }
   .hud-nav{ gap:8px; padding:8px 10px; bottom:16px }
@@ -454,104 +428,18 @@ body.scrolled .comets{ opacity:.45; transition:opacity .4s }
   .tech-rays{ opacity:.3 }
 }
 
-/* =========================================================
-   ESPACIO EXTRA / DOCUMENTACIÓN (relleno para mantener longitud)
-   - Este bloque no afecta al render. Son comentarios útiles.
-   - Puedes borrar de aquí hacia abajo si quieres acortar.
-========================================================= */
-/* DOC: Los "Tech Rays" se pintan en canvas (JS) con curvas Bézier,
-        brillo aditivo (globalCompositeOperation: 'lighter') y cola corta.
-        El JS recorta zonas de texto (hero, tarjetas, HUD) para que nunca
-        tapen el contenido. Ajustes clave:
-        - MAX_RAYS: cantidad simultánea
-        - SPEED/LIFE: ritmo y duración
-        - HUE: tono (170–190 = cian)
-        - steps: longitud de la cola
-        - protectRects: selectores a proteger
-*/
 
-/* DOC: Si se quiere desactivar la franja superior, elimina .top-safety.
-        Alternativa: reducir 'height' a 60px. */
-
-/* DOC: Para oscurecer el fondo global mínimamente, añade:
-        body::after{ content:""; position:fixed; inset:0; pointer-events:none;
-        background: radial-gradient(1200px 600px at 50% 60%, rgba(0,0,0,.1), transparent 70%); } */
-
-/* DOC: Para botones con iconos SVG alineados:
-        .btn svg{ width:18px; height:18px; margin-right:8px } */
-
-/* DOC: Ajustes rápidos de contraste:
-        :root{ --txt:#eaf6ff } -> #defaff si quieres más contraste en monitores oscuros. */
-
-/* DOC: Si subes muchas imágenes en "Experiencia", usa:
-        .grid-2 > * { min-width:0 } y controla overflow dentro. */
-
-/* DOC: Si quieres un borde interior en .card:
-        .card{ box-shadow: 0 8px 30px rgba(0,0,0,.25), inset 0 0 0 1px rgba(255,255,255,.04); } */
-
-/* DOC: El HUD se centra con transform; si parpadea en móviles,
-        añade will-change: transform al .hud-nav. */
-
-/* DOC: El selector de idioma usa z-index alto para estar siempre visible;
-        si pones banners, súbelo a 10000. */
-
-/* DOC: Para tipografía más compacta en móviles:
-        @media (max-width:420px){ .title{ font-size:clamp(2.2rem,12vw,5.4rem) } } */
-
-/* DOC: Si el navegador fuerza reducción de movimiento, los cometas
-        quedan estáticos y los rays bajan de intensidad. */
-
-/* DOC: Recomendado servir fuentes 'display=swap' desde Google Fonts
-        para evitar FOUT. */
-
-/* DOC: Si en GitHub Pages ves caché, añade ?v=build-001 al link CSS. */
-
-/* ---------------------------------------------------------
-   Espaciado de seguridad (no funcional) para mantener >480 líneas
-   --------------------------------------------------------- */
-/* 001 */ /* 002 */ /* 003 */ /* 004 */ /* 005 */ /* 006 */ /* 007 */ /* 008 */ /* 009 */ /* 010 */
-/* 011 */ /* 012 */ /* 013 */ /* 014 */ /* 015 */ /* 016 */ /* 017 */ /* 018 */ /* 019 */ /* 020 */
-/* 021 */ /* 022 */ /* 023 */ /* 024 */ /* 025 */ /* 026 */ /* 027 */ /* 028 */ /* 029 */ /* 030 */
-/* 031 */ /* 032 */ /* 033 */ /* 034 */ /* 035 */ /* 036 */ /* 037 */ /* 038 */ /* 039 */ /* 040 */
-/* 041 */ /* 042 */ /* 043 */ /* 044 */ /* 045 */ /* 046 */ /* 047 */ /* 048 */ /* 049 */ /* 050 */
-/* 051 */ /* 052 */ /* 053 */ /* 054 */ /* 055 */ /* 056 */ /* 057 */ /* 058 */ /* 059 */ /* 060 */
-/* 061 */ /* 062 */ /* 063 */ /* 064 */ /* 065 */ /* 066 */ /* 067 */ /* 068 */ /* 069 */ /* 070 */
-/* 071 */ /* 072 */ /* 073 */ /* 074 */ /* 075 */ /* 076 */ /* 077 */ /* 078 */ /* 079 */ /* 080 */
-/* 081 */ /* 082 */ /* 083 */ /* 084 */ /* 085 */ /* 086 */ /* 087 */ /* 088 */ /* 089 */ /* 090 */
-/* 091 */ /* 092 */ /* 093 */ /* 094 */ /* 095 */ /* 096 */ /* 097 */ /* 098 */ /* 099 */ /* 100 */
-/* 101 */ /* 102 */ /* 103 */ /* 104 */ /* 105 */ /* 106 */ /* 107 */ /* 108 */ /* 109 */ /* 110 */
-/* 111 */ /* 112 */ /* 113 */ /* 114 */ /* 115 */ /* 116 */ /* 117 */ /* 118 */ /* 119 */ /* 120 */
-/* 121 */ /* 122 */ /* 123 */ /* 124 */ /* 125 */ /* 126 */ /* 127 */ /* 128 */ /* 129 */ /* 130 */
-/* 131 */ /* 132 */ /* 133 */ /* 134 */ /* 135 */ /* 136 */ /* 137 */ /* 138 */ /* 139 */ /* 140 */
-/* 141 */ /* 142 */ /* 143 */ /* 144 */ /* 145 */ /* 146 */ /* 147 */ /* 148 */ /* 149 */ /* 150 */
-/* 151 */ /* 152 */ /* 153 */ /* 154 */ /* 155 */ /* 156 */ /* 157 */ /* 158 */ /* 159 */ /* 160 */
-/* 161 */ /* 162 */ /* 163 */ /* 164 */ /* 165 */ /* 166 */ /* 167 */ /* 168 */ /* 169 */ /* 170 */
-/* 171 */ /* 172 */ /* 173 */ /* 174 */ /* 175 */ /* 176 */ /* 177 */ /* 178 */ /* 179 */ /* 180 */
-/* 181 */ /* 182 */ /* 183 */ /* 184 */ /* 185 */ /* 186 */ /* 187 */ /* 188 */ /* 189 */ /* 190 */
-/* 191 */ /* 192 */ /* 193 */ /* 194 */ /* 195 */ /* 196 */ /* 197 */ /* 198 */ /* 199 */ /* 200 */
-/* 201 */ /* 202 */ /* 203 */ /* 204 */ /* 205 */ /* 206 */ /* 207 */ /* 208 */ /* 209 */ /* 210 */
-/* 211 */ /* 212 */ /* 213 */ /* 214 */ /* 215 */ /* 216 */ /* 217 */ /* 218 */ /* 219 */ /* 220 */
-/* 221 */ /* 222 */ /* 223 */ /* 224 */ /* 225 */ /* 226 */ /* 227 */ /* 228 */ /* 229 */ /* 230 */
-/* 231 */ /* 232 */ /* 233 */ /* 234 */ /* 235 */ /* 236 */ /* 237 */ /* 238 */ /* 239 */ /* 240 */
-/* 241 */ /* 242 */ /* 243 */ /* 244 */ /* 245 */ /* 246 */ /* 247 */ /* 248 */ /* 249 */ /* 250 */
-/* 251 */ /* 252 */ /* 253 */ /* 254 */ /* 255 */ /* 256 */ /* 257 */ /* 258 */ /* 259 */ /* 260 */
-/* 261 */ /* 262 */ /* 263 */ /* 264 */ /* 265 */ /* 266 */ /* 267 */ /* 268 */ /* 269 */ /* 270 */
-/* 271 */ /* 272 */ /* 273 */ /* 274 */ /* 275 */ /* 276 */ /* 277 */ /* 278 */ /* 279 */ /* 280 */
-/* 281 */ /* 282 */ /* 283 */ /* 284 */ /* 285 */ /* 286 */ /* 287 */ /* 288 */ /* 289 */ /* 290 */
-/* 291 */ /* 292 */ /* 293 */ /* 294 */ /* 295 */ /* 296 */ /* 297 */ /* 298 */ /* 299 */ /* 300 */
-
-/* Oculta las viejas barras neón (causaban el “cinturón” arriba) */
 .neon-lines{ display:none !important; }
 
-/* Canvas a pantalla completa y sin bloquear clics */
+
 .tech-rays{
-  position:absolute; /* la .neon-bg ya es fixed */
+  position:absolute; 
   inset:0;
-  z-index:2;          /* debajo del contenido (z≥5) */
+  z-index:2;         
   pointer-events:none;
 }
 
-/* ===== Cometas (ligeros) ===== */
+
 .comets{position:absolute;inset:0;pointer-events:none;z-index:1}
 .comet{
   position:absolute; top:-12vh; left:0;
@@ -575,13 +463,13 @@ body.scrolled .comets{ opacity:.45; transition:opacity .4s }
 }
 @keyframes cometPulse{ 0%,100%{ filter: drop-shadow(0 0 12px rgba(255,255,255,.8)) } 50%{ filter: drop-shadow(0 0 18px rgba(255,255,255,1)) } }
 
-/* Pausar si el usuario prefiere menos movimiento */
+
 @media (prefers-reduced-motion: reduce){
   .comet{ animation: none !important }
 }
 #starLinkCanvas{
   position:fixed; inset:0; z-index:1; pointer-events:none;
-  /* Ocupa toda la pantalla por encima de las estrellas pero bajo el contenido */
+
 }
 #starLinkCanvas{
   position:fixed;
@@ -589,20 +477,20 @@ body.scrolled .comets{ opacity:.45; transition:opacity .4s }
   z-index:1;
   pointer-events:none;
 }
-/* Desactivar animaciones y cometas */
+
 .no-anim .beam,
 .no-anim .title,
 .no-anim .star { animation: none !important; }
 
-.no-anim #starLinkCanvas { display:none; } /* oculta el lienzo de cometas */
+.no-anim #starLinkCanvas { display:none; }
 
-/* Desactivar animaciones y cometas */
+
 .no-anim .beam,
 .no-anim .title,
 .no-anim .star { animation: none !important; }
 
-.no-anim #starLinkCanvas { display:none; } /* oculta el lienzo de cometas */
-/* Back to Top */
+.no-anim #starLinkCanvas { display:none; }
+
 .backtop{
   position:fixed; right:22px; bottom:92px; z-index:8;
   width:44px; height:44px; border-radius:12px; cursor:pointer;
@@ -617,18 +505,18 @@ body.scrolled .comets{ opacity:.45; transition:opacity .4s }
   box-shadow:0 0 0 3px rgba(0,234,255,.12), 0 0 22px rgba(0,234,255,.25) inset;
 }
 .backtop.is-visible{ opacity:1; transform:translateY(0); pointer-events:auto; }
-body[data-motion="off"] .backtop{ transition:none; } /* sin animaciones cuando desactivas */
-/* Evita solaparse con la HUD en móviles */
+body[data-motion="off"] .backtop{ transition:none; } /
+
 @media (max-width:900px){ .backtop{ bottom:86px; right:16px; } }
 
-/* Carrusel: fila fija 100% por slide */
+
 .carousel__track{
-  display:flex;                 /* en vez de grid */
+  display:flex;                
   transition:transform .35s ease;
   will-change:transform;
 }
 .carousel__slide{
-  flex:0 0 100%;               /* cada slide ocupa 100% del ancho */
+  flex:0 0 100%;             
   aspect-ratio:4/3;
   position:relative;
   background:#05080a;
@@ -636,19 +524,19 @@ body[data-motion="off"] .backtop{ transition:none; } /* sin animaciones cuando d
 
 .carousel__btn,
 .carousel__dots{ display:none !important; }
-/* Carrusel en fila + controles ocultos */
+
 .carousel__track{ display:flex; transition:transform .35s ease; will-change:transform }
 .carousel__slide{ flex:0 0 100%; position:relative; aspect-ratio:4/3; background:#05080a }
 .carousel__slide img{ width:100%; height:100%; object-fit:cover; display:block; filter:contrast(1.08) brightness(.95) }
 .carousel__btn, .carousel__dots{ display:none !important; }
 
-/* ===== Upsize: Competencias (solo sección #skills) ===== */
+
 #skills .acc-h{ font-size:1.14rem; padding:14px 18px }
 #skills .acc-h span{ font-size:1.08rem }
 #skills .acc-list{ font-size:1.08rem; line-height:1.7 }
 #skills .acc-list li{ margin:6px 0 }
 
-/* ===== Upsize: Competencias (más grande y legible) ===== */
+
 #skills .acc-h{ 
   font-size:1.4rem; 
   padding:16px 20px;
@@ -664,7 +552,7 @@ body[data-motion="off"] .backtop{ transition:none; } /* sin animaciones cuando d
   margin:8px 0; 
 }
 
-/* ===== Upsize: Competencias (más grande y legible) ===== */
+
 #skills .acc-h{ 
   font-size:1.4rem; 
   padding:16px 20px;
@@ -680,13 +568,13 @@ body[data-motion="off"] .backtop{ transition:none; } /* sin animaciones cuando d
   margin:8px 0; 
 }
 
-/* En pantallas grandes aún más cómodo */
+
 @media (min-width:900px){
   #skills .acc-h{ font-size:1.5rem }
   #skills .acc-list{ font-size:1.3rem }
 }
 
-/* ===== Upsize total: títulos + texto + viñetas ===== */
+
 #skills .acc-h{ 
   font-size:1.45rem; 
   padding:16px 20px;
@@ -700,14 +588,14 @@ body[data-motion="off"] .backtop{ transition:none; } /* sin animaciones cuando d
 }
 #skills .acc-list li{ 
   margin:10px 0; 
-  font-size:1.22rem;         /* ← tamaño del texto de las viñetas */
+  font-size:1.22rem;         
   padding-left:4px;
 }
 #skills .acc-list li::marker{
-  font-size:1.4rem;          /* ← tamaño del punto de la viñeta */
+  font-size:1.4rem;          /
 }
 
-/* En pantallas grandes aún más cómodo */
+
 @media (min-width:900px){
   #skills .acc-h{ font-size:1.55rem }
   #skills .acc-list,
