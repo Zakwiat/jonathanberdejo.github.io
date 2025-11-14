@@ -7,7 +7,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700;900&display=swap" rel="stylesheet"/>
 <meta name="color-scheme" content="dark">
 <style>
-/* ===== Reset & Vars ===== */
+
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%}
 html{scroll-behavior:smooth}
@@ -18,7 +18,7 @@ html{scroll-behavior:smooth}
 }
 body{font-family:'Poppins',system-ui,Segoe UI,Roboto,Arial,sans-serif;background:var(--bg);color:var(--txt);-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;overflow-x:hidden}
 
-/* ===== Fondo ===== */
+
 .neon-bg{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none;background:
   radial-gradient(1200px 600px at 50% 60%, rgba(0,234,255,.06), transparent 70%)}
 .stars{position:absolute;inset:0;pointer-events:none}
@@ -30,7 +30,7 @@ body{font-family:'Poppins',system-ui,Segoe UI,Roboto,Arial,sans-serif;background
 @keyframes beamX{from{transform:translateX(-40vw)}to{transform:translateX(120vw)}}
 #starLinkCanvas{position:absolute; inset:0; width:100%; height:100%; display:block}
 
-/* ===== Contenido ===== */
+
 .nav,.hero,.section,.footer,.hud-nav{position:relative;z-index:5}
 .hero{min-height:100vh;display:grid;place-items:center;text-align:center}
 .title{font-weight:900;letter-spacing:.04em;font-size:clamp(2.8rem,9vw,6.4rem);color:#e8fdff;text-shadow:0 0 18px var(--neon),0 0 48px var(--neon),0 0 120px var(--neon);animation:titleBeat var(--beat) ease-in-out infinite}
@@ -49,7 +49,6 @@ body{font-family:'Poppins',system-ui,Segoe UI,Roboto,Arial,sans-serif;background
 .btn--ghost{background:transparent;color:#bfe7f1;border-color:var(--stroke)}
 .footer{padding:40px 20px;color:#a9d7e5;text-align:center;border-top:1px solid var(--stroke)}
 
-/* ===== HUD ===== */
 .hud-nav{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);z-index:6;display:flex;gap:18px;padding:10px 14px;background:rgba(0,0,0,.35);
   backdrop-filter: blur(10px) saturate(120%);-webkit-backdrop-filter: blur(10px) saturate(120%);border:1px solid rgba(0,234,255,.22);border-radius:999px;box-shadow:0 0 24px rgba(0,234,255,.18), inset 0 0 10px rgba(0,234,255,.08)}
 .hud-nav a{position:relative;color:#c9faff;text-decoration:none;font-weight:700;letter-spacing:.02em;padding:8px 12px;border-radius:10px;transition: color .2s ease, background .2s ease, text-shadow .2s ease}
@@ -57,7 +56,6 @@ body{font-family:'Poppins',system-ui,Segoe UI,Roboto,Arial,sans-serif;background
 .hud-nav a.active{color:#eaffff;text-shadow:0 0 10px #00eaff, 0 0 24px #00eaff}
 .hud-indicator{position:absolute;left:0;bottom:6px;height:2px;border-radius:2px;width:var(--indW,40px);transform:translateX(var(--indX,0));background:linear-gradient(90deg,transparent,#00eaff,transparent);box-shadow:0 0 14px #00eaff;transition: transform .25s ease, width .25s ease}
 
-/* ===== Barra superior ===== */
 #topBar{
   position:fixed;top:20px;right:26px;z-index:7;display:flex;gap:8px;align-items:center;
   background:rgba(0,0,0,.4);backdrop-filter: blur(6px);
@@ -67,7 +65,7 @@ body{font-family:'Poppins',system-ui,Segoe UI,Roboto,Arial,sans-serif;background
 #langSwitcher option{background:#000;color:#00eaff}
 #animToggle{font-weight:700;color:#00eaff;background:transparent;border:1px solid rgba(0,234,255,.25);border-radius:10px;padding:6px 10px;cursor:pointer}
 
-/* ===== Accordion ===== */
+
 .acc{display:grid;gap:12px;margin-top:12px}
 .acc-item{border:1px solid rgba(0,234,255,.14);border-radius:14px;overflow:hidden;background:rgba(0,0,0,.12)}
 .acc-h{width:100%;text-align:left;background:transparent;border:none;color:#eafcff;padding:12px 16px;font-weight:700;display:flex;justify-content:space-between;align-items:center;cursor:pointer}
@@ -78,7 +76,7 @@ body{font-family:'Poppins',system-ui,Segoe UI,Roboto,Arial,sans-serif;background
 .acc-h .chev{transition:transform .25s ease}
 .acc-item.open .chev{transform:rotate(90deg)}
 
-/* ===== Motion OFF ===== */
+
 body[data-motion="off"] .star,
 body[data-motion="off"] .beam,
 body[data-motion="off"] .title{animation:none!important;}
@@ -88,7 +86,7 @@ body[data-motion="off"] #starLinkCanvas{display:none}
   #starLinkCanvas{display:none}
 }
 
-/* ===== Carrusel “Sobre mí” (CSS) ===== */
+
 .about-grid{display:grid;gap:18px;grid-template-columns:1.05fr .95fr}
 @media (max-width:900px){ .about-grid{grid-template-columns:1fr} }
 
@@ -96,10 +94,10 @@ body[data-motion="off"] #starLinkCanvas{display:none}
 .carousel__track{display:flex;transition:transform .35s ease;will-change:transform}
 .carousel__slide{flex:0 0 100%;position:relative;aspect-ratio:4/3;background:#05080a}
 .carousel__slide img{width:100%;height:100%;object-fit:cover;display:block;filter:contrast(1.08) brightness(.95)}
-/* Ocultar controles (existen en HTML por accesibilidad) */
+
 .carousel__btn,.carousel__dots{display:none!important}
 
-/* Back to Top */
+
 .backtop{
   position:fixed; right:22px; bottom:92px; z-index:8;
   width:44px; height:44px; border-radius:12px; cursor:pointer;
@@ -116,7 +114,7 @@ body[data-motion="off"] #starLinkCanvas{display:none}
 </style>
 </head>
 <body>
-  <!-- Top bar -->
+
  <select id="langSwitcher" aria-label="Idioma">
   <option value="en" selected>EN</option>
   <option value="es">ES</option>
@@ -130,7 +128,7 @@ body[data-motion="off"] #starLinkCanvas{display:none}
         data-off-label="🌙 OFF">⚡ Animación: ON</button>
   </div>
 
-  <!-- Fondo -->
+
   <div class="neon-bg" aria-hidden="true">
     <div class="stars"></div>
     <div class="neon-lines">
@@ -139,7 +137,6 @@ body[data-motion="off"] #starLinkCanvas{display:none}
     <canvas id="starLinkCanvas" aria-hidden="true"></canvas>
   </div>
 
-  <!-- HUD -->
   <nav class="hud-nav" aria-label="Principal">
     <a href="#home"   data-link data-t="navHome">Inicio</a>
     <a href="#about"  data-link data-t="navAbout">Sobre mí</a>
@@ -149,12 +146,12 @@ body[data-motion="off"] #starLinkCanvas{display:none}
     <span class="hud-indicator" aria-hidden="true"></span>
   </nav>
 
-  <!-- Hero -->
+
   <header id="home" class="hero">
     <h1 class="title">JONATHAN BERDEJO</h1>
   </header>
 
-  <!-- Sobre mí -->
+
   <section id="about" class="section">
     <div class="container">
       <div class="card">
@@ -167,7 +164,7 @@ body[data-motion="off"] #starLinkCanvas{display:none}
             <div class="badges" id="aboutBadges"></div>
           </div>
 
-          <!-- Carrusel lateral -->
+ 
           <figure class="carousel" aria-label="Galería de fotos - Sobre mí">
             <div class="carousel__track" id="aboutTrack">
               <div class="carousel__slide">
@@ -180,7 +177,7 @@ body[data-motion="off"] #starLinkCanvas{display:none}
                 <img src="assets/images/jonpiano1.png" alt="" loading="lazy" decoding="async" />
               </div>
             </div>
-            <!-- Controles presentes pero ocultos por CSS -->
+         
             <button class="carousel__btn carousel__btn--prev" aria-label="Anterior">‹</button>
             <button class="carousel__btn carousel__btn--next" aria-label="Siguiente">›</button>
             <div class="carousel__dots" id="aboutDots" role="tablist" aria-label="Paginación del carrusel"></div>
@@ -191,7 +188,6 @@ body[data-motion="off"] #starLinkCanvas{display:none}
     </div>
   </section>
 
-  <!-- Experiencia / Servicios + Qué aporto -->
   <section id="work" class="section">
     <div class="container">
       <div class="card">
@@ -221,7 +217,7 @@ body[data-motion="off"] #starLinkCanvas{display:none}
           </div>
         </div>
 
-        <!-- Botones -->
+      
         <div class="actions" style="margin-top:18px">
           <a class="btn" href="#contact" data-t="btnTalk">Hablemos</a>
           <a class="btn btn--ghost" href="assets/docs/CVJBS.pdf" target="_blank" rel="noopener">Ver CV</a>
@@ -230,7 +226,7 @@ body[data-motion="off"] #starLinkCanvas{display:none}
     </div>
   </section>
 
-  <!-- Competencias -->
+
   <section id="skills" class="section">
     <div class="container">
       <div class="card">
@@ -240,7 +236,6 @@ body[data-motion="off"] #starLinkCanvas{display:none}
     </div>
   </section>
 
-  <!-- Contacto -->
   <section id="contact" class="section">
     <div class="container">
       <div class="card">
@@ -256,18 +251,17 @@ body[data-motion="off"] #starLinkCanvas{display:none}
 
   <footer class="footer">© <span id="year"></span> Jonathan Berdejo</footer>
 
-  <!-- Back to Top -->
   <button id="backTop" class="backtop" aria-label="Volver arriba" title="Volver arriba">↑</button>
 
 <script>
-/* ========== Año ========== */
+
 document.getElementById('year').textContent = new Date().getFullYear();
 
-/* ========== Estados globales ========== */
+
 const MOTION_KEY = 'motionPref';
 let motionOff = false;
 
-/* ========== Estrellas ========== */
+
 (function(){
   const wrap = document.querySelector('.stars'); if(!wrap) return;
   const isMobile = matchMedia('(max-width: 900px)').matches; const N = isMobile ? 120 : 220;
@@ -284,7 +278,7 @@ let motionOff = false;
   wrap.appendChild(frag);
 })();
 
-/* ========== HUD activo + indicador ========== */
+
 (function(){
   const links=[...document.querySelectorAll('.hud-nav a[data-link]')];
   const ind=document.querySelector('.hud-indicator'); if(!links.length||!ind) return;
@@ -301,7 +295,7 @@ let motionOff = false;
   window.addEventListener('scroll',onScroll,{passive:true}); window.addEventListener('resize',onScroll); onScroll();
 })();
 
-/* ========== Textos ES/EN/FR ========== */
+
 const T = {
   es:{ navHome:"Inicio", navAbout:"Sobre mí", navWork:"Experiencia", navSkills:"Competencias", navContact:"Contacto",
     aboutTitle:"Sobre mí",
@@ -614,7 +608,7 @@ document.getElementById("langSwitcher").addEventListener("change",(e)=>{
   btn.addEventListener('click', ()=> apply(!motionOff));
 })();
 
-/* ========== Canvas: 2 cometas ========== */
+
 (function(){
   const canvas = document.getElementById('starLinkCanvas');
   const starsWrap = document.querySelector('.stars');
@@ -881,7 +875,7 @@ document.getElementById("langSwitcher").addEventListener("change",(e)=>{
   });
   window.addEventListener('resize', update);
 })();
-/* ========== Canvas: 2 cometas (duplicado intencional, sin cambios) ========== */
+
 (function(){
   const canvas = document.getElementById('starLinkCanvas');
   const starsWrap = document.querySelector('.stars');
@@ -919,7 +913,7 @@ document.getElementById("langSwitcher").addEventListener("change",(e)=>{
   }
   let points = getStarPoints();
 
-  // ===== Parámetros =====
+ 
   const RAYS = 2, SPEED = 650;
   const DUR_MIN = 0.36, DUR_MAX = 1.5, MIN_DIST = 40, TABU_LEN = 3;
   const ANGLE_MIN = Math.PI/6, ANGLE_MAX = (5*Math.PI)/6;
